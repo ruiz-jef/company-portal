@@ -1,18 +1,4 @@
-const firebaseConfig = {
-    apiKey: "AIzaSyBcA9TAGRinfH7wwDtI5sF0esr_Tuy8UTs",
-    authDomain: "r-and-a-safety-dept-clients.firebaseapp.com",
-    projectId: "r-and-a-safety-dept-clients",
-    storageBucket: "r-and-a-safety-dept-clients.firebasestorage.app",
-    messagingSenderId: "888213830759",
-    appId: "1:888213830759:web:c1ae7ee03d813d4964a8c2",
-    measurementId: "G-48S68RBVGV"
-};
-
-// Initialize Firebase using compat API if not already initialized
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
-const db = firebase.firestore();
+// db is initialized in shared/auth.js
 
 let allClientsCache = [];
 let currentViewId = null;
@@ -27,6 +13,7 @@ const els = {
     modalTitle: document.getElementById('modalTitle'),
     clientsTableBody: document.getElementById('clientsTableBody'),
     emptyState: document.getElementById('emptyState'),
+    btnDeleteClient: document.getElementById('btnDeleteClient'),
     
     // Services Checkboxes
     svcTailgate: document.getElementById('svc_tailgate_meetings'),
@@ -43,7 +30,14 @@ const els = {
     // Filters
     searchClient: document.getElementById('searchClient'),
     filterServiceModel: document.getElementById('filterServiceModel'),
-    filterService: document.getElementById('filterService')
+    filterService: document.getElementById('filterService'),
+
+    // Audit Modal
+    btnAudit: document.getElementById('btnAudit'),
+    auditModal: document.getElementById('auditModal'),
+    btnCloseAudit: document.getElementById('btnCloseAudit'),
+    btnExitAudit: document.getElementById('btnExitAudit'),
+    auditResults: document.getElementById('auditResults')
 };
 
 // Event Listeners
@@ -61,6 +55,7 @@ els.btnNewClient.addEventListener('click', () => {
     els.clientForm.reset();
     document.getElementById('clientId').value = '';
     els.modalTitle.textContent = 'Add New Client';
+    els.btnDeleteClient.style.display = 'none';
     
     els.optionsTailgate.classList.remove('active');
     els.optionsInspections.classList.remove('active');
@@ -71,6 +66,15 @@ els.btnNewClient.addEventListener('click', () => {
 els.btnCloseModal.addEventListener('click', () => closeModal(els.clientModal));
 els.btnCancel.addEventListener('click', () => closeModal(els.clientModal));
 els.btnCloseView.addEventListener('click', () => closeModal(els.viewModal));
+els.btnCloseAudit.addEventListener('click', () => closeModal(els.auditModal));
+els.btnExitAudit.addEventListener('click', () => closeModal(els.auditModal));
+
+els.btnDeleteClient.addEventListener('click', () => {
+    const id = document.getElementById('clientId').value;
+    if (id) {
+        window.handleDelete(id);
+    }
+});
 
 els.svcTailgate.addEventListener('change', (e) => {
     els.optionsTailgate.classList.toggle('active', e.target.checked);
@@ -98,6 +102,9 @@ els.clientForm.addEventListener('submit', async (e) => {
         email: document.getElementById('email').value,
         meetingsContactName: document.getElementById('meetingsContactName').value,
         meetingsContactNumber: document.getElementById('meetingsContactNumber').value,
+        officeAddress: document.getElementById('officeAddress').value,
+        mailingAddress: document.getElementById('mailingAddress').value,
+        meetingsAddress: document.getElementById('meetingsAddress').value,
         trainerAssigned: document.getElementById('trainerAssigned').value,
         contractStatus: document.getElementById('contractStatus').value,
         nextReviewDate: document.getElementById('nextReviewDate').value,
@@ -213,13 +220,12 @@ function renderTable() {
                 <div>${client.contactName || 'N/A'}</div>
                 <div style="font-size: 0.8rem; color: var(--text-secondary);">${client.businessContactNumber || ''}</div>
             </td>
-            <td><span class="status-badge status-${client.contractStatus.replace(/\s+/g, '-')}">${client.contractStatus}</span></td>
             <td>${meetingsContact}</td>
             <td>${staff}</td>
+            <td><span class="status-badge status-${client.contractStatus.replace(/\s+/g, '-')}">${client.contractStatus}</span></td>
             <td class="actions-cell">
                 <button class="btn-secondary btn-sm" onclick="viewClient('${client.id}')">View</button>
                 <button class="btn-primary btn-sm" onclick="editClient('${client.id}')">Edit</button>
-                <button class="btn-secondary btn-sm" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.2);" onclick="handleDelete('${client.id}')">Delete</button>
             </td>
         `;
         els.clientsTableBody.appendChild(tr);
@@ -229,10 +235,12 @@ function renderTable() {
 function openModal(modal) {
     modal.classList.add('active');
 }
+window.openModal = openModal;
 
 function closeModal(modal) {
     modal.classList.remove('active');
 }
+window.closeModal = closeModal;
 
 // Since app.js is no longer a module, these functions can be standard globals
 window.viewClient = function(id) {
@@ -325,6 +333,22 @@ window.viewClient = function(id) {
             </div>
         </div>
 
+        <h3 style="margin-bottom: 1rem; color: var(--primary-color); margin-top: 2rem;">Addresses</h3>
+        <div class="detail-grid">
+            <div class="detail-item">
+                <div class="detail-label">Office Address</div>
+                <div class="detail-value">${client.officeAddress || 'N/A'}</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">Mailing Address</div>
+                <div class="detail-value">${client.mailingAddress || 'N/A'}</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">Meetings Location Address</div>
+                <div class="detail-value">${client.meetingsAddress || 'N/A'}</div>
+            </div>
+        </div>
+
         <h3 style="margin-bottom: 1rem; color: var(--primary-color); margin-top: 2rem;">Contracted Services</h3>
         <div class="services-list">
             ${servicesHtml}
@@ -357,6 +381,7 @@ window.editClient = function(id) {
 
     els.clientForm.reset();
     els.modalTitle.textContent = 'Edit Client';
+    els.btnDeleteClient.style.display = 'inline-flex';
     
     document.getElementById('clientId').value = client.id;
     document.getElementById('companyName').value = client.companyName;
@@ -366,6 +391,9 @@ window.editClient = function(id) {
     document.getElementById('email').value = client.email || '';
     document.getElementById('meetingsContactName').value = client.meetingsContactName || '';
     document.getElementById('meetingsContactNumber').value = client.meetingsContactNumber || '';
+    document.getElementById('officeAddress').value = client.officeAddress || '';
+    document.getElementById('mailingAddress').value = client.mailingAddress || '';
+    document.getElementById('meetingsAddress').value = client.meetingsAddress || '';
     document.getElementById('trainerAssigned').value = client.trainerAssigned || '';
     document.getElementById('contractStatus').value = client.contractStatus;
     document.getElementById('nextReviewDate').value = client.nextReviewDate || '';
@@ -402,6 +430,7 @@ window.handleDelete = async function(id) {
     if (confirm("Are you sure you want to delete this client?")) {
         try {
             await db.collection("clients").doc(id).delete();
+            closeModal(els.clientModal);
         } catch (error) {
             console.error("Error deleting document: ", error);
             alert("Error deleting client.");
@@ -429,6 +458,7 @@ btnExport.addEventListener('click', () => {
         "id", "companyName", "clientType", "contactName", "businessContactNumber", 
         "email", "meetingsContactName", "meetingsContactNumber", "trainerAssigned", 
         "contractStatus", "nextReviewDate", "notes", "priceFee",
+        "officeAddress", "mailingAddress", "meetingsAddress",
         "svc_tailgate_enabled", "svc_tailgate_options",
         "svc_inspections_enabled", "svc_inspections_options",
         "svc_allCompanySafetyPlans", "svc_cupaIncluded", "svc_pesticideHandler",
@@ -452,6 +482,9 @@ btnExport.addEventListener('click', () => {
             `"${(c.nextReviewDate || "").replace(/"/g, '""')}"`,
             `"${(c.notes || "").replace(/"/g, '""')}"`,
             `"${(c.priceFee || "").replace(/"/g, '""')}"`,
+            `"${(c.officeAddress || "").replace(/"/g, '""')}"`,
+            `"${(c.mailingAddress || "").replace(/"/g, '""')}"`,
+            `"${(c.meetingsAddress || "").replace(/"/g, '""')}"`,
             
             c.services.tailgateMeetings.enabled ? "true" : "false",
             `"${c.services.tailgateMeetings.options.join("|")}"`,
@@ -515,6 +548,55 @@ csvFileInput.addEventListener('change', (e) => {
             const cols = parseCSVRow(lines[i]);
             if (cols.length < 25) continue;
             
+            let officeAddr = "";
+            let mailingAddr = "";
+            let meetingsAddr = "";
+            let tgEnabled = false;
+            let tgOptions = [];
+            let inspEnabled = false;
+            let inspOptions = [];
+            let allPlans = false;
+            let cupa = false;
+            let pesticide = false;
+            let respirator = false;
+            let forklift = false;
+            let spcc = false;
+            let fireExt = false;
+            let reviewBinder = false;
+
+            if (cols.length >= 28) {
+                // New CSV format with address columns
+                officeAddr = cols[13];
+                mailingAddr = cols[14];
+                meetingsAddr = cols[15];
+                tgEnabled = cols[16] === "true";
+                tgOptions = cols[17] ? cols[17].split("|") : [];
+                inspEnabled = cols[18] === "true";
+                inspOptions = cols[19] ? cols[19].split("|") : [];
+                allPlans = cols[20] === "true";
+                cupa = cols[21] === "true";
+                pesticide = cols[22] === "true";
+                respirator = cols[23] === "true";
+                forklift = cols[24] === "true";
+                spcc = cols[25] === "true";
+                fireExt = cols[26] === "true";
+                reviewBinder = cols[27] === "true";
+            } else {
+                // Backward compatible format
+                tgEnabled = cols[13] === "true";
+                tgOptions = cols[14] ? cols[14].split("|") : [];
+                inspEnabled = cols[15] === "true";
+                inspOptions = cols[16] ? cols[16].split("|") : [];
+                allPlans = cols[17] === "true";
+                cupa = cols[18] === "true";
+                pesticide = cols[19] === "true";
+                respirator = cols[20] === "true";
+                forklift = cols[21] === "true";
+                spcc = cols[22] === "true";
+                fireExt = cols[23] === "true";
+                reviewBinder = cols[24] === "true";
+            }
+
             const clientData = {
                 companyName: cols[1],
                 clientType: cols[2],
@@ -523,6 +605,9 @@ csvFileInput.addEventListener('change', (e) => {
                 email: cols[5],
                 meetingsContactName: cols[6],
                 meetingsContactNumber: cols[7],
+                officeAddress: officeAddr,
+                mailingAddress: mailingAddr,
+                meetingsAddress: meetingsAddr,
                 trainerAssigned: cols[8],
                 contractStatus: cols[9],
                 nextReviewDate: cols[10],
@@ -530,21 +615,21 @@ csvFileInput.addEventListener('change', (e) => {
                 priceFee: cols[12],
                 services: {
                     tailgateMeetings: {
-                        enabled: cols[13] === "true",
-                        options: cols[14] ? cols[14].split("|") : []
+                        enabled: tgEnabled,
+                        options: tgOptions
                     },
                     inspections: {
-                        enabled: cols[15] === "true",
-                        options: cols[16] ? cols[16].split("|") : []
+                        enabled: inspEnabled,
+                        options: inspOptions
                     },
-                    allCompanySafetyPlans: cols[17] === "true",
-                    cupaIncluded: cols[18] === "true",
-                    pesticideHandler: cols[19] === "true",
-                    respiratorProgram: cols[20] === "true",
-                    forkliftCerts: cols[21] === "true",
-                    spcc: cols[22] === "true",
-                    fireExtinguisher: cols[23] === "true",
-                    reviewBinder: cols[24] === "true"
+                    allCompanySafetyPlans: allPlans,
+                    cupaIncluded: cupa,
+                    pesticideHandler: pesticide,
+                    respiratorProgram: respirator,
+                    forkliftCerts: forklift,
+                    spcc: spcc,
+                    fireExtinguisher: fireExt,
+                    reviewBinder: reviewBinder
                 }
             };
 
@@ -564,3 +649,82 @@ csvFileInput.addEventListener('change', (e) => {
     };
     reader.readAsText(file);
 });
+
+// Audit Clients logic
+els.btnAudit.addEventListener('click', runAudit);
+
+function runAudit() {
+    const auditFields = [
+        { key: 'companyName', label: 'Company Name' },
+        { key: 'clientType', label: 'Service Model' },
+        { key: 'contactName', label: 'Business Contact Name' },
+        { key: 'businessContactNumber', label: 'Business Contact Number' },
+        { key: 'email', label: 'Email' },
+        { key: 'meetingsContactName', label: 'Meetings Contact Name' },
+        { key: 'meetingsContactNumber', label: 'Meetings Contact Number' },
+        { key: 'trainerAssigned', label: 'Staff Assigned' },
+        { key: 'contractStatus', label: 'Contract Status' },
+        { key: 'nextReviewDate', label: 'Next Review Date' },
+        { key: 'priceFee', label: 'Retainer / Meetings / CUPA Fee' },
+        { key: 'officeAddress', label: 'Office Address' },
+        { key: 'mailingAddress', label: 'Mailing Address' },
+        { key: 'meetingsAddress', label: 'Meetings Location Address' }
+    ];
+
+    els.auditResults.innerHTML = '';
+    let incompleteClients = [];
+
+    allClientsCache.forEach(client => {
+        let missing = [];
+        auditFields.forEach(field => {
+            const val = client[field.key];
+            if (val === undefined || val === null || (typeof val === 'string' && val.trim() === '')) {
+                missing.push(field.label);
+            }
+        });
+
+        if (missing.length > 0) {
+            incompleteClients.push({ client, missing });
+        }
+    });
+
+    if (incompleteClients.length === 0) {
+        els.auditResults.innerHTML = `
+            <div style="text-align: center; padding: 2rem; color: #16a34a;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🎉</div>
+                <div style="font-weight: 700; font-size: 1.2rem; margin-bottom: 0.5rem;">Audit Complete!</div>
+                <p style="color: var(--text-secondary);">All client profiles are complete. No missing information found.</p>
+            </div>
+        `;
+    } else {
+        incompleteClients.forEach(item => {
+            const { client, missing } = item;
+            const div = document.createElement('div');
+            div.style.display = 'flex';
+            div.style.justifyContent = 'space-between';
+            div.style.alignItems = 'flex-start';
+            div.style.marginBottom = '1.25rem';
+            div.style.paddingBottom = '1.25rem';
+            div.style.borderBottom = '1px solid var(--border-color)';
+            
+            const tagsHtml = missing.map(f => `
+                <span style="background: #fef3c7; color: #b45309; padding: 0.2rem 0.5rem; border-radius: 4px; border: 1px solid #fde047; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.25rem; display: inline-block;">
+                    ${f}
+                </span>
+            `).join(' ');
+
+            div.innerHTML = `
+                <div style="flex: 1; padding-right: 1rem;">
+                    <div style="font-weight: 700; color: var(--text-primary); font-size: 1.05rem; margin-bottom: 0.5rem;">${client.companyName}</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+                        ${tagsHtml}
+                    </div>
+                </div>
+                <button class="btn btn-secondary btn-sm" onclick="closeModal(document.getElementById('auditModal')); window.editClient('${client.id}')">Edit</button>
+            `;
+            els.auditResults.appendChild(div);
+        });
+    }
+
+    openModal(els.auditModal);
+}
