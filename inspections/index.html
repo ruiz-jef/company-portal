@@ -1,0 +1,3630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Field Inspections - Ruiz & Associates</title>
+    <link rel="stylesheet" href="../shared/portal.css">
+    
+    <!-- Firebase Compat SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="../shared/auth.js"></script>
+
+    <style>
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            width: 100%;
+        }
+
+        .view-container {
+            display: none;
+            margin-bottom: 3rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .view-container.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Landing Dashboard Cards */
+        .landing-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .landing-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .landing-card {
+            background: var(--bg-surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .landing-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-blue);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+
+        .landing-card-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .landing-card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--slate-dark);
+            margin-bottom: 0.75rem;
+        }
+
+        .landing-card-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .panel {
+            background: var(--bg-surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            padding: 1.75rem;
+            box-shadow: var(--shadow-md);
+            align-self: start;
+        }
+
+        .panel-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--slate-dark);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* Status & Connection Indicators */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .connection-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .dot.online {
+            background-color: var(--success-color);
+            box-shadow: 0 0 8px var(--success-color);
+        }
+
+        .dot.offline {
+            background-color: var(--error-color);
+            box-shadow: 0 0 8px var(--error-color);
+        }
+
+        /* Toggle switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input { 
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cbd5e1;
+            transition: .3s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-blue);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Step Wizard Layout */
+        .step-container {
+            display: none;
+        }
+
+        .step-container.active {
+            display: block;
+        }
+
+        /* Waste Stream Selector Checklist */
+        .stream-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .stream-card {
+            border: 1px solid var(--border-color);
+            padding: 0.75rem;
+            border-radius: 6px;
+            background: var(--bg-base);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            user-select: none;
+        }
+
+        .stream-card input {
+            cursor: pointer;
+        }
+
+        .stream-card:hover {
+            border-color: var(--accent-blue);
+            background: var(--accent-blue-light);
+        }
+
+        /* Custom Stream Button Box */
+        .custom-stream-box {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Step 2 Form elements */
+        .audit-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .audit-card-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent-blue-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Question Layout Table */
+        .question-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .question-row {
+            padding: 1.25rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: #ffffff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: var(--transition-smooth);
+        }
+
+        .question-row:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+        }
+
+        .question-row.violation {
+            background-color: #fee2e2 !important;
+            border-color: #fca5a5 !important;
+            box-shadow: 0 1px 3px rgba(239, 68, 68, 0.1);
+        }
+
+        .question-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 640px) {
+            .question-header-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            .question-header-row .btn-group {
+                width: 100%;
+                justify-content: stretch;
+            }
+            .question-header-row .btn-group button {
+                flex: 1;
+                text-align: center;
+                padding: 0.5rem 0.25rem;
+            }
+            .question-header-row .drawer-triggers {
+                align-self: flex-end;
+                margin-left: 0;
+            }
+        }
+
+        .question-text {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--slate-dark);
+            line-height: 1.4;
+            flex: 1;
+        }
+
+        .question-row.violation .question-text {
+            color: #991b1b;
+            font-weight: 600;
+        }
+
+        /* Yes / No / NA Custom Button Groups */
+        .btn-group {
+            display: inline-flex;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            overflow: hidden;
+            background: #f8fafc;
+            flex-shrink: 0;
+        }
+
+        .btn-group button {
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            border-right: 1px solid #cbd5e1;
+        }
+
+        .btn-group button:last-child {
+            border-right: none;
+        }
+
+        /* Selected State Colors */
+        .btn-group button.selected-na {
+            background-color: #64748b;
+            color: white;
+        }
+
+        .btn-group button.selected-compliant {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-group button.selected-violation {
+            background-color: var(--error-color);
+            color: white;
+        }
+
+        /* Trigger Drawer Icons */
+        .drawer-triggers {
+            display: flex;
+            gap: 0.5rem;
+            margin-left: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .btn-trigger {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            font-size: 0.9rem;
+        }
+
+        .btn-trigger:hover {
+            background: var(--accent-blue-light);
+            border-color: var(--accent-blue);
+        }
+
+        .btn-trigger.active-notes {
+            background-color: #fef08a;
+            border-color: #ca8a04;
+        }
+
+        .btn-trigger.active-photo {
+            background-color: #bfdbfe;
+            border-color: #3b82f6;
+        }
+
+        /* Collapsible Drawers */
+        .question-drawer {
+            display: none;
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .question-drawer.expanded {
+            display: flex;
+        }
+
+        .drawer-photo-preview {
+            max-width: 150px;
+            max-height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            display: none;
+        }
+
+        /* Table Log and Action Buttons */
+        .log-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .log-table th, .log-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            text-align: left;
+        }
+
+        .log-table th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .log-table tbody tr {
+            transition: background-color 0.2s;
+        }
+
+        .log-table tbody tr:hover {
+            background-color: var(--accent-blue-light);
+        }
+
+        .badge-status {
+            padding: 0.2rem 0.6rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+
+        .badge-passed {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .badge-action {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .badge-sync {
+            background: #fef3c7;
+            color: #b45309;
+            font-size: 0.7rem;
+            border: 1px solid #fde68a;
+        }
+
+        .sync-queue-badge {
+            background: var(--accent-blue);
+            color: white;
+            font-size: 0.8rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 9999px;
+            font-weight: bold;
+        }
+
+        .btn-pdf {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            color: #475569;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .btn-pdf:hover {
+            border-color: #ef4444;
+            color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .btn-delete {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            color: #64748b;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .btn-delete:hover {
+            border-color: #ef4444;
+            color: #ffffff;
+            background: #ef4444;
+        }
+
+        /* Wizard header indicator */
+        .wizard-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+        }
+
+        .wizard-indicator span.active {
+            color: var(--accent-blue);
+        }
+
+        /* Image Markup Editor Modal */
+        .markup-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 1.5rem;
+            animation: fadeIn 0.25s ease;
+        }
+
+        .markup-modal-container {
+            background: #ffffff;
+            border-radius: var(--radius-md);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--border-color);
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(15px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .markup-modal-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8fafc;
+        }
+
+        .markup-modal-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--slate-dark);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .markup-modal-body {
+            padding: 1.5rem;
+            overflow: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f1f5f9;
+            min-height: 300px;
+            position: relative;
+        }
+
+        .markup-canvas-wrapper {
+            position: relative;
+            background: #000000;
+            border-radius: 4px;
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            max-width: 100%;
+        }
+
+        #markupCanvas {
+            display: block;
+            max-width: 100%;
+            cursor: crosshair;
+            user-select: none;
+            touch-action: none;
+        }
+
+        .markup-modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            background: #f8fafc;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .markup-tools-group {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .markup-tool-btn {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .markup-tool-btn:hover {
+            border-color: var(--accent-blue);
+            background: var(--accent-blue-light);
+            color: var(--accent-blue);
+        }
+
+        .markup-tool-btn.active {
+            background-color: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: white;
+        }
+
+        .markup-tool-btn.btn-action-red {
+            border-color: #fca5a5;
+        }
+        .markup-tool-btn.btn-action-red:hover {
+            background-color: #fee2e2;
+            color: #b91c1c;
+            border-color: #f87171;
+        }
+
+        /* OSHA Regulation Citation Helper Styles */
+        .reg-helper-container {
+            display: none;
+            flex-direction: column;
+            gap: 0.5rem;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+            box-shadow: inset 0 1px 2px 0 rgba(0,0,0,0.05);
+        }
+        .reg-cat-folder {
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            background: #ffffff;
+            margin-bottom: 0.35rem;
+            overflow: hidden;
+        }
+        .reg-cat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0.75rem;
+            background: #f1f5f9;
+            cursor: pointer;
+            user-select: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--slate-dark);
+            transition: background 0.2s;
+        }
+        .reg-cat-header:hover {
+            background: #e2e8f0;
+        }
+        .reg-cat-chevron {
+            font-size: 0.75rem;
+            transition: transform 0.2s;
+        }
+        .reg-cat-content {
+            display: none;
+            flex-direction: column;
+            gap: 0.35rem;
+            padding: 0.5rem 0.75rem;
+            border-top: 1px solid var(--border-color);
+            background: #fafafb;
+        }
+        .reg-citation-tag {
+            display: inline-flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 0.35rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+            user-select: none;
+        }
+        .reg-citation-tag:hover {
+            border-color: var(--accent-blue);
+            background: #eff6ff;
+            color: var(--accent-blue);
+        }
+        .reg-citation-tag.active {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: white;
+            font-weight: 600;
+        }
+        .reg-citation-tag .tag-check {
+            margin-right: 0.35rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="portal-bg"></div>
+
+    <!-- Navigation Header -->
+    <div class="app-container" style="padding-bottom: 0;">
+        <div style="margin-top: 1.5rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; background: #ffffff; padding: 0.75rem 1.5rem; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+            <a href="../dashboard.html" style="color: var(--accent-blue); font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; transition: var(--transition-smooth);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                Back to Dashboard
+            </a>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;" id="user-email">loading...</span>
+                <button type="button" onclick="openGeminiSettings()" style="background: transparent; border: 1px solid var(--border-color); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.3); padding: 0.25rem 0.75rem; border-radius: 4px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: var(--transition-smooth); display: inline-flex; align-items: center; gap: 0.25rem;">✨ Gemini Settings</button>
+                <button onclick="logoutUser(1)" style="background: transparent; border: 1px solid var(--border-color); color: #ef4444; border-color: rgba(239, 68, 68, 0.2); padding: 0.25rem 0.75rem; border-radius: 4px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: var(--transition-smooth);">Sign Out</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Workspace -->
+    <div class="app-container" style="flex: 1; padding-top: 0;">
+        <div class="dashboard-header" style="margin-bottom: 1.5rem;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <img src="../shared/APPLE Logo.jpg" alt="Logo" style="height: 50px; border-radius: 4px; object-fit: contain; background: white; padding: 2px; box-shadow: var(--shadow-sm);">
+                <div>
+                    <h1 style="font-size: 2rem; font-weight: 800; color: var(--slate-dark); margin-bottom: 0.25rem;">Site Safety Audits</h1>
+                    <p style="color: var(--text-secondary); font-size: 1rem;">Log Weekly Waste Area Site Inspections or General Site Safety Inspections on-site.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sync & Status Controller -->
+        <div class="status-bar">
+            <div class="connection-indicator">
+                <span id="network-dot" class="dot online"></span>
+                <span id="network-text">Device Online (Connected to Firebase)</span>
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <span style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary);">Simulate Offline Mode:</span>
+                <label class="switch">
+                    <input type="checkbox" id="offline-toggle" onchange="toggleNetworkMode(this.checked)">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Layout Grid / Views -->
+        
+        <!-- View 1: Landing Dashboard -->
+        <div id="view-landing" class="view-container active">
+            <div class="landing-grid">
+                <div class="landing-card" onclick="switchToView('inspection')">
+                    <div>
+                        <div class="landing-card-icon">📋</div>
+                        <div class="landing-card-title">Begin New Inspection</div>
+                        <p class="landing-card-desc">Start a Weekly Waste Area Site Inspection or a General Site Safety Inspection template.</p>
+                    </div>
+                    <button type="button" class="btn-primary" style="background-color: var(--accent-blue); width: 100%; margin-top: 1rem;">Start New Inspection &rarr;</button>
+                </div>
+                <div class="landing-card" onclick="switchToView('history')">
+                    <div>
+                        <div class="landing-card-icon">🕒</div>
+                        <div class="landing-card-title">View Audit Log History</div>
+                        <p class="landing-card-desc">Access past inspections, print reports, and synchronize cached offline records.</p>
+                        <div id="landing-queue-indicator" class="sync-queue-badge" style="display: none; margin-top: 0.5rem;">0 Pending Sync</div>
+                    </div>
+                    <button type="button" class="btn-primary" style="background-color: #64748b; width: 100%; margin-top: 1rem;">Open Log History &rarr;</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- View 2: History Log -->
+        <div id="view-history" class="view-container">
+            <div style="margin-bottom: 1.5rem;">
+                <button type="button" class="btn-primary" style="background: #64748b; padding: 0.5rem 1.25rem; font-size: 0.9rem; width: auto;" onclick="switchToView('landing')">
+                    &larr; Back to Dashboard
+                </button>
+            </div>
+            
+            <div class="panel" style="width: 100%;">
+                <div class="panel-title">
+                    <span>Audit Log History</span>
+                    <span id="queue-indicator" class="sync-queue-badge" style="display: none;">0 Pending Sync</span>
+                </div>
+                
+                <div style="overflow-x: auto;">
+                    <table class="log-table">
+                        <thead>
+                            <tr>
+                                <th>Client / Site</th>
+                                <th>Type / Details</th>
+                                <th>Status</th>
+                                <th>Inspector</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inspectionsLogBody">
+                            <tr>
+                                <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">Loading audits from Cloud Firestore...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- View 3: Inspection Wizard -->
+        <div id="view-inspection" class="view-container">
+            <div style="margin-bottom: 1.5rem;">
+                <button type="button" class="btn-primary" style="background: #64748b; padding: 0.5rem 1.25rem; font-size: 0.9rem; width: auto;" onclick="cancelInspection()">
+                    &larr; Cancel & Back to Dashboard
+                </button>
+            </div>
+
+            <div class="panel" style="width: 100%;">
+                <!-- Step indicator -->
+                <div class="wizard-indicator">
+                    <span id="wiz-step-1" class="active">Step 1: Info</span>
+                    <span>&rarr;</span>
+                    <span id="wiz-step-2">Step 2: Audit Checklist</span>
+                </div>
+
+                <form id="inspectionForm" onsubmit="handleInspectionSubmit(event)">
+                    
+                    <!-- STEP 1: PREFACE -->
+                    <div id="step-1" class="step-container active">
+                        <h2 class="panel-title" style="border: none; margin-bottom: 0.5rem; padding-bottom: 0;">Inspection Preface</h2>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Enter general details and pick your inspection template.</p>
+
+                        <!-- Disclaimer Banner -->
+                        <div class="disclaimer-banner" style="background: #f8fafc; border: 1px solid var(--border-color); border-left: 4px solid #eab308; padding: 1.25rem; border-radius: 6px; margin-bottom: 1.5rem; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; box-shadow: var(--shadow-sm);">
+                            <div style="font-weight: 700; color: #854d0e; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.35rem;">
+                                ⚠️ IMPORTANT DISCLAIMER & NOTICE
+                            </div>
+                            <p style="margin: 0; text-align: justify;">
+                                Fernando Ruiz, Inc. dba Ruiz & Associates DOES NOT assert to have been able to identify 100% of hazards, safety violations and the like during this and previous inspections, particularly with machine guarding and machine “emergency cut off” safety devices.  Our inspection DID NOT focus any attention in the mechanical or electrical condition of any of the equipment referenced in this report; or which may exist at your facilities.  We’ve made a “good faith effort” at identifying the hazards that are visual and most obvious which could cause harm or injury.  Additionally, our recommendations are intended to provide a “common sense” approach to remedying or rectifying any deficiency and are not to be construed as a “guarantee” for compliance; that privilege is left to the inspector of the corresponding regulatory agency.
+                            </p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="clientSelect">Select Client *</label>
+                            <select id="clientSelect" required>
+                                <option value="">Select a client...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="siteLocation">Site / Facility Location *</label>
+                            <input type="text" id="siteLocation" placeholder="e.g. Main Maintenance Bay, Warehouse B" required>
+                        </div>
+
+                        <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div>
+                                <label class="form-label" for="auditDate">Date</label>
+                                <input type="date" id="auditDate" required>
+                            </div>
+                            <div>
+                                <label class="form-label" for="auditTime">Time</label>
+                                <input type="time" id="auditTime" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="inspectorName">Inspector *</label>
+                            <select id="inspectorName" required>
+                                <option value="">Select Staff...</option>
+                                <option value="Fernando Ruiz">Fernando Ruiz</option>
+                                <option value="Jefte Abencerraje">Jefte Abencerraje</option>
+                                <option value="Juan Villareal">Juan Villareal</option>
+                                <option value="David Meza">David Meza</option>
+                                <option value="Josue Mercado">Josue Mercado</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="auditType">Inspection Template *</label>
+                            <select id="auditType" required onchange="handleAuditTypeChange(this.value)">
+                                <option value="Weekly Waste Area">Weekly Waste Area Site Inspection</option>
+                                <option value="General Safety">General Site Safety Inspection</option>
+                            </select>
+                        </div>
+
+                        <!-- Waste Streams Selector (Shown only when type === Weekly Waste Area) -->
+                        <div id="waste-streams-selector" class="form-group">
+                            <label class="form-label">Waste Streams Present *</label>
+                            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Select the container groups to audit:</p>
+                            
+                            <div class="stream-grid" id="streamsGrid">
+                                <!-- Default checked streams -->
+                                <label class="stream-card">
+                                    <input type="checkbox" value="Waste Oil" checked class="stream-checkbox">
+                                    <span>Waste Oil</span>
+                                </label>
+                                <label class="stream-card">
+                                    <input type="checkbox" value="Metal Oil Filters" checked class="stream-checkbox">
+                                    <span>Metal Oil Filters</span>
+                                </label>
+                                <label class="stream-card">
+                                    <input type="checkbox" value="Paper Oil Filters" checked class="stream-checkbox">
+                                    <span>Paper Oil Filters</span>
+                                </label>
+                                <label class="stream-card">
+                                    <input type="checkbox" value="Waste Antifreeze" checked class="stream-checkbox">
+                                    <span>Waste Antifreeze</span>
+                                </label>
+                                <label class="stream-card">
+                                    <input type="checkbox" value="Oily Debris" checked class="stream-checkbox">
+                                    <span>Oily Debris</span>
+                                </label>
+                                <label class="stream-card">
+                                    <input type="checkbox" value="Oily Dirt" checked class="stream-checkbox">
+                                    <span>Oily Dirt</span>
+                                </label>
+                                <label class="stream-card">
+                                    <input type="checkbox" value="Aerosols" class="stream-checkbox">
+                                    <span>Aerosols</span>
+                                </label>
+                                <label class="stream-card">
+                                    <input type="checkbox" value="Universal Waste" class="stream-checkbox">
+                                    <span>Universal Waste</span>
+                                </label>
+                            </div>
+
+                            <!-- Add Custom Stream Input -->
+                            <div class="custom-stream-box">
+                                <input type="text" id="customStreamInput" placeholder="Add custom stream (e.g. Paint Waste)..." style="flex: 1;">
+                                <button type="button" class="btn-primary" style="padding: 0 1rem; font-size: 0.85rem; background: #64748b; width: auto;" onclick="addCustomStream()">+ Add</button>
+                            </div>
+                        </div>
+
+                        <!-- General Safety Reason Selector (Shown only when type === General Safety) -->
+                        <div id="general-safety-selector" class="form-group" style="display: none;">
+                            <label class="form-label">Inspection Frequency / Reason *</label>
+                            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Select the frequency or reason for this safety visit:</p>
+                            
+                            <div class="stream-grid" id="safetyReasonsGrid">
+                                <label class="stream-card">
+                                    <input type="radio" name="safetyReason" value="Monthly" checked class="reason-radio">
+                                    <span>Monthly</span>
+                                </label>
+                                <label class="stream-card">
+                                    <input type="radio" name="safetyReason" value="Quarterly" class="reason-radio">
+                                    <span>Quarterly</span>
+                                </label>
+                                <label class="stream-card">
+                                    <input type="radio" name="safetyReason" value="Yearly" class="reason-radio">
+                                    <span>Yearly</span>
+                                </label>
+                            </div>
+
+                            <!-- Add Custom Reason Input -->
+                            <div class="custom-stream-box">
+                                <input type="text" id="customReasonInput" placeholder="Add custom reason (e.g. Ad Hoc Audit)..." style="flex: 1;">
+                                <button type="button" class="btn-primary" style="padding: 0 1rem; font-size: 0.85rem; background: #64748b; width: auto;" onclick="addCustomReason()">+ Add</button>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn-primary" style="background-color: var(--accent-blue); width: auto; min-width: 220px; display: block; margin: 1.5rem auto 0 auto;" onclick="goToStep2()">
+                            Begin Inspection &rarr;
+                        </button>
+                    </div>
+
+                    <!-- STEP 2: AUDIT CHECKLIST CONTENT -->
+                    <div id="step-2" class="step-container">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <button type="button" class="btn-primary" style="background: #64748b; padding: 0.4rem 0.8rem; font-size: 0.85rem; width: auto;" onclick="backToStep1()">
+                                &larr; Edit Preface
+                            </button>
+                            <h2 class="panel-title" style="border: none; margin: 0; padding: 0;">Audit Details</h2>
+                        </div>
+
+                        <div id="audit-cards-container">
+                            <!-- Dynamic Content Populated by generateInspectionFields() -->
+                        </div>
+
+                        <button type="submit" class="btn-primary" style="background-color: var(--accent-blue); width: auto; min-width: 250px; display: block; margin: 1.5rem auto 0 auto;">
+                            Submit Inspection Report
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer class="portal-footer">
+        &copy; 2026 Ruiz & Associates Safety Department. Staff Site Inspection App.
+    </footer>
+
+    <!-- Image Markup Editor Modal Overlay -->
+    <div id="markupModal" class="markup-modal-overlay">
+        <div class="markup-modal-container">
+            <div class="markup-modal-header">
+                <h3 class="markup-modal-title">
+                    <span>🖌️ Annotate Picture</span>
+                </h3>
+                <span style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 500;">Draw red arrows or circles to highlight details</span>
+            </div>
+            
+            <div class="markup-modal-body">
+                <div class="markup-canvas-wrapper">
+                    <canvas id="markupCanvas"></canvas>
+                </div>
+            </div>
+            
+            <div class="markup-modal-footer">
+                <div class="markup-tools-group">
+                    <button type="button" id="tool-arrow" class="markup-tool-btn active" onclick="setMarkupTool('arrow')">
+                        <span>↗️</span> Arrow
+                    </button>
+                    <button type="button" id="tool-circle" class="markup-tool-btn" onclick="setMarkupTool('circle')">
+                        <span>⭕</span> Circle
+                    </button>
+                    <button type="button" class="markup-tool-btn btn-action-red" onclick="undoMarkup()" title="Undo last draw stroke">
+                        <span>⎌</span> Undo
+                    </button>
+                </div>
+                
+                <div style="display: flex; gap: 0.75rem;">
+                    <button type="button" class="btn-primary" style="background: #64748b; padding: 0.5rem 1.25rem; font-size: 0.85rem;" onclick="closeMarkupModal()">Cancel</button>
+                    <button type="button" class="btn-primary" style="background: var(--accent-blue); padding: 0.5rem 1.25rem; font-size: 0.85rem;" onclick="applyMarkup()">Save & Apply</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gemini Settings Modal Overlay -->
+    <div id="geminiSettingsModal" class="markup-modal-overlay">
+        <div class="markup-modal-container" style="max-width: 450px;">
+            <div class="markup-modal-header">
+                <h3 class="markup-modal-title">
+                    <span>✨ Gemini AI Settings</span>
+                </h3>
+            </div>
+            <div class="markup-modal-body" style="background: #ffffff; min-height: auto; flex-direction: column; align-items: stretch; padding: 1.5rem; gap: 1rem;">
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0; line-height: 1.5;">
+                    Enter your Gemini Developer API Key to enable automated image inspection. The key is stored locally in your browser's local storage by default.
+                </p>
+                <div class="form-group" style="margin: 0;">
+                    <label class="form-label" for="gemini-key-input">Gemini API Key</label>
+                    <div style="position: relative; display: flex; align-items: center;">
+                        <input type="password" id="gemini-key-input" class="input-field" placeholder="AIzaSy..." style="padding-right: 3rem; width: 100%;">
+                        <button type="button" onclick="toggleKeyVisibility()" style="position: absolute; right: 0.5rem; background: transparent; border: none; font-size: 1rem; cursor: pointer; color: var(--text-secondary);">👁️</button>
+                    </div>
+                    <div id="gemini-cloud-status" style="font-size: 0.75rem; color: #64748b; margin-top: 0.5rem; display: flex; align-items: center; gap: 0.25rem;">
+                        Checking shared cloud key...
+                    </div>
+                    <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; margin-top: 0.75rem; color: var(--text-primary); cursor: pointer; user-select: none;">
+                        <input type="checkbox" id="gemini-cloud-sync" style="cursor: pointer; width: 1rem; height: 1rem;">
+                        <span>Save / Sync to Cloud (Shared with all inspectors)</span>
+                    </label>
+                </div>
+            </div>
+            <div class="markup-modal-footer" style="justify-content: flex-end; gap: 0.75rem; border-top: 1px solid var(--border-color); background: #f8fafc; padding: 1rem 1.5rem;">
+                <button type="button" class="btn-primary" style="background: #64748b; padding: 0.5rem 1.25rem; font-size: 0.85rem;" onclick="closeGeminiSettings()">Cancel</button>
+                <button type="button" class="btn-primary" style="background: #8b5cf6; padding: 0.5rem 1.25rem; font-size: 0.85rem;" onclick="saveGeminiSettings()">Save & Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Start Auth Guard (depth 1)
+        initAuthGuard(1);
+
+        let sharedGeminiApiKey = '';
+
+        // Gemini Settings Modal Operations
+        window.openGeminiSettings = function() {
+            const storedKey = localStorage.getItem('gemini_api_key') || '';
+            const statusEl = document.getElementById('gemini-cloud-status');
+            const syncCheckbox = document.getElementById('gemini-cloud-sync');
+            const inputEl = document.getElementById('gemini-key-input');
+            
+            inputEl.value = storedKey;
+            
+            if (sharedGeminiApiKey) {
+                statusEl.innerHTML = '🟢 Shared Cloud Key is configured.';
+                if (!storedKey) {
+                    inputEl.placeholder = 'Using shared Cloud key...';
+                } else {
+                    inputEl.placeholder = 'AIzaSy...';
+                }
+            } else {
+                statusEl.innerHTML = '⚪ No Shared Cloud Key configured.';
+                inputEl.placeholder = 'AIzaSy...';
+            }
+            
+            syncCheckbox.checked = false;
+            document.getElementById('geminiSettingsModal').style.display = 'flex';
+        };
+
+        window.closeGeminiSettings = function() {
+            document.getElementById('geminiSettingsModal').style.display = 'none';
+        };
+
+        window.saveGeminiSettings = async function() {
+            const keyVal = document.getElementById('gemini-key-input').value.trim();
+            const syncCheckbox = document.getElementById('gemini-cloud-sync');
+            
+            if (keyVal) {
+                localStorage.setItem('gemini_api_key', keyVal);
+            } else {
+                localStorage.removeItem('gemini_api_key');
+            }
+            
+            if (syncCheckbox.checked) {
+                try {
+                    const user = auth.currentUser;
+                    const userEmail = user ? user.email : 'unknown';
+                    if (keyVal) {
+                        await db.collection("config").doc("gemini").set({
+                            apiKey: keyVal,
+                            updatedBy: userEmail,
+                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                        sharedGeminiApiKey = keyVal;
+                        alert("Gemini API Key saved locally and synced to Cloud!");
+                    } else {
+                        await db.collection("config").doc("gemini").delete();
+                        sharedGeminiApiKey = '';
+                        alert("Gemini API Key cleared locally and deleted from Cloud!");
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert("Error syncing to Cloud: " + err.message + "\nKey saved locally only.");
+                }
+            } else {
+                alert("Gemini AI API Key saved locally.");
+            }
+            
+            window.closeGeminiSettings();
+        };
+
+        window.toggleKeyVisibility = function() {
+            const input = document.getElementById('gemini-key-input');
+            if (input.type === 'password') {
+                input.type = 'text';
+            } else {
+                input.type = 'password';
+            }
+        };
+
+        let isOffline = false;
+        let clientsList = [];
+        let allInspections = [];
+        
+        // Checklist template definition
+        const checklistQuestions = [
+            { text: "Are there any unknown/unlabeled hazardous waste containers?", violateOn: "Yes" },
+            { text: "Are the HW drums corroded, bulging, dented or deteriorated in any way?", violateOn: "Yes" },
+            { text: "Are there any open/unlocked HW drums?", violateOn: "Yes" },
+            { text: "Are there any leaking or overfilled HW drums?", violateOn: "Yes" },
+            { text: "Is there any staining or spillage in area near HW drums?", violateOn: "Yes" },
+            { text: "Are HW drums missing information on labels? (Such as the word 'Hazardous Waste', chemical composition, generator name & address, EPA ID#, Hazardous Properties, EPA Waste Code)", violateOn: "Yes" },
+            { text: "Are HW drums compatible with contents?", violateOn: "No" },
+            { text: "Are HW drums stored in rows with less than 30\" of aisle space?", violateOn: "Yes" },
+            { text: "Are flammable/reactive HW drums stored less than 50 feet from property line?", violateOn: "Yes" },
+            { text: "Are HW drums packaged in DOT approved containers?", violateOn: "No" },
+            { text: "Are empty drums > 5 gal. labeled with date emptied?", violateOn: "No" },
+            { text: "Are HW drums stored more than 180 days?", violateOn: "Yes" },
+            { text: "Are drums of recyclable materials labeled 'Excluded Recyclable Materials' and with all other labeling information?", violateOn: "No" },
+            { text: "Was leaking or deteriorated HW drum transferred into an over pack drum?", violateOn: "No" }
+        ];
+
+        // Audit Form State object
+        let auditState = {
+            streams: {} // Maps streamName -> { questions: { qIndex -> { answer: "N/A", note: "", photo: null } }, generalNotes: "" }
+        };
+        
+        // Common OSHA regulations for site inspections helper (Cal/OSHA primary where available)
+        const commonRegulations = {
+            "Fire Extinguishers": [
+                {
+                    label: "Not Inspected Monthly",
+                    short: "8 CCR 6151(e)(2)",
+                    text: "8 CCR 6151(e)(2): Portable fire extinguishers or hose shall be visually inspected monthly."
+                },
+                {
+                    label: "Obstructed / Not Accessible",
+                    short: "8 CCR 6151(c)(1)",
+                    text: "8 CCR 6151(c)(1): Portable fire extinguishers shall be mounted, located, and identified so that they are readily accessible to employees without subjecting them to injury."
+                }
+            ],
+            "Electrical Safety": [
+                {
+                    label: "Extension Cords as Permanent Wiring",
+                    short: "8 CCR 2500.8(a)",
+                    text: "8 CCR 2500.8(a): Flexible cords and cables shall not be used as a substitute for the fixed wiring of a structure."
+                },
+                {
+                    label: "Damaged Outer Jacket / Exposed Wires",
+                    short: "8 CCR 2500.9",
+                    text: "8 CCR 2500.9: Flexible cords shall be used only in continuous lengths without splice or tap. Damaged outer jacket or exposed conductors."
+                },
+                {
+                    label: "Blocked Electrical Panels (36\" clearance)",
+                    short: "8 CCR 2340.16(a)",
+                    text: "8 CCR 2340.16(a): Sufficient access and working space shall be provided and maintained about all electric equipment to permit ready and safe operation and maintenance. Clear workspace of 36 inches required."
+                }
+            ],
+            "Housekeeping & Walkways": [
+                {
+                    label: "Tripping Hazards / Cluttered Walkways",
+                    short: "8 CCR 3273(a)",
+                    text: "8 CCR 3273(a): Permanent floors and platforms shall be kept in good repair, free of dangerous obstructions, and maintained in a safe condition."
+                }
+            ],
+            "Exit Routes / Emergency Exits": [
+                {
+                    label: "Obstructed Exit Routes",
+                    short: "8 CCR 3225(a)",
+                    text: "8 CCR 3225(a): Every required exit shall be maintained free of all obstructions or impediments to full instant use in the case of fire or other emergency."
+                },
+                {
+                    label: "Missing / Unmarked Exit Signs",
+                    short: "8 CCR 3216(a)",
+                    text: "8 CCR 3216(a): Exit signs shall be provided at all exits and where the path to an exit is not immediately visible."
+                }
+            ],
+            "Machine Guarding": [
+                {
+                    label: "Missing Point of Operation / Rotating Parts Guards",
+                    short: "8 CCR 4002(a)",
+                    text: "8 CCR 4002(a): Hazardous revolving, reciprocating, running, shearing, punching, pressing, squeezing, drawing, cutting, rolling, mixing or similar action, including pinch points and shear points, shall be guarded."
+                }
+            ],
+            "Eye Wash Stations": [
+                {
+                    label: "Obstructed / Unmaintained Eyewash",
+                    short: "8 CCR 5162(a)",
+                    text: "8 CCR 5162(a): Plumbed or self-contained eyewash equipment shall be provided at all locations where eyes of an employee may be exposed to injurious corrosive materials."
+                }
+            ],
+            "Hazard Communication": [
+                {
+                    label: "Missing SDS Sheets",
+                    short: "8 CCR 5194(g)(8)",
+                    text: "8 CCR 5194(g)(8): The employer shall maintain in the workplace copies of the required safety data sheets for each hazardous chemical, and shall ensure that they are readily accessible during each work shift to employees when they are in their work area(s)."
+                },
+                {
+                    label: "Unlabeled Chemical Containers",
+                    short: "8 CCR 5194(f)(6)",
+                    text: "8 CCR 5194(f)(6): The employer shall ensure that each container of hazardous chemicals in the workplace is labeled, tagged or marked with either the product identifier and words, pictures, symbols, or combination thereof."
+                }
+            ]
+        };
+
+        // General Safety observations state array
+        let safetyObservations = [
+            { id: 1, notes: "", citations: "", selectedCitations: [], photos: [] }
+        ];
+        let observationCounter = 1;
+
+        // Image Markup Editor State & Canvas Drawing Engine
+        var markupState = {
+            canvas: null,
+            ctx: null,
+            baseImage: null,
+            drawingMode: 'arrow',
+            isDrawing: false,
+            startX: 0,
+            startY: 0,
+            history: [],
+            lastImageData: null,
+            saveCallback: null
+        };
+
+        window.openMarkupEditor = function(fileOrDataUrl, saveCallback) {
+            if (!fileOrDataUrl) return;
+            const img = new Image();
+            img.onload = function() {
+                initMarkupCanvas(img, saveCallback);
+            };
+
+            if (typeof fileOrDataUrl === 'string' && fileOrDataUrl.startsWith('data:')) {
+                img.src = fileOrDataUrl;
+            } else {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(fileOrDataUrl);
+            }
+        };
+
+        function initMarkupCanvas(img, saveCallback) {
+            const canvas = document.getElementById('markupCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            let width = img.width;
+            let height = img.height;
+            const max_size = 1024;
+            
+            if (width > height) {
+                if (width > max_size) {
+                    height *= max_size / width;
+                    width = max_size;
+                }
+            } else {
+                if (height > max_size) {
+                    width *= max_size / height;
+                    height = max_size;
+                }
+            }
+            
+            canvas.width = width;
+            canvas.height = height;
+            
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            markupState = {
+                canvas: canvas,
+                ctx: ctx,
+                baseImage: img,
+                drawingMode: 'arrow',
+                isDrawing: false,
+                startX: 0,
+                startY: 0,
+                history: [canvas.toDataURL('image/jpeg', 1.0)],
+                lastImageData: null,
+                saveCallback: saveCallback
+            };
+            
+            setMarkupTool('arrow');
+            document.getElementById('markupModal').style.display = 'flex';
+            setupCanvasListeners();
+        }
+
+        function setupCanvasListeners() {
+            const canvas = markupState.canvas;
+            if (!canvas) return;
+            
+            canvas.onmousedown = onDrawStart;
+            canvas.onmousemove = onDrawMove;
+            canvas.onmouseup = onDrawEnd;
+            canvas.onmouseleave = onDrawEnd;
+            
+            canvas.ontouchstart = onDrawStart;
+            canvas.ontouchmove = onDrawMove;
+            canvas.ontouchend = onDrawEnd;
+            canvas.ontouchcancel = onDrawEnd;
+        }
+
+        function getCanvasCoords(event) {
+            const rect = markupState.canvas.getBoundingClientRect();
+            const scaleX = markupState.canvas.width / rect.width;
+            const scaleY = markupState.canvas.height / rect.height;
+            
+            let clientX, clientY;
+            if (event.touches && event.touches.length > 0) {
+                clientX = event.touches[0].clientX;
+                clientY = event.touches[0].clientY;
+            } else if (event.changedTouches && event.changedTouches.length > 0) {
+                clientX = event.changedTouches[0].clientX;
+                clientY = event.changedTouches[0].clientY;
+            } else {
+                clientX = event.clientX;
+                clientY = event.clientY;
+            }
+            
+            return {
+                x: (clientX - rect.left) * scaleX,
+                y: (clientY - rect.top) * scaleY
+            };
+        }
+
+        function onDrawStart(e) {
+            e.preventDefault();
+            const coords = getCanvasCoords(e);
+            markupState.isDrawing = true;
+            markupState.startX = coords.x;
+            markupState.startY = coords.y;
+            
+            const canvas = markupState.canvas;
+            const ctx = markupState.ctx;
+            markupState.lastImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        }
+        
+        function onDrawMove(e) {
+            if (!markupState.isDrawing) return;
+            e.preventDefault();
+            const coords = getCanvasCoords(e);
+            
+            const ctx = markupState.ctx;
+            ctx.putImageData(markupState.lastImageData, 0, 0);
+            
+            ctx.strokeStyle = '#ef4444';
+            ctx.fillStyle = '#ef4444';
+            ctx.lineWidth = 5;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            
+            if (markupState.drawingMode === 'arrow') {
+                drawArrowPreview(ctx, markupState.startX, markupState.startY, coords.x, coords.y);
+            } else if (markupState.drawingMode === 'circle') {
+                drawCirclePreview(ctx, markupState.startX, markupState.startY, coords.x, coords.y);
+            }
+        }
+        
+        function onDrawEnd(e) {
+            if (!markupState.isDrawing) return;
+            markupState.isDrawing = false;
+            
+            const canvas = markupState.canvas;
+            markupState.history.push(canvas.toDataURL('image/jpeg', 0.9));
+        }
+
+        function drawArrowPreview(ctx, fromx, fromy, tox, toy) {
+            const headlen = 20;
+            const dx = tox - fromx;
+            const dy = toy - fromy;
+            const angle = Math.atan2(dy, dx);
+            
+            ctx.beginPath();
+            ctx.moveTo(fromx, fromy);
+            ctx.lineTo(tox, toy);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(tox, toy);
+            ctx.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
+            ctx.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
+            ctx.closePath();
+            ctx.fill();
+        }
+        
+        function drawCirclePreview(ctx, x1, y1, x2, y2) {
+            const radius = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+            ctx.beginPath();
+            ctx.arc(x1, y1, radius, 0, 2 * Math.PI);
+            ctx.stroke();
+        }
+
+        window.setMarkupTool = function(tool) {
+            markupState.drawingMode = tool;
+            document.getElementById('tool-arrow').classList.remove('active');
+            document.getElementById('tool-circle').classList.remove('active');
+            
+            if (tool === 'arrow') {
+                document.getElementById('tool-arrow').classList.add('active');
+            } else if (tool === 'circle') {
+                document.getElementById('tool-circle').classList.add('active');
+            }
+        };
+
+        window.undoMarkup = function() {
+            if (markupState.history.length <= 1) {
+                alert("Nothing left to undo.");
+                return;
+            }
+            markupState.history.pop();
+            const prevStateDataUrl = markupState.history[markupState.history.length - 1];
+            
+            const img = new Image();
+            img.onload = function() {
+                markupState.ctx.clearRect(0, 0, markupState.canvas.width, markupState.canvas.height);
+                markupState.ctx.drawImage(img, 0, 0);
+            };
+            img.src = prevStateDataUrl;
+        };
+
+        window.closeMarkupModal = function() {
+            document.getElementById('markupModal').style.display = 'none';
+        };
+
+        window.applyMarkup = function() {
+            const canvas = markupState.canvas;
+            const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+            if (markupState.saveCallback) {
+                markupState.saveCallback(compressedDataUrl);
+            }
+            closeMarkupModal();
+        };
+
+        // Switch Views Helper
+        window.switchToView = function(viewId) {
+            document.querySelectorAll('.view-container').forEach(view => {
+                view.classList.remove('active');
+                view.style.display = 'none';
+            });
+            const activeView = document.getElementById(`view-${viewId}`);
+            if (activeView) {
+                activeView.classList.add('active');
+                activeView.style.display = 'block';
+            }
+            
+            // If opening history, re-render log to ensure sync indicators are fresh
+            if (viewId === 'history') {
+                renderInspectionsLog();
+            }
+        };
+
+        // Cancel Inspection Confirmation
+        window.cancelInspection = function() {
+            const client = document.getElementById('clientSelect').value;
+            const site = document.getElementById('siteLocation').value.trim();
+            const step2Active = document.getElementById('step-2').classList.contains('active');
+            
+            // Prompt if user has typed anything or is in step 2
+            const hasPhotos = safetyObservations[0].photos && safetyObservations[0].photos.length > 0;
+            if (client || site || step2Active || safetyObservations.length > 1 || safetyObservations[0].notes || hasPhotos) {
+                if (!confirm("Are you sure you want to cancel this inspection? Any unsaved progress will be lost.")) {
+                    return;
+                }
+            }
+            resetForm();
+            backToStep1();
+            switchToView('landing');
+        };
+
+        // Auto-fill Dates & Inspector Name
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date();
+            document.getElementById('auditDate').value = today.toISOString().substring(0, 10);
+            
+            const timeStr = today.toTimeString().substring(0, 5);
+            document.getElementById('auditTime').value = timeStr;
+
+            // Wait for user details to load from auth state
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    const email = user.email.toLowerCase();
+                    const select = document.getElementById('inspectorName');
+                    
+                    if (email.includes('fernando') || email.includes('ruiz')) {
+                        select.value = 'Fernando Ruiz';
+                    } else if (email.includes('jefte') || email.includes('abencerraje')) {
+                        select.value = 'Jefte Abencerraje';
+                    } else if (email.includes('juan') || email.includes('villareal')) {
+                        select.value = 'Juan Villareal';
+                    } else if (email.includes('david') || email.includes('meza')) {
+                        select.value = 'David Meza';
+                    } else if (email.includes('josue') || email.includes('mercado')) {
+                        select.value = 'Josue Mercado';
+                    }
+
+                    // Asynchronously fetch shared Gemini API Key from Firestore config
+                    db.collection("config").doc("gemini").get().then((doc) => {
+                        if (doc.exists) {
+                            sharedGeminiApiKey = doc.data().apiKey || '';
+                        }
+                    }).catch((err) => {
+                        console.warn("Could not fetch shared API key from Firestore:", err);
+                    });
+                }
+            });
+        });
+
+        // Dynamic client dropdown populator from Firebase Firestore
+        db.collection("clients").onSnapshot((snapshot) => {
+            clientsList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            clientsList.sort((a,b) => (a.companyName || "").localeCompare(b.companyName || ""));
+
+            const clientSelect = document.getElementById('clientSelect');
+            clientSelect.innerHTML = '<option value="">Select a client...</option>';
+            clientsList.forEach(client => {
+                const opt = document.createElement('option');
+                opt.value = client.companyName;
+                opt.textContent = client.companyName;
+                clientSelect.appendChild(opt);
+            });
+        });
+
+        // Dynamic inspections listener from Firestore
+        db.collection("inspections").orderBy("timestamp", "desc").limit(30).onSnapshot((snapshot) => {
+            allInspections = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            renderInspectionsLog();
+        });
+
+        // Add Custom Waste Stream
+        function addCustomStream() {
+            const input = document.getElementById('customStreamInput');
+            const val = input.value.trim();
+            if (!val) return;
+
+            // Check if already exists
+            const existing = Array.from(document.querySelectorAll('.stream-checkbox')).map(c => c.value.toLowerCase());
+            if (existing.includes(val.toLowerCase())) {
+                alert("Waste stream already exists.");
+                return;
+            }
+
+            const grid = document.getElementById('streamsGrid');
+            const label = document.createElement('label');
+            label.className = 'stream-card';
+            label.innerHTML = `
+                <input type="checkbox" value="${val}" checked class="stream-checkbox">
+                <span>${val}</span>
+            `;
+            grid.appendChild(label);
+            input.value = '';
+        }
+
+        // Add Custom Safety Reason
+        function addCustomReason() {
+            const input = document.getElementById('customReasonInput');
+            const val = input.value.trim();
+            if (!val) return;
+
+            // Check if already exists
+            const existing = Array.from(document.querySelectorAll('.reason-radio')).map(r => r.value.toLowerCase());
+            if (existing.includes(val.toLowerCase())) {
+                alert("Reason already exists.");
+                return;
+            }
+
+            const grid = document.getElementById('safetyReasonsGrid');
+            const label = document.createElement('label');
+            label.className = 'stream-card';
+            label.innerHTML = `
+                <input type="radio" name="safetyReason" value="${val}" checked class="reason-radio">
+                <span>${val}</span>
+            `;
+            grid.appendChild(label);
+            input.value = '';
+        }
+
+        // Toggle Preface Waste Stream checklist block on template type switch
+        function handleAuditTypeChange(type) {
+            const streamPanel = document.getElementById('waste-streams-selector');
+            const safetyPanel = document.getElementById('general-safety-selector');
+            if (type === 'Weekly Waste Area') {
+                streamPanel.style.display = 'block';
+                safetyPanel.style.display = 'none';
+            } else {
+                streamPanel.style.display = 'none';
+                safetyPanel.style.display = 'block';
+            }
+        }
+
+        // Navigate to Step 2
+        function goToStep2() {
+            const client = document.getElementById('clientSelect').value;
+            const site = document.getElementById('siteLocation').value.trim();
+            const date = document.getElementById('auditDate').value;
+            const time = document.getElementById('auditTime').value;
+
+            if (!client || !site || !date || !time) {
+                alert("Please fill in all general preface details first.");
+                return;
+            }
+
+            const type = document.getElementById('auditType').value;
+            if (type === 'Weekly Waste Area') {
+                const checkedCount = document.querySelectorAll('.stream-checkbox:checked').length;
+                if (checkedCount === 0) {
+                    alert("Please select at least one Waste Stream to audit.");
+                    return;
+                }
+            } else {
+                const checkedRadio = document.querySelector('.reason-radio:checked');
+                if (!checkedRadio) {
+                    alert("Please select a Frequency / Reason for visit.");
+                    return;
+                }
+            }
+
+            // Move indicator status
+            document.getElementById('wiz-step-1').className = '';
+            document.getElementById('wiz-step-2').className = 'active';
+
+            document.getElementById('step-1').classList.remove('active');
+            document.getElementById('step-2').classList.add('active');
+
+            generateInspectionFields();
+        }
+
+        // Go Back to Step 1
+        function backToStep1() {
+            document.getElementById('wiz-step-1').className = 'active';
+            document.getElementById('wiz-step-2').className = '';
+
+            document.getElementById('step-2').classList.remove('active');
+            document.getElementById('step-1').classList.add('active');
+        }
+
+        // Generate Step 2 Form dynamically based on Selected Template
+        function generateInspectionFields() {
+            const container = document.getElementById('audit-cards-container');
+            container.innerHTML = '';
+            const type = document.getElementById('auditType').value;
+
+            if (type === 'Weekly Waste Area') {
+                const checkedStreams = Array.from(document.querySelectorAll('.stream-checkbox:checked')).map(cb => cb.value);
+                
+                checkedStreams.forEach((stream, sIdx) => {
+                    // Initialize stream state if not present
+                    if (!auditState.streams[stream]) {
+                        auditState.streams[stream] = {
+                            questions: {},
+                            generalNotes: ""
+                        };
+                        // Default all answers to 'N/A'
+                        checklistQuestions.forEach((q, qIdx) => {
+                            auditState.streams[stream].questions[qIdx] = {
+                                answer: "N/A",
+                                note: "",
+                                photo: null
+                            };
+                        });
+                    }
+
+                    const card = document.createElement('div');
+                    card.className = 'audit-card';
+                    
+                    let cardHtml = `
+                        <div class="audit-card-title">
+                            <span>📦 Stream: ${stream}</span>
+                        </div>
+                        <div class="question-list">
+                    `;
+
+                    checklistQuestions.forEach((q, qIdx) => {
+                        const qState = auditState.streams[stream].questions[qIdx];
+                        const rowClass = (q.violateOn === qState.answer) ? 'question-row violation' : 'question-row';
+                        
+                        // Check selected states
+                        const selNA = qState.answer === 'N/A' ? 'class="selected-na"' : '';
+                        const selYes = qState.answer === 'Yes' ? (q.violateOn === 'Yes' ? 'class="selected-violation"' : 'class="selected-compliant"') : '';
+                        const selNo = qState.answer === 'No' ? (q.violateOn === 'No' ? 'class="selected-violation"' : 'class="selected-compliant"') : '';
+
+                        // Check notes/photo indicator classes
+                        const notesBtnClass = qState.note ? 'btn-trigger active-notes' : 'btn-trigger';
+                        const photoBtnClass = qState.photo ? 'btn-trigger active-photo' : 'btn-trigger';
+
+                        cardHtml += `
+                            <div class="${rowClass}" id="row-${sIdx}-${qIdx}">
+                                <div class="question-header-row">
+                                    <div class="question-text">
+                                        <strong>${qIdx + 1}.</strong> ${q.text}
+                                    </div>
+                                    <div class="btn-group">
+                                        <button type="button" ${selYes} onclick="setAnswer(${sIdx}, '${stream}', ${qIdx}, 'Yes')">Yes</button>
+                                        <button type="button" ${selNo} onclick="setAnswer(${sIdx}, '${stream}', ${qIdx}, 'No')">No</button>
+                                        <button type="button" ${selNA} onclick="setAnswer(${sIdx}, '${stream}', ${qIdx}, 'N/A')">N/A</button>
+                                    </div>
+                                    <div class="drawer-triggers">
+                                        <button type="button" id="trigger-notes-${sIdx}-${qIdx}" class="${notesBtnClass}" onclick="toggleDrawer(${sIdx}, ${qIdx}, 'notes')" title="Add note">📝</button>
+                                        <button type="button" id="trigger-photo-${sIdx}-${qIdx}" class="${photoBtnClass}" onclick="toggleDrawer(${sIdx}, ${qIdx}, 'photo')" title="Attach photo">📷</button>
+                                    </div>
+                                </div>
+
+                                <!-- Collapsible Drawer -->
+                                <div class="question-drawer" id="drawer-${sIdx}-${qIdx}">
+                                    <div id="drawer-notes-box-${sIdx}-${qIdx}" style="display: none;">
+                                        <label class="form-label" style="font-size: 0.8rem;">Item Notes:</label>
+                                        <input type="text" id="note-input-${sIdx}-${qIdx}" value="${qState.note}" oninput="updateItemNote('${stream}', ${qIdx}, this.value)" placeholder="Enter explanation/corrective actions...">
+                                    </div>
+                                    <div id="drawer-photo-box-${sIdx}-${qIdx}" style="display: none;">
+                                        <label class="form-label" style="font-size: 0.8rem;">Attach Picture:</label>
+                                        <input type="file" id="item-photo-input-${sIdx}-${qIdx}" accept="image/*" onchange="compressItemPhoto(event, '${stream}', ${qIdx}, ${sIdx})">
+                                        <div id="compression-stats-${sIdx}-${qIdx}" style="font-size: 0.75rem; color: var(--success-color); margin-top: 0.25rem; font-weight: 700;"></div>
+                                        
+                                        <div id="item-preview-container-${sIdx}-${qIdx}" style="${qState.photo ? 'display: flex;' : 'display: none;'} margin-top: 0.5rem; align-items: center; gap: 1rem; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 6px; padding: 0.5rem;">
+                                            <img id="img-preview-${sIdx}-${qIdx}" class="drawer-photo-preview" src="${qState.photo || ''}" style="max-width: 150px; max-height: 100px; object-fit: cover; border-radius: 4px; border: 1px solid var(--border-color); margin: 0;">
+                                            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                                <button type="button" class="btn-primary" style="background: var(--accent-blue); padding: 0.25rem 0.75rem; font-size: 0.75rem; width: fit-content;" onclick="reeditItemPhoto('${stream}', ${qIdx}, ${sIdx})">✏️ Re-edit</button>
+                                                <button type="button" class="btn-pdf" style="border-color: #ef4444; color: #ef4444; background: #fef2f2; padding: 0.25rem 0.75rem; font-size: 0.75rem; width: fit-content;" onclick="deleteItemPhoto('${stream}', ${qIdx}, ${sIdx})">🗑️ Delete</button>
+                                                <button type="button" id="gemini-btn-${sIdx}-${qIdx}" class="btn-primary" style="background: #8b5cf6; border: none; color: white; padding: 0.25rem 0.75rem; font-size: 0.75rem; width: fit-content; display: inline-flex; align-items: center; gap: 0.25rem;" onclick="analyzeItemWithGemini('${stream}', ${qIdx}, ${sIdx})">✨ Ask Gemini</button>
+                                            </div>
+                                        </div>
+                                        <div id="gemini-result-${sIdx}-${qIdx}" style="display: none; margin-top: 0.5rem; padding: 0.75rem; background: #f5f3ff; border: 1px solid #c084fc; border-radius: 6px; font-size: 0.8rem; color: #5b21b6; flex-direction: column; gap: 0.5rem; width: 100%; box-sizing: border-box;">
+                                            <div style="font-weight: 700; display: flex; justify-content: space-between; align-items: center;">
+                                                <span style="display: inline-flex; align-items: center; gap: 0.25rem;">🤖 Gemini Observation:</span>
+                                                <button type="button" class="btn-primary" style="background: #7c3aed; font-size: 0.7rem; padding: 0.2rem 0.5rem; width: fit-content;" onclick="acceptGeminiNote('${stream}', ${qIdx}, ${sIdx})">Append to Notes</button>
+                                            </div>
+                                            <div id="gemini-text-${sIdx}-${qIdx}" style="white-space: pre-wrap; line-height: 1.4; color: #4c1d95;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    cardHtml += `
+                        </div>
+                        <div class="form-group" style="margin-top: 1.5rem;">
+                            <label class="form-label">15. General Stream Notes / Audit Summary</label>
+                            <textarea rows="2" placeholder="Summary details for ${stream}..." oninput="updateStreamSummary('${stream}', this.value)">${auditState.streams[stream].generalNotes || ''}</textarea>
+                        </div>
+                    `;
+
+                    card.innerHTML = cardHtml;
+                    container.appendChild(card);
+                });
+
+            } else {
+                // GENERAL SAFETY VIEW
+                safetyObservations.forEach((obs, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'audit-card';
+                    card.id = `obs-card-${obs.id}`;
+                    
+                    const checkedRadio = document.querySelector('.reason-radio:checked');
+                    const reason = checkedRadio ? checkedRadio.value : 'General';
+
+                    // Ensure photos array exists
+                    if (!obs.photos) {
+                        obs.photos = obs.photo ? [obs.photo] : [];
+                    }
+
+                    // Render preview list
+                    let photosHtml = '';
+                    obs.photos.forEach((photoData, pIdx) => {
+                        photosHtml += `
+                            <div class="obs-photo-preview-item" style="display: flex; flex-direction: column; gap: 0.75rem; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 6px; padding: 0.75rem; min-width: 280px; max-width: calc(50% - 0.5rem); box-sizing: border-box; flex: 1 1 280px;">
+                                <div style="display: flex; align-items: center; gap: 1rem; width: 100%;">
+                                    <img src="${photoData}" alt="Preview" style="width: 100px; height: 75px; object-fit: cover; border-radius: 4px; border: 1px solid var(--border-color);">
+                                    <div style="display: flex; flex-direction: column; gap: 0.35rem; flex: 1;">
+                                        <span style="color: var(--success-color); font-weight: 700; font-size: 0.8rem;">Photo #${pIdx + 1} Attached</span>
+                                        <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+                                            <button type="button" class="btn-primary" style="background: var(--accent-blue); padding: 0.2rem 0.5rem; font-size: 0.7rem; border-radius: 4px;" onclick="reeditObservationPhoto(${obs.id}, ${pIdx})">✏️ Re-edit</button>
+                                            <button type="button" class="btn-pdf" style="border-color: #ef4444; color: #ef4444; background: #fef2f2; padding: 0.2rem 0.5rem; font-size: 0.7rem; border-radius: 4px;" onclick="deleteObservationPhoto(${obs.id}, ${pIdx})">🗑️ Delete</button>
+                                            <button type="button" id="gemini-obs-btn-${obs.id}-${pIdx}" class="btn-primary" style="background: #8b5cf6; border: none; color: white; padding: 0.2rem 0.5rem; font-size: 0.7rem; border-radius: 4px; display: inline-flex; align-items: center; gap: 0.15rem;" onclick="analyzeObsPhotoWithGemini(${obs.id}, ${pIdx})">✨ Ask Gemini</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="gemini-obs-result-${obs.id}-${pIdx}" style="display: none; width: 100%; padding: 0.5rem 0.75rem; background: #f5f3ff; border: 1px solid #c084fc; border-radius: 6px; font-size: 0.75rem; color: #5b21b6; flex-direction: column; gap: 0.35rem; box-sizing: border-box;">
+                                    <div style="font-weight: 700; display: flex; justify-content: space-between; align-items: center;">
+                                        <span>🤖 Gemini Analysis:</span>
+                                        <button type="button" class="btn-primary" style="background: #7c3aed; font-size: 0.65rem; padding: 0.1rem 0.35rem; width: fit-content;" onclick="acceptGeminiObsNote(${obs.id}, ${pIdx})">Append to Notes</button>
+                                    </div>
+                                    <div id="gemini-obs-text-${obs.id}-${pIdx}" style="white-space: pre-wrap; line-height: 1.3; color: #4c1d95;"></div>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    const showUploadArea = obs.photos.length < 10 ? 'block' : 'none';
+                    const uploadCountText = `${obs.photos.length}/10 pictures uploaded`;
+                    
+                    card.innerHTML = `
+                        <div class="audit-card-title">
+                            <span>🛡️ Observation #${index + 1} (${reason} Inspection)</span>
+                            ${safetyObservations.length > 1 ? `<button type="button" class="btn-pdf" style="border-color:#ef4444; color:#ef4444; background:#fef2f2; padding:0.25rem 0.5rem; font-size:0.75rem;" onclick="removeObservation(${obs.id})">🗑️ Remove</button>` : ''}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="obs-notes-${obs.id}">Observations & Findings *</label>
+                            <textarea id="obs-notes-${obs.id}" rows="4" placeholder="Write down what was observed, hazard details, or corrective actions required..." oninput="updateObservationNotes(${obs.id}, this.value)" required>${obs.notes || ''}</textarea>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 1.25rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                <label class="form-label" for="obs-citations-${obs.id}" style="margin-bottom: 0;">Cited OSHA Regulations</label>
+                                <button type="button" class="btn-primary" style="background: var(--accent-blue); padding: 0.25rem 0.65rem; font-size: 0.75rem; font-weight: 600; width: auto; display: flex; align-items: center; gap: 0.25rem;" onclick="toggleRegHelper(${obs.id})">
+                                    <span>📖</span> OSHA Citation Helper
+                                </button>
+                            </div>
+                            <textarea id="obs-citations-${obs.id}" rows="3" placeholder="Select from the helper or type specific OSHA citations (e.g. 8 CCR 6151 or 29 CFR 1910.157)..." oninput="updateObservationCitations(${obs.id}, this.value)">${obs.citations || ''}</textarea>
+                            
+                            <!-- Collapsible Citation Helper Accordion -->
+                            <div id="reg-helper-container-${obs.id}" class="reg-helper-container" style="display: none;">
+                                <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); border-bottom: 1px solid var(--border-color); padding-bottom: 0.35rem; margin-bottom: 0.5rem;">
+                                    Select Common Violations to Auto-Cite:
+                                </div>
+                                <div class="reg-helper-categories">
+                                    ${renderCategoriesHtml(obs)}
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="form-group">
+                            <label class="form-label">Upload Site Pictures (Max 10) <span style="font-weight: normal; color: var(--text-secondary); font-size: 0.8rem;">- ${uploadCountText}</span></label>
+                            <div class="upload-area" id="obs-upload-area-${obs.id}" style="display: ${showUploadArea};" onclick="document.getElementById('obs-photo-input-${obs.id}').click()">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-muted); margin-bottom: 0.5rem;"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                                <p style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);">Click to take/upload photo</p>
+                            </div>
+                            <input type="file" id="obs-photo-input-${obs.id}" accept="image/*" style="display: none;" onchange="processObservationPhoto(event, ${obs.id})">
+                            
+                            <div id="obs-previews-container-${obs.id}" style="display: ${obs.photos.length > 0 ? 'flex' : 'none'}; flex-wrap: wrap; gap: 1rem; margin-top: 1rem;">
+                                ${photosHtml}
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+
+                // Add button below the cards to add more observations
+                const actionDiv = document.createElement('div');
+                actionDiv.style.textAlign = 'center';
+                actionDiv.style.marginBottom = '1.5rem';
+                actionDiv.innerHTML = `
+                    <button type="button" class="btn-primary" style="background: var(--accent-blue); padding: 0.65rem 1.5rem; font-size: 0.9rem; width: auto;" onclick="addObservation()">
+                        + Add Another Observation
+                    </button>
+                `;
+                container.appendChild(actionDiv);
+            }
+        }
+
+        // General Safety Multi-Observation Actions
+        window.addObservation = function() {
+            // Save current notes and citations from DOM into state before rendering new card to avoid losing input
+            safetyObservations.forEach(o => {
+                const el = document.getElementById(`obs-notes-${o.id}`);
+                if (el) o.notes = el.value;
+                const citEl = document.getElementById(`obs-citations-${o.id}`);
+                if (citEl) o.citations = citEl.value;
+            });
+
+            observationCounter++;
+            safetyObservations.push({ id: observationCounter, notes: "", citations: "", selectedCitations: [], photos: [] });
+            generateInspectionFields();
+        };
+
+        window.removeObservation = function(id) {
+            if (safetyObservations.length === 1) {
+                alert("You must include at least one observation.");
+                return;
+            }
+            // Save current notes and citations from DOM into state before removing
+            safetyObservations.forEach(o => {
+                const el = document.getElementById(`obs-notes-${o.id}`);
+                if (el) o.notes = el.value;
+                const citEl = document.getElementById(`obs-citations-${o.id}`);
+                if (citEl) o.citations = citEl.value;
+            });
+
+            safetyObservations = safetyObservations.filter(o => o.id !== id);
+            generateInspectionFields();
+        };
+
+        window.updateObservationNotes = function(id, notes) {
+            const obs = safetyObservations.find(o => o.id === id);
+            if (obs) {
+                obs.notes = notes;
+            }
+        };
+
+        window.updateObservationCitations = function(id, citations) {
+            const obs = safetyObservations.find(o => o.id === id);
+            if (obs) {
+                obs.citations = citations;
+            }
+        };
+
+        window.toggleRegHelper = function(obsId) {
+            const container = document.getElementById(`reg-helper-container-${obsId}`);
+            if (container) {
+                if (container.style.display === 'none' || !container.style.display) {
+                    container.style.display = 'flex';
+                } else {
+                    container.style.display = 'none';
+                }
+            }
+        };
+
+        window.toggleRegCategory = function(obsId, categoryName) {
+            const safeCatName = categoryName.replace(/\s+/g, '-');
+            const content = document.getElementById(`reg-cat-content-${obsId}-${safeCatName}`);
+            const chevron = document.getElementById(`reg-cat-chevron-${obsId}-${safeCatName}`);
+            if (content) {
+                if (content.style.display === 'none' || !content.style.display) {
+                    content.style.display = 'flex';
+                    if (chevron) chevron.textContent = '▼';
+                } else {
+                    content.style.display = 'none';
+                    if (chevron) chevron.textContent = '▶';
+                }
+            }
+        };
+
+        window.toggleRegCitation = function(obsId, category, itemIdx) {
+            const obs = safetyObservations.find(o => o.id === obsId);
+            if (!obs) return;
+            
+            if (!obs.selectedCitations) obs.selectedCitations = [];
+            const citationKey = `${category}:${itemIdx}`;
+            const item = commonRegulations[category][itemIdx];
+            const regText = item.text;
+            
+            const safeCatName = category.replace(/\s+/g, '-');
+            const btn = document.getElementById(`reg-btn-${obsId}-${safeCatName}-${itemIdx}`);
+            const textarea = document.getElementById(`obs-citations-${obsId}`);
+            if (!textarea) return;
+            
+            // Sync state to DOM input first
+            obs.citations = textarea.value;
+            
+            const keyIdx = obs.selectedCitations.indexOf(citationKey);
+            if (keyIdx === -1) {
+                // Select it
+                obs.selectedCitations.push(citationKey);
+                if (btn) {
+                    btn.classList.add('active');
+                    const checkSpan = btn.querySelector('.tag-check');
+                    if (checkSpan) checkSpan.textContent = '✓';
+                }
+                
+                // Append text
+                let currentVal = textarea.value.trim();
+                if (currentVal) {
+                    textarea.value = currentVal + "\n\n" + regText;
+                } else {
+                    textarea.value = regText;
+                }
+            } else {
+                // Deselect it
+                obs.selectedCitations.splice(keyIdx, 1);
+                if (btn) {
+                    btn.classList.remove('active');
+                    const checkSpan = btn.querySelector('.tag-check');
+                    if (checkSpan) checkSpan.textContent = '+';
+                }
+                
+                // Remove text
+                let currentVal = textarea.value;
+                currentVal = currentVal.replace(regText, "");
+                // Clean up leading/trailing newlines and restore double newlines
+                currentVal = currentVal.replace(/\n{3,}/g, "\n\n").trim();
+                textarea.value = currentVal;
+            }
+            obs.citations = textarea.value;
+        };
+
+        window.renderCategoriesHtml = function(obs) {
+            let html = '';
+            for (const category in commonRegulations) {
+                const safeCatName = category.replace(/\s+/g, '-');
+                html += `
+                <div class="reg-cat-folder">
+                    <div class="reg-cat-header" onclick="toggleRegCategory(${obs.id}, '${category}')">
+                        <span>📁 ${category}</span>
+                        <span id="reg-cat-chevron-${obs.id}-${safeCatName}" class="reg-cat-chevron">▶</span>
+                    </div>
+                    <div id="reg-cat-content-${obs.id}-${safeCatName}" class="reg-cat-content" style="display: none; flex-wrap: wrap; gap: 0.5rem;">
+                `;
+                commonRegulations[category].forEach((item, itemIdx) => {
+                    const citationKey = `${category}:${itemIdx}`;
+                    const isSelected = obs.selectedCitations && obs.selectedCitations.includes(citationKey);
+                    const isActive = isSelected ? 'active' : '';
+                    html += `
+                        <button type="button" id="reg-btn-${obs.id}-${safeCatName}-${itemIdx}" class="reg-citation-tag ${isActive}" onclick="toggleRegCitation(${obs.id}, '${category}', ${itemIdx})">
+                            <span class="tag-check">${isSelected ? '✓' : '+'}</span> ${item.label}
+                        </button>
+                    `;
+                });
+                html += `
+                    </div>
+                </div>
+                `;
+            }
+            return html;
+        };
+
+        window.processObservationPhoto = function(event, id) {
+            const obs = safetyObservations.find(o => o.id === id);
+            if (!obs) return;
+
+            if (!obs.photos) {
+                obs.photos = [];
+            }
+            if (obs.photos.length >= 10) {
+                alert("You can upload a maximum of 10 photos per observation.");
+                return;
+            }
+
+            const file = event.target.files[0];
+            if (!file) return;
+            event.target.value = '';
+
+            // Save current notes and citations from DOM to state first
+            safetyObservations.forEach(o => {
+                const el = document.getElementById(`obs-notes-${o.id}`);
+                if (el) o.notes = el.value;
+                const citEl = document.getElementById(`obs-citations-${o.id}`);
+                if (citEl) o.citations = citEl.value;
+            });
+
+            window.openMarkupEditor(file, function(annotatedDataUrl) {
+                obs.photos.push(annotatedDataUrl);
+                obs.photo = obs.photos[0] || null; // fallback
+                generateInspectionFields();
+            });
+        };
+
+        // Set Checklist Answer & Check Violation
+        window.setAnswer = function(sIdx, stream, qIdx, answer) {
+            auditState.streams[stream].questions[qIdx].answer = answer;
+            
+            // Re-render this specific row's button colors and violation highlights
+            const q = checklistQuestions[qIdx];
+            const row = document.getElementById(`row-${sIdx}-${qIdx}`);
+            const buttons = row.querySelectorAll('.btn-group button');
+            
+            // Clear prior states
+            buttons.forEach(btn => btn.className = '');
+            row.classList.remove('violation');
+
+            // Apply selected class styles
+            const isViolate = q.violateOn === answer;
+            
+            if (answer === 'Yes') {
+                buttons[0].className = isViolate ? 'selected-violation' : 'selected-compliant';
+            } else if (answer === 'No') {
+                buttons[1].className = isViolate ? 'selected-violation' : 'selected-compliant';
+            } else if (answer === 'N/A') {
+                buttons[2].className = 'selected-na';
+            }
+
+            if (isViolate) {
+                row.classList.add('violation');
+            }
+        };
+
+        // Open Note / Photo expander drawer
+        window.toggleDrawer = function(sIdx, qIdx, section) {
+            const drawer = document.getElementById(`drawer-${sIdx}-${qIdx}`);
+            const notesBox = document.getElementById(`drawer-notes-box-${sIdx}-${qIdx}`);
+            const photoBox = document.getElementById(`drawer-photo-box-${sIdx}-${qIdx}`);
+
+            const isExpanded = drawer.classList.contains('expanded');
+            
+            // If drawer is closed, open it and show selected box
+            if (!isExpanded) {
+                drawer.classList.add('expanded');
+                notesBox.style.display = (section === 'notes') ? 'block' : 'none';
+                photoBox.style.display = (section === 'photo') ? 'block' : 'none';
+            } else {
+                // If drawer is open and we clicked the SAME section trigger, close the drawer
+                const noteIsVisible = notesBox.style.display === 'block';
+                const photoIsVisible = photoBox.style.display === 'block';
+
+                if ((section === 'notes' && noteIsVisible) || (section === 'photo' && photoIsVisible)) {
+                    drawer.classList.remove('expanded');
+                    notesBox.style.display = 'none';
+                    photoBox.style.display = 'none';
+                } else {
+                    // Switch boxes
+                    notesBox.style.display = (section === 'notes') ? 'block' : 'none';
+                    photoBox.style.display = (section === 'photo') ? 'block' : 'none';
+                }
+            }
+        };
+
+        // Update Item Note in State
+        window.updateItemNote = function(stream, qIdx, value) {
+            auditState.streams[stream].questions[qIdx].note = value;
+            
+            // Update note button highlight based on text length
+            const sIdx = Object.keys(auditState.streams).indexOf(stream);
+            const trigger = document.getElementById(`trigger-notes-${sIdx}-${qIdx}`);
+            if (value.trim()) {
+                trigger.classList.add('active-notes');
+            } else {
+                trigger.classList.remove('active-notes');
+            }
+        };
+
+        // Update Stream General Summary
+        window.updateStreamSummary = function(stream, value) {
+            auditState.streams[stream].generalNotes = value;
+        };
+
+        // Compress Checklist Item Photos
+        window.compressItemPhoto = function(event, stream, qIdx, sIdx) {
+            const file = event.target.files[0];
+            if (!file) return;
+            event.target.value = '';
+
+            window.openMarkupEditor(file, function(annotatedDataUrl) {
+                const compSizeBytes = Math.round((annotatedDataUrl.length - 22) * 3 / 4);
+                
+                // Save to state
+                auditState.streams[stream].questions[qIdx].photo = annotatedDataUrl;
+
+                // Update UI stats
+                const stats = document.getElementById(`compression-stats-${sIdx}-${qIdx}`);
+                if (stats) {
+                    stats.textContent = `Compressed to ${(compSizeBytes / 1024).toFixed(1)} KB`;
+                }
+                
+                const preview = document.getElementById(`img-preview-${sIdx}-${qIdx}`);
+                if (preview) {
+                    preview.src = annotatedDataUrl;
+                }
+
+                const container = document.getElementById(`item-preview-container-${sIdx}-${qIdx}`);
+                if (container) {
+                    container.style.display = 'flex';
+                }
+
+                // Highlight trigger icon
+                const trigger = document.getElementById(`trigger-photo-${sIdx}-${qIdx}`);
+                if (trigger) {
+                    trigger.classList.add('active-photo');
+                }
+            });
+        };
+
+        // Re-edit Checklist Item Photo
+        window.reeditItemPhoto = function(stream, qIdx, sIdx) {
+            const photo = auditState.streams[stream].questions[qIdx].photo;
+            if (!photo) return;
+            window.openMarkupEditor(photo, function(annotatedDataUrl) {
+                const compSizeBytes = Math.round((annotatedDataUrl.length - 22) * 3 / 4);
+                // Save to state
+                auditState.streams[stream].questions[qIdx].photo = annotatedDataUrl;
+
+                // Update UI stats
+                const stats = document.getElementById(`compression-stats-${sIdx}-${qIdx}`);
+                if (stats) {
+                    stats.textContent = `Compressed to ${(compSizeBytes / 1024).toFixed(1)} KB`;
+                }
+                
+                const preview = document.getElementById(`img-preview-${sIdx}-${qIdx}`);
+                if (preview) {
+                    preview.src = annotatedDataUrl;
+                }
+            });
+        };
+
+        // Delete Checklist Item Photo
+        window.deleteItemPhoto = function(stream, qIdx, sIdx) {
+            if (!confirm("Are you sure you want to delete this photo?")) return;
+
+            // Clear in state
+            auditState.streams[stream].questions[qIdx].photo = null;
+
+            // Clear input element value
+            const input = document.getElementById(`item-photo-input-${sIdx}-${qIdx}`);
+            if (input) input.value = '';
+
+            // Clear stats and hide container
+            const stats = document.getElementById(`compression-stats-${sIdx}-${qIdx}`);
+            if (stats) stats.textContent = '';
+
+            const container = document.getElementById(`item-preview-container-${sIdx}-${qIdx}`);
+            if (container) container.style.display = 'none';
+
+            // Remove active status from camera trigger icon
+            const trigger = document.getElementById(`trigger-photo-${sIdx}-${qIdx}`);
+            if (trigger) {
+                trigger.classList.remove('active-photo');
+            }
+        };
+
+        // Re-edit Observation Photo
+        window.reeditObservationPhoto = function(id, pIdx) {
+            // Save current notes and citations from DOM to state first
+            safetyObservations.forEach(o => {
+                const el = document.getElementById(`obs-notes-${o.id}`);
+                if (el) o.notes = el.value;
+                const citEl = document.getElementById(`obs-citations-${o.id}`);
+                if (citEl) o.citations = citEl.value;
+            });
+
+            const obs = safetyObservations.find(o => o.id === id);
+            if (!obs || !obs.photos || !obs.photos[pIdx]) return;
+            window.openMarkupEditor(obs.photos[pIdx], function(annotatedDataUrl) {
+                obs.photos[pIdx] = annotatedDataUrl;
+                obs.photo = obs.photos[0] || null; // fallback
+                generateInspectionFields();
+            });
+        };
+
+        // Delete Observation Photo
+        window.deleteObservationPhoto = function(id, pIdx) {
+            if (!confirm("Are you sure you want to delete this photo?")) return;
+            
+            // Save current notes and citations from DOM to state first
+            safetyObservations.forEach(o => {
+                const el = document.getElementById(`obs-notes-${o.id}`);
+                if (el) o.notes = el.value;
+                const citEl = document.getElementById(`obs-citations-${o.id}`);
+                if (citEl) o.citations = citEl.value;
+            });
+
+            const obs = safetyObservations.find(o => o.id === id);
+            if (obs && obs.photos) {
+                obs.photos.splice(pIdx, 1);
+                obs.photo = obs.photos[0] || null; // fallback
+            }
+            
+            const input = document.getElementById(`obs-photo-input-${id}`);
+            if (input) input.value = '';
+
+            generateInspectionFields();
+        };
+
+        // Note: processGeneralSafetyPhoto has been replaced by processObservationPhoto
+
+        // Gemini AI Integration Scripts
+        async function callGeminiAPI(base64DataUrl, promptText) {
+            const apiKey = localStorage.getItem('gemini_api_key') || sharedGeminiApiKey;
+            if (!apiKey) {
+                alert("Please configure your Gemini API Key in 'Gemini Settings' first!");
+                throw new Error("API key not configured");
+            }
+
+            const mimeTypeMatch = base64DataUrl.match(/^data:(image\/[a-zA-Z+.-]+);base64,/);
+            const mimeType = mimeTypeMatch ? mimeTypeMatch[1] : "image/jpeg";
+            const rawBase64 = base64DataUrl.replace(/^data:image\/[a-zA-Z+.-]+;base64,/, "");
+
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    contents: [
+                        {
+                            parts: [
+                                { text: promptText },
+                                {
+                                    inlineData: {
+                                        mimeType: mimeType,
+                                        data: rawBase64
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                const errMsg = errorData.error?.message || response.statusText || "Unknown error";
+                throw new Error(`Gemini API Error: ${errMsg}`);
+            }
+
+            const data = await response.json();
+            if (!data.candidates || data.candidates.length === 0 || !data.candidates[0].content?.parts?.[0]?.text) {
+                throw new Error("Invalid response from Gemini API");
+            }
+
+            return data.candidates[0].content.parts[0].text;
+        }
+
+        window.analyzeItemWithGemini = async function(stream, qIdx, sIdx) {
+            const qState = auditState.streams[stream].questions[qIdx];
+            if (!qState || !qState.photo) {
+                alert("Please attach a photo first!");
+                return;
+            }
+
+            const btn = document.getElementById(`gemini-btn-${sIdx}-${qIdx}`);
+            const resultBox = document.getElementById(`gemini-result-${sIdx}-${qIdx}`);
+            const textEl = document.getElementById(`gemini-text-${sIdx}-${qIdx}`);
+
+            btn.disabled = true;
+            btn.textContent = "⌛ Analyzing...";
+            resultBox.style.display = "flex";
+            textEl.textContent = "Gemini is reviewing the image for safety violations...";
+
+            const questionText = checklistQuestions[qIdx].text;
+            const prompt = `You are a professional site safety inspector. Review this photo. The inspection checklist item is: "${questionText}". Focus exclusively on identifying directly visible compliance observations or safety violations related to "${questionText}".
+
+CRITICAL CONSTRAINTS:
+1. Do NOT include any corrective actions, recommendations, or solutions. The inspector will add these in their own words.
+2. Do NOT include any code citations, regulations, or standards references (e.g., no OSHA codes/clauses) as these are cited in a separate window.
+3. Provide ONLY directly visible observations.
+4. Output a maximum of 2 or 3 observations in short, concise bullet points.`;
+
+            try {
+                const analysisResult = await callGeminiAPI(qState.photo, prompt);
+                textEl.textContent = analysisResult;
+            } catch (err) {
+                console.error(err);
+                textEl.textContent = `❌ Error: ${err.message}`;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "✨ Ask Gemini";
+            }
+        };
+
+        window.acceptGeminiNote = function(stream, qIdx, sIdx) {
+            const textEl = document.getElementById(`gemini-text-${sIdx}-${qIdx}`);
+            const text = textEl.textContent || "";
+            if (!text || text.startsWith("❌ Error:") || text.startsWith("Gemini is reviewing")) {
+                alert("No valid Gemini analysis to append.");
+                return;
+            }
+
+            const input = document.getElementById(`note-input-${sIdx}-${qIdx}`);
+            const currentNote = input.value.trim();
+            const newNote = currentNote ? `${currentNote}\n[Gemini AI]: ${text}` : `[Gemini AI]: ${text}`;
+            input.value = newNote;
+            
+            // Trigger state update
+            window.updateItemNote(stream, qIdx, newNote);
+            
+            // Show notes drawer box to make sure the user sees it
+            const notesBox = document.getElementById(`drawer-notes-box-${sIdx}-${qIdx}`);
+            if (notesBox) notesBox.style.display = 'block';
+            
+            alert("Gemini findings appended to item notes.");
+        };
+
+        window.analyzeObsPhotoWithGemini = async function(obsId, pIdx) {
+            const obs = safetyObservations.find(o => o.id === obsId);
+            if (!obs || !obs.photos || !obs.photos[pIdx]) {
+                alert("Photo not found.");
+                return;
+            }
+
+            const btn = document.getElementById(`gemini-obs-btn-${obsId}-${pIdx}`);
+            const resultBox = document.getElementById(`gemini-obs-result-${obsId}-${pIdx}`);
+            const textEl = document.getElementById(`gemini-obs-text-${obsId}-${pIdx}`);
+
+            btn.disabled = true;
+            btn.textContent = "⌛...";
+            resultBox.style.display = "flex";
+            textEl.textContent = "Analyzing photo...";
+
+            const prompt = `You are a professional site safety inspector. Analyze this safety observation photo. Focus exclusively on identifying directly visible compliance observations or safety violations.
+
+CRITICAL CONSTRAINTS:
+1. Do NOT include any corrective actions, recommendations, or solutions. The inspector will add these in their own words.
+2. Do NOT include any code citations, regulations, or standards references (e.g., no OSHA codes/clauses) as these are cited in a separate window.
+3. Provide ONLY directly visible observations.
+4. Output a maximum of 2 or 3 observations in short, concise bullet points.`;
+
+            try {
+                const analysisResult = await callGeminiAPI(obs.photos[pIdx], prompt);
+                textEl.textContent = analysisResult;
+            } catch (err) {
+                console.error(err);
+                textEl.textContent = `❌ Error: ${err.message}`;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "✨ Ask Gemini";
+            }
+        };
+
+        window.acceptGeminiObsNote = function(obsId, pIdx) {
+            const textEl = document.getElementById(`gemini-obs-text-${obsId}-${pIdx}`);
+            const text = textEl.textContent || "";
+            if (!text || text.startsWith("❌ Error:") || text.startsWith("Analyzing photo")) {
+                alert("No valid Gemini analysis to append.");
+                return;
+            }
+
+            const textarea = document.getElementById(`obs-notes-${obsId}`);
+            if (textarea) {
+                const currentNote = textarea.value.trim();
+                const newNote = currentNote ? `${currentNote}\n[Gemini AI Observation #${pIdx + 1}]: ${text}` : `[Gemini AI Observation #${pIdx + 1}]: ${text}`;
+                textarea.value = newNote;
+                
+                // Update state
+                window.updateObservationNotes(obsId, newNote);
+                alert("Gemini findings appended to observations notes.");
+            }
+        };
+
+        // Save & Submit Inspection Report
+        async function handleInspectionSubmit(e) {
+            e.preventDefault();
+
+            const clientName = document.getElementById('clientSelect').value;
+            const siteLocation = document.getElementById('siteLocation').value.trim();
+            const dateVal = document.getElementById('auditDate').value;
+            const timeVal = document.getElementById('auditTime').value;
+            const inspector = document.getElementById('inspectorName').value;
+            const auditType = document.getElementById('auditType').value;
+
+            // package inspection payload
+            let reportData = {
+                clientName: clientName,
+                siteLocation: siteLocation,
+                dateStr: dateVal,
+                timeStr: timeVal,
+                inspector: inspector,
+                inspectionType: auditType,
+                timestamp: firebase.firestore.Timestamp.now(),
+                violationsCount: 0
+            };
+
+            if (auditType === 'Weekly Waste Area') {
+                const checkedStreams = Array.from(document.querySelectorAll('.stream-checkbox:checked')).map(cb => cb.value);
+                const streamAudits = [];
+                let totalViolations = 0;
+
+                checkedStreams.forEach(stream => {
+                    const questionsMap = auditState.streams[stream].questions;
+                    const questionsArray = [];
+
+                    checklistQuestions.forEach((q, idx) => {
+                        const answerObj = questionsMap[idx];
+                        const isViolate = q.violateOn === answerObj.answer;
+                        if (isViolate) totalViolations++;
+
+                        questionsArray.push({
+                            questionText: q.text,
+                            answer: answerObj.answer,
+                            note: answerObj.note || "",
+                            photo: answerObj.photo || null, // Base64
+                            isViolation: isViolate
+                        });
+                    });
+
+                    streamAudits.push({
+                        streamName: stream,
+                        checklist: questionsArray,
+                        generalNotes: auditState.streams[stream].generalNotes || ""
+                    });
+                });
+
+                reportData.wasteStreams = streamAudits;
+                reportData.violationsCount = totalViolations;
+            } else {
+                // General Safety
+                const checkedRadio = document.querySelector('.reason-radio:checked');
+                reportData.safetyReason = checkedRadio ? checkedRadio.value : 'General';
+                
+                // Sync textareas to state array first
+                safetyObservations.forEach(o => {
+                    const el = document.getElementById(`obs-notes-${o.id}`);
+                    if (el) o.notes = el.value.trim();
+                    const citEl = document.getElementById(`obs-citations-${o.id}`);
+                    if (citEl) o.citations = citEl.value.trim();
+                });
+                
+                reportData.observations = safetyObservations.map(o => {
+                    const photos = o.photos || (o.photo ? [o.photo] : []);
+                    return {
+                        notes: o.notes,
+                        citations: o.citations || "",
+                        selectedCitations: o.selectedCitations || [],
+                        photo: photos.length > 0 ? photos[0] : null,
+                        photos: photos
+                    };
+                });
+                reportData.violationsCount = 0;
+            }
+
+            if (isOffline) {
+                // Queue locally
+                const queue = getQueue();
+                queue.push(reportData);
+                saveQueue(queue);
+                
+                alert("Inspection saved locally in Offline sync cache!");
+                resetForm();
+                backToStep1();
+                renderInspectionsLog();
+            } else {
+                try {
+                    await db.collection("inspections").add(reportData);
+                    alert("Inspection Report uploaded successfully to Cloud Firebase!");
+                    resetForm();
+                    backToStep1();
+                } catch (error) {
+                    console.error("Firestore upload failed, caching locally:", error);
+                    const queue = getQueue();
+                    queue.push(reportData);
+                    saveQueue(queue);
+                    alert("Network connection error. Report cached in local sync queue.");
+                    resetForm();
+                    backToStep1();
+                    renderInspectionsLog();
+                }
+            }
+        }
+
+        // Reset form
+        function resetForm() {
+            document.getElementById('inspectionForm').reset();
+            const today = new Date();
+            document.getElementById('auditDate').value = today.toISOString().substring(0, 10);
+            document.getElementById('auditTime').value = today.toTimeString().substring(0, 5);
+            
+            // Clear state variables
+            auditState.streams = {};
+            safetyObservations = [
+                { id: 1, notes: "", citations: "", selectedCitations: [], photos: [] }
+            ];
+            observationCounter = 1;
+            
+            // Clear custom streams/reasons and restore initial HTML grid options
+            document.getElementById('streamsGrid').innerHTML = `
+                <label class="stream-card">
+                    <input type="checkbox" value="Waste Oil" checked class="stream-checkbox">
+                    <span>Waste Oil</span>
+                </label>
+                <label class="stream-card">
+                    <input type="checkbox" value="Metal Oil Filters" checked class="stream-checkbox">
+                    <span>Metal Oil Filters</span>
+                </label>
+                <label class="stream-card">
+                    <input type="checkbox" value="Paper Oil Filters" checked class="stream-checkbox">
+                    <span>Paper Oil Filters</span>
+                </label>
+                <label class="stream-card">
+                    <input type="checkbox" value="Waste Antifreeze" checked class="stream-checkbox">
+                    <span>Waste Antifreeze</span>
+                </label>
+                <label class="stream-card">
+                    <input type="checkbox" value="Oily Debris" checked class="stream-checkbox">
+                    <span>Oily Debris</span>
+                </label>
+                <label class="stream-card">
+                    <input type="checkbox" value="Oily Dirt" checked class="stream-checkbox">
+                    <span>Oily Dirt</span>
+                </label>
+                <label class="stream-card">
+                    <input type="checkbox" value="Aerosols" class="stream-checkbox">
+                    <span>Aerosols</span>
+                </label>
+                <label class="stream-card">
+                    <input type="checkbox" value="Universal Waste" class="stream-checkbox">
+                    <span>Universal Waste</span>
+                </label>
+            `;
+
+            document.getElementById('safetyReasonsGrid').innerHTML = `
+                <label class="stream-card">
+                    <input type="radio" name="safetyReason" value="Monthly" checked class="reason-radio">
+                    <span>Monthly</span>
+                </label>
+                <label class="stream-card">
+                    <input type="radio" name="safetyReason" value="Quarterly" class="reason-radio">
+                    <span>Quarterly</span>
+                </label>
+                <label class="stream-card">
+                    <input type="radio" name="safetyReason" value="Yearly" class="reason-radio">
+                    <span>Yearly</span>
+                </label>
+            `;
+            document.getElementById('waste-streams-selector').style.display = 'block';
+            document.getElementById('general-safety-selector').style.display = 'none';
+
+            // Clear Dynamic container UI
+            document.getElementById('audit-cards-container').innerHTML = '';
+        }
+
+        // Network Toggle Switch
+        function toggleNetworkMode(checked) {
+            isOffline = checked;
+            const dot = document.getElementById('network-dot');
+            const text = document.getElementById('network-text');
+
+            if (isOffline) {
+                dot.className = 'dot offline';
+                text.textContent = 'Device Offline (Queuing locally in browser cache)';
+                renderInspectionsLog();
+            } else {
+                dot.className = 'dot online';
+                text.textContent = 'Device Online (Connected to Firebase)';
+                processSyncQueue();
+            }
+        }
+
+        // Local Queue cache
+        function getQueue() {
+            const q = localStorage.getItem('inspection_sync_queue');
+            return q ? JSON.parse(q) : [];
+        }
+
+        function saveQueue(queue) {
+            localStorage.setItem('inspection_sync_queue', JSON.stringify(queue));
+            updateQueueIndicator();
+        }
+
+        function updateQueueIndicator() {
+            const queue = getQueue();
+            const badge = document.getElementById('queue-indicator');
+            if (queue.length > 0) {
+                badge.textContent = `${queue.length} Pending Sync`;
+                badge.style.display = 'inline-block';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        // Process Offline Queue Uploads
+        async function processSyncQueue() {
+            const queue = getQueue();
+            if (queue.length === 0) return;
+
+            console.log(`Syncing ${queue.length} reports...`);
+            const remaining = [];
+
+            for (let report of queue) {
+                try {
+                    report.timestamp = firebase.firestore.Timestamp.now();
+                    await db.collection("inspections").add(report);
+                } catch (err) {
+                    console.error("Failed syncing report:", err);
+                    remaining.push(report);
+                }
+            }
+
+            saveQueue(remaining);
+            if (remaining.length === 0) {
+                alert("Offline queue synchronized with Cloud database successfully!");
+            }
+            renderInspectionsLog();
+        }
+
+        // Render Log entries
+        function renderInspectionsLog() {
+            const tbody = document.getElementById('inspectionsLogBody');
+            
+            // Build temporary array combining Firestore + local queue
+            const queuedItems = getQueue().map((item, idx) => ({
+                ...item,
+                isQueued: true,
+                id: 'queued_' + idx,
+                dateStr: item.dateStr
+            }));
+
+            const combinedList = [...queuedItems, ...allInspections];
+
+            if (combinedList.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">No inspections logged yet.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = '';
+            combinedList.forEach(ins => {
+                const tr = document.createElement('tr');
+                if (ins.isQueued) {
+                    tr.style.background = '#fefaf0';
+                }
+
+                // Compile details
+                let detailText = "";
+                let statusBadge = "";
+                
+                if (ins.inspectionType === 'Weekly Waste Area') {
+                    const streams = ins.wasteStreams ? ins.wasteStreams.map(s => s.streamName).join(', ') : '';
+                    detailText = `<strong>Weekly Waste Audit</strong><br><span style="font-size:0.75rem; color: var(--text-secondary);">${streams}</span>`;
+                    
+                    if (ins.violationsCount > 0) {
+                        statusBadge = `<span class="badge-status badge-action">⚠️ ${ins.violationsCount} Violation${ins.violationsCount > 1 ? 's' : ''}</span>`;
+                    } else {
+                        statusBadge = `<span class="badge-status badge-passed">Compliant</span>`;
+                    }
+                } else {
+                    let obsSummary = "";
+                    if (Array.isArray(ins.observations)) {
+                        obsSummary = ins.observations.map(o => o.notes).filter(n => n).join(' | ');
+                    } else if (typeof ins.observations === 'string') {
+                        obsSummary = ins.observations;
+                    }
+                    detailText = `<strong>${ins.safetyReason || 'General'} Site Safety Inspection</strong><br><span style="font-size:0.75rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; display: inline-block;" title="${obsSummary.replace(/"/g, '&quot;')}">${obsSummary}</span>`;
+                    statusBadge = `<span class="badge-status badge-passed">Logged</span>`;
+                }
+
+                if (ins.isQueued) {
+                    statusBadge += `<br><span class="badge-status badge-sync">Queued</span>`;
+                }
+
+                tr.innerHTML = `
+                    <td>
+                        <strong style="color: var(--slate-dark);">${ins.clientName}</strong>
+                        <div style="font-size:0.75rem; color: var(--text-secondary);">${ins.siteLocation || ''}</div>
+                    </td>
+                    <td>${detailText}</td>
+                    <td>${statusBadge}</td>
+                    <td style="font-size: 0.8rem; color: var(--text-secondary);">${ins.inspector}</td>
+                    <td>${ins.dateStr}</td>
+                    <td>
+                        <div style="display: flex; gap: 0.5rem; align-items: center;">
+                            <button class="btn-pdf" onclick="printInspectionReport('${ins.id}')">📄 Print/PDF</button>
+                            <button class="btn-delete" onclick="deleteInspectionReport('${ins.id}', event)">🗑️ Delete</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            updateQueueIndicator();
+        }
+
+        // Helper function to match General Safety observations
+        function matchObservations(obs1, obs2) {
+            if (!obs1 || !obs2) return false;
+            
+            // 1. Check selectedCitations overlap
+            if (obs1.selectedCitations && obs2.selectedCitations) {
+                for (let c1 of obs1.selectedCitations) {
+                    if (obs2.selectedCitations.includes(c1)) return true;
+                }
+            }
+            
+            // 2. Extract and check regulation codes from citations/notes
+            const getRegs = (obs) => {
+                const text = ((obs.citations || "") + " " + (obs.notes || "")).toLowerCase();
+                const matches = text.match(/(?:8\s*ccr\s*[0-9\.]+|29\s*cfr\s*[0-9\.]+|nfpa\s*\d+|ansi\s*[a-z0-9\.-]+)/gi) || [];
+                return matches.map(m => m.replace(/\s+/g, "").toLowerCase());
+            };
+            const regs1 = getRegs(obs1);
+            const regs2 = getRegs(obs2);
+            for (let r1 of regs1) {
+                if (regs2.includes(r1)) return true;
+            }
+            
+            // 3. Check text keywords overlap
+            const keywords = ["fire extinguisher", "extension cord", "electrical panel", "tripping hazard", "exit route", "exit sign", "machine guard", "eyewash", "sds", "label"];
+            const text1 = ((obs1.citations || "") + " " + (obs1.notes || "")).toLowerCase();
+            const text2 = ((obs2.citations || "") + " " + (obs2.notes || "")).toLowerCase();
+            for (let kw of keywords) {
+                if (text1.includes(kw) && text2.includes(kw)) {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+
+        // Print/PDF Generation engine
+        window.printInspectionReport = async function(id) {
+            let report = null;
+            if (id.startsWith('queued_')) {
+                const idx = parseInt(id.split('_')[1]);
+                report = getQueue()[idx];
+            } else {
+                report = allInspections.find(i => i.id === id);
+            }
+
+            if (!report) {
+                alert("Inspection report details could not be found.");
+                return;
+            }
+
+            // Open window synchronously to avoid popup blocker blockages, displaying a premium loading spinner
+            const printWindow = window.open('', '_blank', 'width=900,height=900');
+            if (!printWindow) {
+                alert("Please disable your popup blocker to view and print report.");
+                return;
+            }
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>Loading Report...</title>
+                    <style>
+                        body { font-family: 'Segoe UI', Arial, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; color: #475569; background: #f8fafc; }
+                        .loader { text-align: center; }
+                        .spinner { border: 4px solid #cbd5e1; border-top: 4px solid #2563eb; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 1.25rem auto; }
+                        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+                        h3 { font-size: 1.1rem; font-weight: 700; color: #1e293b; margin: 0; }
+                        p { font-size: 0.85rem; color: #64748b; margin-top: 0.5rem; }
+                    </style>
+                </head>
+                <body>
+                    <div class="loader">
+                        <div class="spinner"></div>
+                        <h3>Retrieving Historical Data</h3>
+                        <p>Analyzing past reports for repeated safety violations...</p>
+                    </div>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+
+            // Fetch past reports of the same client and inspection template type
+            let clientReports = [];
+            try {
+                const snapshot = await db.collection("inspections")
+                    .where("clientName", "==", report.clientName)
+                    .where("inspectionType", "==", report.inspectionType)
+                    .get();
+                clientReports = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            } catch (err) {
+                console.warn("Could not query Firestore for history:", err);
+                clientReports = allInspections.filter(i => 
+                    i.clientName === report.clientName && 
+                    i.inspectionType === report.inspectionType
+                );
+            }
+            
+            // Add local queued reports as well
+            const queuedReports = getQueue().filter(i => 
+                i.clientName === report.clientName && 
+                i.inspectionType === report.inspectionType
+            );
+            clientReports = [...queuedReports, ...clientReports];
+
+            // Deduplicate by ID / unique info
+            const seenIds = new Set();
+            clientReports = clientReports.filter(r => {
+                const uid = r.id || `${r.dateStr}_${r.timeStr}`;
+                if (seenIds.has(uid)) return false;
+                seenIds.add(uid);
+                return true;
+            });
+
+            // Filter by siteLocation (case-insensitive trimmed comparison)
+            const targetSite = (report.siteLocation || "").trim().toLowerCase();
+            clientReports = clientReports.filter(r => 
+                (r.siteLocation || "").trim().toLowerCase() === targetSite
+            );
+
+            // Sort chronologically ascending
+            clientReports.sort((a, b) => {
+                const dateA = `${a.dateStr}T${a.timeStr || '00:00'}`;
+                const dateB = `${b.dateStr}T${b.timeStr || '00:00'}`;
+                return dateA.localeCompare(dateB);
+            });
+
+            // Find current report index
+            const currentKey = report.id || `${report.dateStr}_${report.timeStr}`;
+            let currIdx = clientReports.findIndex(r => (r.id || `${r.dateStr}_${r.timeStr}`) === currentKey);
+            if (currIdx === -1) {
+                clientReports.push(report);
+                clientReports.sort((a, b) => {
+                    const dateA = `${a.dateStr}T${a.timeStr || '00:00'}`;
+                    const dateB = `${b.dateStr}T${b.timeStr || '00:00'}`;
+                    return dateA.localeCompare(dateB);
+                });
+                currIdx = clientReports.findIndex(r => (r.id || `${r.dateStr}_${r.timeStr}`) === currentKey);
+            }
+
+            const pastChronologicalReports = clientReports.slice(0, currIdx);
+
+            // Generate content
+            let html = `
+            <html>
+            <head>
+                <title>Inspection Report - ${report.clientName}</title>
+                <style>
+                    body {
+                        font-family: 'Segoe UI', Arial, sans-serif;
+                        color: #1e293b;
+                        line-height: 1.5;
+                        padding: 2.5rem;
+                        background: #ffffff;
+                    }
+                    .header {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        border-bottom: 3px solid #2563eb;
+                        padding-bottom: 1rem;
+                        margin-bottom: 2rem;
+                    }
+                    .title-box h1 {
+                        font-size: 1.6rem;
+                        margin: 0;
+                        color: #0f172a;
+                        font-weight: 800;
+                    }
+                    .title-box p {
+                        margin: 0.25rem 0 0 0;
+                        color: #64748b;
+                        font-size: 0.9rem;
+                        font-weight: 600;
+                    }
+                    .meta-grid {
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 1.5rem;
+                        background: #f8fafc;
+                        padding: 1.25rem;
+                        border: 1px solid #e2e8f0;
+                        border-radius: 8px;
+                        margin-bottom: 2.5rem;
+                    }
+                    .meta-item {
+                        font-size: 0.9rem;
+                    }
+                    .meta-item strong {
+                        color: #475569;
+                    }
+                    .violation-summary {
+                        background: #fee2e2;
+                        border: 1px solid #fca5a5;
+                        padding: 1rem;
+                        border-radius: 6px;
+                        color: #991b1b;
+                        font-weight: 700;
+                        margin-bottom: 2rem;
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                    }
+                    .stream-section {
+                        margin-bottom: 3rem;
+                        page-break-inside: avoid;
+                    }
+                    .stream-title {
+                        font-size: 1.2rem;
+                        font-weight: 700;
+                        color: #2563eb;
+                        border-bottom: 2px solid #e2e8f0;
+                        padding-bottom: 0.5rem;
+                        margin-bottom: 1rem;
+                    }
+                    .audit-table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-bottom: 1.5rem;
+                        font-size: 0.85rem;
+                    }
+                    .audit-table th, .audit-table td {
+                        border: 1px solid #cbd5e1;
+                        padding: 0.6rem 0.8rem;
+                        text-align: left;
+                    }
+                    .audit-table th {
+                        background: #f1f5f9;
+                        font-weight: 700;
+                        color: #475569;
+                    }
+                    .row-violation {
+                        background-color: #fee2e2;
+                        color: #991b1b;
+                        font-weight: bold;
+                    }
+                    .badge-v {
+                        background: #b91c1c;
+                        color: white;
+                        padding: 0.1rem 0.4rem;
+                        border-radius: 4px;
+                        font-size: 0.7rem;
+                        font-weight: bold;
+                    }
+                    .badge-c {
+                        background: #15803d;
+                        color: white;
+                        padding: 0.1rem 0.4rem;
+                        border-radius: 4px;
+                        font-size: 0.7rem;
+                        font-weight: bold;
+                    }
+                    .photo-container {
+                        margin-top: 0.5rem;
+                        display: flex;
+                        gap: 1rem;
+                        flex-wrap: wrap;
+                    }
+                    .photo-box {
+                        border: 1px solid #cbd5e1;
+                        padding: 0.25rem;
+                        border-radius: 4px;
+                        background: #fff;
+                    }
+                    .photo-box img {
+                        max-width: 250px;
+                        max-height: 180px;
+                        object-fit: contain;
+                        display: block;
+                    }
+                    .sig-section {
+                        margin-top: 4rem;
+                        display: flex;
+                        justify-content: space-between;
+                        gap: 2rem;
+                        page-break-inside: avoid;
+                    }
+                    .sig-line {
+                        flex: 1;
+                        border-top: 1px solid #94a3b8;
+                        padding-top: 0.5rem;
+                        font-size: 0.85rem;
+                        color: #64748b;
+                        margin-top: 2rem;
+                    }
+                    @media print {
+                        body {
+                            padding: 0;
+                        }
+                        .no-print {
+                            display: none;
+                        }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <img src="../shared/APPLE Logo.jpg" alt="Logo" style="height: 50px; border-radius: 4px; object-fit: contain;">
+                        <div class="title-box">
+                            <h1>INSPECTION REPORT</h1>
+                            <p>Ruiz & Associates Safety Department</p>
+                        </div>
+                    </div>
+                    <div class="no-print">
+                        <button onclick="window.print();" style="background:#2563eb; color:#fff; border:none; padding:0.5rem 1.25rem; border-radius:6px; font-weight:700; cursor:pointer;">Print to Paper / Save PDF</button>
+                    </div>
+                </div>
+
+                <div class="meta-grid">
+                    <div class="meta-item"><strong>Client:</strong> ${report.clientName}</div>
+                    <div class="meta-item"><strong>Date:</strong> ${report.dateStr}</div>
+                    <div class="meta-item"><strong>Location:</strong> ${report.siteLocation || 'Not Specified'}</div>
+                    <div class="meta-item"><strong>Time:</strong> ${report.timeStr}</div>
+                    <div class="meta-item"><strong>Inspector:</strong> ${report.inspector}</div>
+                    <div class="meta-item"><strong>Report Type:</strong> ${report.inspectionType === 'General Safety' ? (report.safetyReason ? report.safetyReason + ' Site Safety Inspection' : 'General Site Safety Inspection') : report.inspectionType}</div>
+                </div>
+
+                <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-left: 4px solid #eab308; padding: 1.25rem; border-radius: 6px; margin-bottom: 2rem; font-size: 0.8rem; color: #475569; line-height: 1.5; text-align: justify; page-break-inside: avoid;">
+                    <strong style="color: #854d0e; display: block; margin-bottom: 0.4rem;">DISCLAIMER & NOTICE:</strong>
+                    Fernando Ruiz, Inc. dba Ruiz & Associates DOES NOT assert to have been able to identify 100% of hazards, safety violations and the like during this and previous inspections, particularly with machine guarding and machine “emergency cut off” safety devices.  Our inspection DID NOT focus any attention in the mechanical or electrical condition of any of the equipment referenced in this report; or which may exist at your facilities.  We’ve made a “good faith effort” at identifying the hazards that are visual and most obvious which could cause harm or injury.  Additionally, our recommendations are intended to provide a “common sense” approach to remedying or rectifying any deficiency and are not to be construed as a “guarantee” for compliance; that privilege is left to the inspector of the corresponding regulatory agency.
+                </div>
+            `;
+
+            if (report.inspectionType === 'Weekly Waste Area') {
+                if (report.violationsCount > 0) {
+                    html += `
+                    <div class="violation-summary">
+                        <span>⚠️ WARNING: ${report.violationsCount} Compliance Violation(s) identified during this weekly audit. Immediate corrective action required.</span>
+                    </div>
+                    `;
+                } else {
+                    html += `
+                    <div class="violation-summary" style="background:#dcfce7; border-color:#86efac; color:#15803d;">
+                        <span>✅ COMPLIANT: All audited waste streams comply with hazardous waste storage guidelines.</span>
+                    </div>
+                    `;
+                }
+
+                report.wasteStreams.forEach(stream => {
+                    html += `
+                    <div class="stream-section">
+                        <div class="stream-title">📦 Stream Report: ${stream.streamName}</div>
+                        <table class="audit-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 5%">#</th>
+                                    <th style="width: 60%">Compliance Checklist Item</th>
+                                    <th style="width: 12%">Status</th>
+                                    <th>Findings / Corrective Action Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+
+                    stream.checklist.forEach((q, idx) => {
+                        const trClass = q.isViolation ? 'class="row-violation"' : '';
+                        const badge = q.isViolation 
+                            ? `<span class="badge-v">VIOLATION</span>` 
+                            : (q.answer === 'N/A' ? `<span style="color:#64748b; font-weight:bold;">N/A</span>` : `<span class="badge-c">PASS</span>`);
+
+                        let historyHtml = '';
+                        if (q.isViolation) {
+                            let lastObservedDate = null;
+                            let consecutiveStreak = 0;
+                            let isConsecutiveBreak = false;
+                            let totalPastOccurrences = 0;
+
+                            for (let i = pastChronologicalReports.length - 1; i >= 0; i--) {
+                                const prevReport = pastChronologicalReports[i];
+                                if (!prevReport.wasteStreams) continue;
+                                const prevStream = prevReport.wasteStreams.find(s => s.streamName.toLowerCase() === stream.streamName.toLowerCase());
+                                if (!prevStream || !prevStream.checklist) continue;
+                                
+                                const prevQ = prevStream.checklist[idx];
+                                if (prevQ && prevQ.isViolation) {
+                                    totalPastOccurrences++;
+                                    if (lastObservedDate === null) {
+                                        lastObservedDate = prevReport.dateStr;
+                                    }
+                                    if (!isConsecutiveBreak) {
+                                        consecutiveStreak++;
+                                    }
+                                } else {
+                                    isConsecutiveBreak = true;
+                                }
+                            }
+
+                            if (totalPastOccurrences > 0) {
+                                const streakText = consecutiveStreak > 0 ? `<strong>${consecutiveStreak + 1} consecutive reports</strong>. ` : '';
+                                historyHtml = `
+                                <div style="margin-top: 0.35rem; font-size: 0.75rem; background: #fffbeb; border: 1px solid #fde68a; border-radius: 4px; padding: 0.25rem 0.5rem; color: #b45309; display: inline-block;">
+                                    ⚠️ Repeated: ${streakText}Last observed on ${lastObservedDate}
+                                </div>
+                                `;
+                            }
+                        }
+
+                        html += `
+                            <tr ${trClass}>
+                                <td>${idx + 1}</td>
+                                <td>
+                                    ${q.questionText}
+                                    ${historyHtml ? '<br>' + historyHtml : ''}
+                                </td>
+                                <td>${badge} (${q.answer})</td>
+                                <td>${q.note || ''}</td>
+                            </tr>
+                        `;
+                    });
+
+                    html += `
+                            </tbody>
+                        </table>
+                    `;
+
+                    // Compile and render photos inline for this stream
+                    const streamPhotos = stream.checklist.filter(q => q.photo !== null);
+                    if (streamPhotos.length > 0) {
+                        html += `
+                        <div style="font-size: 0.9rem; font-weight: 700; margin-bottom: 0.5rem; color:#475569;">Audited Photo Log (Stream: ${stream.streamName})</div>
+                        <div class="photo-container">
+                        `;
+                        streamPhotos.forEach(p => {
+                            html += `
+                            <div class="photo-box">
+                                <img src="${p.photo}">
+                                <div style="font-size: 0.7rem; color: #64748b; margin-top: 0.25rem; font-weight: 700; text-align:center;">Q${stream.checklist.indexOf(p) + 1} Attachment</div>
+                            </div>
+                            `;
+                        });
+                        html += `</div>`;
+                    }
+
+                    if (stream.generalNotes) {
+                        html += `
+                        <div style="margin-top:1rem; font-size:0.85rem; padding: 0.75rem; background: #f8fafc; border:1px dashed #cbd5e1; border-radius:4px;">
+                            <strong>General Stream Notes:</strong> ${stream.generalNotes}
+                        </div>
+                        `;
+                    }
+
+                    html += `</div>`;
+                });
+            } else {
+                // General Safety Observations (can be array or string)
+                if (Array.isArray(report.observations)) {
+                    report.observations.forEach((obs, index) => {
+                        let noteMargin = obs.citations ? '0.75rem' : '1.5rem';
+
+                        let lastObservedDate = null;
+                        let consecutiveStreak = 0;
+                        let isConsecutiveBreak = false;
+                        let totalPastOccurrences = 0;
+
+                        for (let i = pastChronologicalReports.length - 1; i >= 0; i--) {
+                            const prevReport = pastChronologicalReports[i];
+                            if (!prevReport.observations) continue;
+                            
+                            let foundMatch = false;
+                            if (Array.isArray(prevReport.observations)) {
+                                for (let prevObs of prevReport.observations) {
+                                    if (matchObservations(obs, prevObs)) {
+                                        foundMatch = true;
+                                        break;
+                                    }
+                                }
+                            } else if (typeof prevReport.observations === 'string') {
+                                if (matchObservations(obs, { notes: prevReport.observations })) {
+                                    foundMatch = true;
+                                }
+                            }
+
+                            if (foundMatch) {
+                                totalPastOccurrences++;
+                                if (lastObservedDate === null) {
+                                    lastObservedDate = prevReport.dateStr;
+                                }
+                                if (!isConsecutiveBreak) {
+                                    consecutiveStreak++;
+                                }
+                            } else {
+                                isConsecutiveBreak = true;
+                            }
+                        }
+
+                        let historyHtml = '';
+                        if (totalPastOccurrences > 0) {
+                            const streakText = consecutiveStreak > 0 ? `<strong>${consecutiveStreak + 1} consecutive reports</strong>. ` : '';
+                            historyHtml = `
+                            <div style="margin-bottom: 0.75rem; font-size: 0.8rem; background: #fffbeb; border: 1px solid #fde68a; border-radius: 4px; padding: 0.35rem 0.65rem; color: #b45309; display: inline-block;">
+                                ⚠️ Repeated Finding: ${streakText}Last observed on ${lastObservedDate}
+                            </div>
+                            `;
+                        }
+
+                        html += `
+                        <div class="stream-section" style="page-break-inside: avoid; margin-bottom: 2.5rem;">
+                            <div class="stream-title">🛡️ Observation #${index + 1}</div>
+                            ${historyHtml}
+                            <div style="padding:1.25rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; font-size:0.95rem; white-space: pre-wrap; margin-bottom: ${noteMargin};">${obs.notes}</div>
+                        `;
+                        
+                        if (obs.citations) {
+                            html += `
+                            <div style="margin-top: 0.75rem; padding: 0.75rem 1rem; background: #fffbeb; border: 1px solid #fef3c7; border-left: 4px solid #f59e0b; border-radius: 6px; font-size: 0.85rem; color: #78350f; margin-bottom: 1.5rem;">
+                                <strong>Cited Regulations:</strong>
+                                <div style="margin-top: 0.25rem; white-space: pre-wrap;">${obs.citations}</div>
+                            </div>
+                            `;
+                        }
+                        const photos = obs.photos || (obs.photo ? [obs.photo] : []);
+                        if (photos.length > 0) {
+                            html += `
+                            <div style="font-size: 0.9rem; font-weight: 700; margin-bottom: 0.5rem; color:#475569;">Site Photo Attachment${photos.length > 1 ? 's' : ''}</div>
+                            <div class="photo-container">
+                            `;
+                            photos.forEach((p, pIdx) => {
+                                html += `
+                                <div class="photo-box">
+                                    <img src="${p}" style="max-width: 250px; max-height: 180px; object-fit: contain;">
+                                    <div style="font-size: 0.7rem; color: #64748b; margin-top: 0.25rem; font-weight: 700; text-align:center;">Photo #${pIdx + 1}</div>
+                                </div>
+                                `;
+                            });
+                            html += `</div>`;
+                        }
+                        html += `</div>`;
+                    });
+                } else {
+                    const obsObj = { notes: report.observations || "", citations: "" };
+                    let lastObservedDate = null;
+                    let consecutiveStreak = 0;
+                    let isConsecutiveBreak = false;
+                    let totalPastOccurrences = 0;
+
+                    for (let i = pastChronologicalReports.length - 1; i >= 0; i--) {
+                        const prevReport = pastChronologicalReports[i];
+                        if (!prevReport.observations) continue;
+
+                        let foundMatch = false;
+                        if (Array.isArray(prevReport.observations)) {
+                            for (let prevObs of prevReport.observations) {
+                                if (matchObservations(obsObj, prevObs)) {
+                                    foundMatch = true;
+                                    break;
+                                }
+                            }
+                        } else if (typeof prevReport.observations === 'string') {
+                            if (matchObservations(obsObj, { notes: prevReport.observations })) {
+                                foundMatch = true;
+                            }
+                        }
+
+                        if (foundMatch) {
+                            totalPastOccurrences++;
+                            if (lastObservedDate === null) {
+                                lastObservedDate = prevReport.dateStr;
+                            }
+                            if (!isConsecutiveBreak) {
+                                consecutiveStreak++;
+                            }
+                        } else {
+                            isConsecutiveBreak = true;
+                        }
+                    }
+
+                    let historyHtml = '';
+                    if (totalPastOccurrences > 0) {
+                        const streakText = consecutiveStreak > 0 ? `<strong>${consecutiveStreak + 1} consecutive reports</strong>. ` : '';
+                        historyHtml = `
+                        <div style="margin-bottom: 0.75rem; font-size: 0.8rem; background: #fffbeb; border: 1px solid #fde68a; border-radius: 4px; padding: 0.35rem 0.65rem; color: #b45309; display: inline-block;">
+                            ⚠️ Repeated Finding: ${streakText}Last observed on ${lastObservedDate}
+                        </div>
+                        `;
+                    }
+
+                    html += `
+                    <div class="stream-section">
+                        <div class="stream-title">🛡️ ${report.safetyReason || 'General'} Site Safety Inspection Notes</div>
+                        ${historyHtml}
+                        <div style="padding:1.25rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; font-size:0.95rem; white-space: pre-wrap; margin-bottom:2rem;">${report.observations || ''}</div>
+                    `;
+
+                    if (report.photo) {
+                        html += `
+                        <div style="font-size: 0.9rem; font-weight: 700; margin-bottom: 0.5rem; color:#475569;">Site Photo Attachment</div>
+                        <div class="photo-container">
+                            <div class="photo-box">
+                                <img src="${report.photo}" style="max-width: 500px; max-height: 400px;">
+                            </div>
+                        </div>
+                        `;
+                    }
+
+                    html += `</div>`;
+                }
+            }
+
+            // Build Corrective Actions page content
+            let correctiveHtml = "";
+            let correctiveCount = 0;
+
+            if (report.inspectionType === 'Weekly Waste Area') {
+                let violations = [];
+                if (report.wasteStreams) {
+                    report.wasteStreams.forEach(stream => {
+                        if (stream.checklist) {
+                            stream.checklist.forEach((q, qIdx) => {
+                                if (q.isViolation) {
+                                    violations.push({
+                                        stream: stream.streamName,
+                                        itemNum: qIdx + 1,
+                                        text: q.questionText
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+                correctiveCount = violations.length;
+                if (correctiveCount > 0) {
+                    correctiveHtml += `
+                    <div style="page-break-before: always; margin-top: 2rem;">
+                        <h2 style="font-size: 1.3rem; border-bottom: 2px solid #2563eb; padding-bottom: 0.5rem; color: #0f172a; margin-bottom: 1.5rem;">REQUIRED CORRECTIVE ACTIONS / MEASURES</h2>
+                        <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 2rem;">The following corrective actions/measures must be documented and implemented to resolve the violations identified during this weekly audit:</p>
+                    `;
+                    violations.forEach((v, idx) => {
+                        correctiveHtml += `
+                        <div style="margin-bottom: 2rem; page-break-inside: avoid;">
+                            <strong style="color: #b91c1c; font-size: 0.9rem;">Measure #${idx + 1}: Stream "${v.stream}" - Item #${v.itemNum}</strong>
+                            <div style="font-size: 0.85rem; color: #475569; font-style: italic; margin-top: 0.25rem; margin-bottom: 0.75rem;">"${v.text}"</div>
+                            <div style="margin-top: 0.5rem;">
+                                <div style="border-bottom: 1px dotted #cbd5e1; height: 1.5rem; margin-bottom: 0.75rem;"></div>
+                                <div style="border-bottom: 1px dotted #cbd5e1; height: 1.5rem; margin-bottom: 0.75rem;"></div>
+                                <div style="border-bottom: 1px dotted #cbd5e1; height: 1.5rem;"></div>
+                            </div>
+                        </div>
+                        `;
+                    });
+                    correctiveHtml += `</div>`;
+                }
+            } else {
+                // General Safety Observations
+                let obsCount = 0;
+                if (Array.isArray(report.observations)) {
+                    obsCount = report.observations.length;
+                } else if (report.observations && typeof report.observations === 'string') {
+                    obsCount = 1;
+                }
+                correctiveCount = obsCount;
+                if (correctiveCount > 0) {
+                    correctiveHtml += `
+                    <div style="page-break-before: always; margin-top: 2rem;">
+                        <h2 style="font-size: 1.3rem; border-bottom: 2px solid #2563eb; padding-bottom: 0.5rem; color: #0f172a; margin-bottom: 1.5rem;">REQUIRED CORRECTIVE ACTIONS / MEASURES</h2>
+                        <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 2rem;">Please document the corrective actions/measures taken to address each safety observation finding listed in this report:</p>
+                    `;
+                    for (let idx = 0; idx < correctiveCount; idx++) {
+                        const obs = Array.isArray(report.observations) ? report.observations[idx] : { notes: report.observations || "", citations: "" };
+                        
+                        let shortcodesList = "";
+                        if (obs) {
+                            const shorts = [];
+                            if (obs.selectedCitations && obs.selectedCitations.length > 0) {
+                                obs.selectedCitations.forEach(key => {
+                                    const parts = key.split(':');
+                                    if (parts.length === 2) {
+                                        const cat = parts[0];
+                                        const idx = parseInt(parts[1]);
+                                        if (commonRegulations[cat] && commonRegulations[cat][idx]) {
+                                            shorts.push(commonRegulations[cat][idx].short);
+                                        }
+                                    }
+                                });
+                            }
+                            if (obs.citations) {
+                                const matches = obs.citations.match(/(?:8\s*CCR\s*[0-9\.]+(?:\([a-zA-Z0-9\(\)]+\))*|29\s*CFR\s*[0-9\.]+(?:\([a-zA-Z0-9\(\)]+\))*|NFPA\s*\d+|ANSI\s*[A-Z0-9\.-]+)/gi);
+                                if (matches) {
+                                    matches.forEach(m => {
+                                        const clean = m.trim().replace(/[\.,:;]+$/, '');
+                                        if (!shorts.includes(clean)) {
+                                            shorts.push(clean);
+                                        }
+                                    });
+                                }
+                            }
+
+                            if (shorts.length > 0) {
+                                shortcodesList = ` (Cited: ${shorts.join(', ')})`;
+                            } else if (obs.citations && obs.citations.trim()) {
+                                let truncated = obs.citations.trim();
+                                if (truncated.length > 30) {
+                                    truncated = truncated.substring(0, 27) + "...";
+                                }
+                                shortcodesList = ` (Cited: ${truncated})`;
+                            }
+                        }
+
+                        correctiveHtml += `
+                        <div style="margin-bottom: 2rem; page-break-inside: avoid;">
+                            <strong style="color: #475569; font-size: 0.9rem;">Corrective Action for Observation #${idx + 1}${shortcodesList}:</strong>
+                            <div style="margin-top: 0.5rem;">
+                                <div style="border-bottom: 1px dotted #cbd5e1; height: 1.5rem; margin-bottom: 0.75rem;"></div>
+                                <div style="border-bottom: 1px dotted #cbd5e1; height: 1.5rem; margin-bottom: 0.75rem;"></div>
+                                <div style="border-bottom: 1px dotted #cbd5e1; height: 1.5rem;"></div>
+                            </div>
+                        </div>
+                        `;
+                    }
+                    correctiveHtml += `</div>`;
+                }
+            }
+
+            // Signature Block #1 (Inspector & Representative) - Above Corrective Actions
+            html += `
+                <div class="sig-section" style="margin-bottom: 2rem;">
+                    <div class="sig-line">
+                        Inspector Signature
+                    </div>
+                    <div class="sig-line">
+                        Representative Signature
+                    </div>
+                </div>
+            `;
+
+            // Corrective actions page (page-break-before: always; inside)
+            html += correctiveHtml;
+
+            // Signature Block #2 (Representative Only) - Below Corrective Actions
+            if (correctiveCount > 0) {
+                html += `
+                    <div class="sig-section" style="margin-top: 3rem;">
+                        <div style="flex: 1;"></div>
+                        <div class="sig-line" style="flex: 1;">
+                            Representative Signature (Corrective Measures Verification)
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Close body & HTML
+            html += `
+            </body>
+            </html>
+            `;
+
+            printWindow.document.write(html);
+            printWindow.document.close();
+        };
+
+        // Delete Inspection Report from Firestore or Local Cache Queue
+        window.deleteInspectionReport = async function(id, event) {
+            if (event) event.stopPropagation();
+            if (!confirm("Are you sure you want to permanently delete this inspection report?")) {
+                return;
+            }
+
+            if (id.startsWith('queued_')) {
+                const idx = parseInt(id.split('_')[1]);
+                const queue = getQueue();
+                if (idx >= 0 && idx < queue.length) {
+                    queue.splice(idx, 1);
+                    saveQueue(queue);
+                    alert("Queued inspection report deleted successfully.");
+                    renderInspectionsLog();
+                }
+            } else {
+                try {
+                    await db.collection("inspections").doc(id).delete();
+                    alert("Inspection report deleted successfully from Cloud Firestore.");
+                } catch (error) {
+                    console.error("Error deleting inspection report:", error);
+                    alert("Failed to delete the report. Please check your connection or permissions.");
+                }
+            }
+        };
+
+        // Initialize state
+        updateQueueIndicator();
+    </script>
+</body>
+</html>

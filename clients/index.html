@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Services Database</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Firebase Compat SDKs (Works with file:/// without modules) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="../shared/auth.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; background: #ffffff; padding: 0.75rem 1.5rem; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+            <a href="../dashboard.html" style="color: var(--accent-blue); font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; transition: var(--transition-smooth);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                Back to Dashboard
+            </a>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;" id="user-email">loading...</span>
+                <button onclick="logoutUser(1)" style="background: transparent; border: 1px solid var(--border-color); color: #ef4444; border-color: rgba(239, 68, 68, 0.2); padding: 0.25rem 0.75rem; border-radius: 4px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: var(--transition-smooth);">Sign Out</button>
+            </div>
+        </div>
+        <header class="app-header">
+            <div class="header-content">
+                <div class="header-titles">
+                    <img src="APPLE Logo.jpg" alt="Logo" class="header-logo">
+                    <div>
+                        <div class="company-title">Ruiz & Associates Safety Department</div>
+                        <h1>Client Services Database</h1>
+                    </div>
+                </div>
+                <button id="btnNewClient" class="btn btn-primary">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    New Client
+                </button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="filters-container">
+                <div class="filter-group search-group">
+                    <label for="searchClient">Search Clients</label>
+                    <input type="text" id="searchClient" placeholder="Search Company or Contacts...">
+                </div>
+                <div class="filter-group">
+                    <label for="filterServiceModel">Filter by Service Model</label>
+                    <select id="filterServiceModel">
+                        <option value="All">All Service Models</option>
+                        <option value="Monthly Retainer">Monthly Retainer</option>
+                        <option value="CUPA">CUPA</option>
+                        <option value="Non-Retainer Monthly">Non-Retainer Monthly</option>
+                        <option value="Ad Hoc">Ad Hoc</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filterService">Filter by Service</label>
+                    <select id="filterService">
+                        <option value="All">All Services</option>
+                        <option value="Tailgate Safety Meetings">Tailgate Safety Meetings</option>
+                        <option value="All Company Safety Plans">All Company Safety Plans</option>
+                        <option value="CUPA Included">CUPA Included</option>
+                        <option value="Inspections">Inspections</option>
+                        <option value="Pesticide Handler Training">Pesticide Handler Training</option>
+                        <option value="Respirator Program">Respirator Program</option>
+                        <option value="Forklift Certifications">Forklift Certifications</option>
+                        <option value="SPCC">SPCC</option>
+                        <option value="Fire Extinguisher Inspections">Fire Extinguisher Inspections</option>
+                        <option value="Review Inspections Binder">Review Inspections Binder</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table id="clientsTable">
+                    <thead>
+                        <tr>
+                            <th>Company Name</th>
+                            <th>Service Model</th>
+                            <th>Contact</th>
+                            <th>Status</th>
+                            <th>Meetings Contact</th>
+                            <th>Staff Assigned</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clientsTableBody">
+                        <!-- Rows will be populated by JS -->
+                    </tbody>
+                </table>
+                <div id="emptyState" class="empty-state hidden">
+                    <div class="empty-icon">📁</div>
+                    <h3>No clients found</h3>
+                    <p>Get started by adding your first client to the database.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Client Modal -->
+    <div id="clientModal" class="modal">
+        <div class="modal-content glass-panel">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Client</h2>
+                <button id="btnCloseModal" class="btn-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <form id="clientForm">
+                <input type="hidden" id="clientId">
+                
+                <div class="form-grid">
+                    <!-- Client Info Section -->
+                    <div class="form-section">
+                        <h3>Client Information</h3>
+                        
+                        <div class="form-group">
+                            <label for="companyName">Company Name *</label>
+                            <input type="text" id="companyName" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="clientType">Service Model</label>
+                            <select id="clientType">
+                                <option value="Monthly Retainer">Monthly Retainer</option>
+                                <option value="CUPA">CUPA</option>
+                                <option value="Non-Retainer Monthly">Non-Retainer Monthly</option>
+                                <option value="Ad Hoc">Ad Hoc</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contactName">Contact Name</label>
+                            <input type="text" id="contactName">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="businessContactNumber">Business Contact Number</label>
+                            <input type="text" id="businessContactNumber">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="meetingsContactName">Meetings Contact Name</label>
+                            <input type="text" id="meetingsContactName">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="meetingsContactNumber">Meetings Contact Number</label>
+                            <input type="text" id="meetingsContactNumber">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="trainerAssigned">Staff Assigned</label>
+                            <select id="trainerAssigned">
+                                <option value="">Select Staff</option>
+                                <option value="Fernando Ruiz">Fernando Ruiz</option>
+                                <option value="Jefte Abencerraje">Jefte Abencerraje</option>
+                                <option value="Juan Villareal">Juan Villareal</option>
+                                <option value="David Meza">David Meza</option>
+                                <option value="Josue Mercado">Josue Mercado</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contractStatus">Contract Status</label>
+                            <select id="contractStatus">
+                                <option value="Active">Active</option>
+                                <option value="In Review">In Review</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Danger">Danger</option>
+                                <option value="Expired">Expired</option>
+                                <option value="Discontinued">Discontinued</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="nextReviewDate">Next Review Date</label>
+                            <input type="date" id="nextReviewDate">
+                        </div>
+                    </div>
+
+                    <!-- Services Section -->
+                    <div class="form-section">
+                        <h3>Contracted Services</h3>
+                        
+                        <div class="service-group">
+                            <label class="checkbox-label service-title">
+                                <input type="checkbox" id="svc_tailgate_meetings">
+                                <span>Tailgate Safety Meetings</span>
+                            </label>
+                            <div class="service-options" id="options_tailgate">
+                                <label class="checkbox-label"><input type="checkbox" name="opt_tailgate" value="Monthly"> Monthly</label>
+                                <label class="checkbox-label"><input type="checkbox" name="opt_tailgate" value="Bi-Monthly"> Bi-Monthly</label>
+                                <label class="checkbox-label"><input type="checkbox" name="opt_tailgate" value="Quarterly"> Quarterly</label>
+                                <label class="checkbox-label"><input type="checkbox" name="opt_tailgate" value="As Needed"> As Needed</label>
+                                <label class="checkbox-label"><input type="checkbox" name="opt_tailgate" value="Multiple Sites"> Multiple Sites</label>
+                            </div>
+                        </div>
+
+                        <div class="service-group">
+                            <label class="checkbox-label service-title">
+                                <input type="checkbox" id="svc_inspections">
+                                <span>Inspections</span>
+                            </label>
+                            <div class="service-options" id="options_inspections">
+                                <label class="checkbox-label"><input type="checkbox" name="opt_inspections" value="Monthly"> Monthly</label>
+                                <label class="checkbox-label"><input type="checkbox" name="opt_inspections" value="Quarterly"> Quarterly</label>
+                                <label class="checkbox-label"><input type="checkbox" name="opt_inspections" value="Semi-Yearly"> Semi-Yearly</label>
+                                <label class="checkbox-label"><input type="checkbox" name="opt_inspections" value="Yearly"> Yearly</label>
+                                <label class="checkbox-label"><input type="checkbox" name="opt_inspections" value="Weekly Waste Area"> Weekly Waste Area</label>
+                                <label class="checkbox-label"><input type="checkbox" name="opt_inspections" value="Multiple Locations"> Multiple Locations</label>
+                            </div>
+                        </div>
+
+                        <div class="service-group standalone">
+                            <label class="checkbox-label"><input type="checkbox" id="svc_all_company_safety_plans"> All Company Safety Plans</label>
+                            <label class="checkbox-label"><input type="checkbox" id="svc_cupa_included"> CUPA Included</label>
+                            <label class="checkbox-label"><input type="checkbox" id="svc_pesticide_handler"> Pesticide Handler Training</label>
+                            <label class="checkbox-label"><input type="checkbox" id="svc_respirator_program"> Respirator Program</label>
+                            <label class="checkbox-label"><input type="checkbox" id="svc_forklift_certs"> Forklift Certifications</label>
+                            <label class="checkbox-label"><input type="checkbox" id="svc_spcc"> SPCC</label>
+                            <label class="checkbox-label"><input type="checkbox" id="svc_fire_extinguisher"> Fire Extinguisher Inspections</label>
+                            <label class="checkbox-label"><input type="checkbox" id="svc_review_binder"> Review Inspections Binder</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" style="padding: 0 2rem 1rem 2rem; margin-bottom: 0;">
+                    <label for="clientNotes">Client Notes</label>
+                    <textarea id="clientNotes" rows="4" placeholder="Enter any specific notes for this client..."></textarea>
+                </div>
+
+                <div class="form-group" style="padding: 0 2rem 1rem 2rem; margin-bottom: 0;">
+                    <label for="priceFee">Retainer / Meetings / CUPA Fee</label>
+                    <input type="text" id="priceFee" placeholder="$0.00">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="btnCancel" class="btn btn-secondary">Cancel</button>
+                    <button type="submit" id="btnSave" class="btn btn-primary">Save Client</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Client Details View Modal -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content glass-panel">
+            <div class="modal-header">
+                <h2 id="viewTitle">Client Details</h2>
+                <div class="header-actions">
+                    <button id="btnEditFromView" class="btn btn-secondary btn-sm">Edit</button>
+                    <button id="btnCloseView" class="btn-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                </div>
+            </div>
+            <div id="viewContent" class="view-content">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Tools (Inconspicuous Export/Import) -->
+    <div class="admin-tools">
+        <button id="btnExport" class="btn-icon-subtle" title="Export Backup">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        </button>
+        <button id="btnImport" class="btn-icon-subtle" title="Import Backup">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+        </button>
+        <input type="file" id="csvFileInput" accept=".csv" style="display: none;">
+    </div>
+
+    <script>
+        // Start Auth Guard for client database module (depth 1)
+        initAuthGuard(1);
+    </script>
+    <script src="app.js"></script>
+</body>
+</html>
