@@ -937,7 +937,7 @@
                     
                     <!-- STEP 1: PREFACE -->
                     <div id="step-1" class="step-container active">
-                        <h2 class="panel-title" style="border: none; margin-bottom: 0.5rem; padding-bottom: 0;">Inspection Preface</h2>
+                        <h2 id="preface-title" class="panel-title" style="border: none; margin-bottom: 0.5rem; padding-bottom: 0;">Inspection Preface</h2>
                         <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Enter general details and pick your inspection template.</p>
 
                         <!-- Disclaimer Banner -->
@@ -1079,7 +1079,7 @@
                             <button type="button" class="btn-primary" style="background: #64748b; padding: 0.4rem 0.8rem; font-size: 0.85rem; width: auto;" onclick="backToStep1()">
                                 &larr; Edit Preface
                             </button>
-                            <h2 class="panel-title" style="border: none; margin: 0; padding: 0;">Audit Details</h2>
+                            <h2 id="audit-details-title" class="panel-title" style="border: none; margin: 0; padding: 0;">Audit Details</h2>
                         </div>
 
                         <div id="audit-cards-container">
@@ -1256,6 +1256,7 @@
         let isOffline = false;
         let clientsList = [];
         let allInspections = [];
+        let editingInspectionId = null;
         
         // Checklist template definition
         const checklistQuestions = [
@@ -2640,6 +2641,37 @@ CRITICAL CONSTRAINTS:
                 reportData.violationsCount = 0;
             }
 
+            if (editingInspectionId) {
+                if (editingInspectionId.startsWith('queued_')) {
+                    const idx = parseInt(editingInspectionId.split('_')[1]);
+                    const queue = getQueue();
+                    if (idx >= 0 && idx < queue.length) {
+                        queue[idx] = reportData;
+                        saveQueue(queue);
+                        alert("Queued inspection report updated successfully.");
+                    }
+                    resetForm();
+                    backToStep1();
+                    switchToView('history');
+                } else {
+                    if (isOffline) {
+                        alert("Cannot update a submitted Firestore report while in offline mode. Please switch to online mode.");
+                        return;
+                    }
+                    try {
+                        await db.collection("inspections").doc(editingInspectionId).set(reportData);
+                        alert("Inspection Report updated successfully in Cloud Firebase!");
+                        resetForm();
+                        backToStep1();
+                        switchToView('history');
+                    } catch (error) {
+                        console.error("Firestore update failed:", error);
+                        alert("Failed to update the report in Cloud Firestore: " + error.message);
+                    }
+                }
+                return;
+            }
+
             if (isOffline) {
                 // Queue locally
                 const queue = getQueue();
@@ -2738,6 +2770,13 @@ CRITICAL CONSTRAINTS:
 
             // Clear Dynamic container UI
             document.getElementById('audit-cards-container').innerHTML = '';
+
+            // Reset editing state and form titles
+            editingInspectionId = null;
+            const prefTitle = document.getElementById('preface-title');
+            if (prefTitle) prefTitle.textContent = "Inspection Preface";
+            const audTitle = document.getElementById('audit-details-title');
+            if (audTitle) audTitle.textContent = "Audit Details";
         }
 
         // Network Toggle Switch
@@ -2858,6 +2897,9 @@ CRITICAL CONSTRAINTS:
                     statusBadge += `<br><span class="badge-status badge-sync">Queued</span>`;
                 }
 
+                const canReopen = isWithinOneYear(ins.dateStr);
+                const editBtn = canReopen ? `<button class="btn-pdf" style="border-color: var(--accent-blue); color: var(--accent-blue); background: var(--accent-blue-light);" onclick="reopenInspectionReport('${ins.id}', event)">✏️ Edit</button>` : '';
+
                 tr.innerHTML = `
                     <td>
                         <strong style="color: var(--slate-dark);">${ins.clientName}</strong>
@@ -2870,6 +2912,7 @@ CRITICAL CONSTRAINTS:
                     <td>
                         <div style="display: flex; gap: 0.5rem; align-items: center;">
                             <button class="btn-pdf" onclick="printInspectionReport('${ins.id}')">📄 Print/PDF</button>
+                            ${editBtn}
                             <button class="btn-delete" onclick="deleteInspectionReport('${ins.id}', event)">🗑️ Delete</button>
                         </div>
                     </td>
@@ -2879,6 +2922,141 @@ CRITICAL CONSTRAINTS:
 
             updateQueueIndicator();
         }
+
+        // Helper to check if a date is within 1 year from now
+        function isWithinOneYear(dateStr) {
+            if (!dateStr) return false;
+            const parts = dateStr.split('-');
+            if (parts.length !== 3) return false;
+            const year = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10) - 1;
+            const day = parseInt(parts[2], 10);
+            
+            const reportDate = new Date(year, month, day);
+            const oneYearAgo = new Date();
+            oneYearAgo.setHours(0,0,0,0);
+            oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+            
+            return reportDate >= oneYearAgo;
+        }
+
+        // Reopen and edit an existing inspection report
+        window.reopenInspectionReport = function(id, event) {
+            if (event) event.stopPropagation();
+            
+            let report = null;
+            if (id.startsWith('queued_')) {
+                const idx = parseInt(id.split('_')[1]);
+                report = getQueue()[idx];
+            } else {
+                report = allInspections.find(i => i.id === id);
+            }
+
+            if (!report) {
+                alert("Inspection report details could not be found.");
+                return;
+            }
+
+            if (!confirm("Are you sure you want to reopen and edit this inspection report? Any submitted changes will overwrite the existing report.")) {
+                return;
+            }
+
+            // Set editing state
+            editingInspectionId = id;
+
+            // 1. Populate preface form fields
+            document.getElementById('clientSelect').value = report.clientName;
+            document.getElementById('siteLocation').value = report.siteLocation || '';
+            document.getElementById('auditDate').value = report.dateStr;
+            document.getElementById('auditTime').value = report.timeStr;
+            document.getElementById('inspectorName').value = report.inspector;
+            document.getElementById('auditType').value = report.inspectionType;
+
+            // Trigger type change UI display (shows/hides proper streams or safety observation frequency options)
+            handleAuditTypeChange(report.inspectionType);
+
+            // 2. Populate checklist / observation state
+            if (report.inspectionType === 'Weekly Waste Area') {
+                // Restore Checked Streams Grid
+                // First uncheck all
+                document.querySelectorAll('.stream-checkbox').forEach(cb => cb.checked = false);
+                
+                // Check those in report
+                const reportStreams = report.wasteStreams.map(s => s.streamName);
+                const grid = document.getElementById('streamsGrid');
+                
+                reportStreams.forEach(stream => {
+                    const checkboxes = Array.from(document.querySelectorAll('.stream-checkbox'));
+                    const match = checkboxes.find(cb => cb.value.toLowerCase() === stream.toLowerCase());
+                    if (match) {
+                        match.checked = true;
+                    } else {
+                        // Create custom stream card
+                        const label = document.createElement('label');
+                        label.className = 'stream-card';
+                        label.innerHTML = `
+                            <input type="checkbox" value="${stream}" checked class="stream-checkbox">
+                            <span>${stream}</span>
+                        `;
+                        grid.appendChild(label);
+                    }
+                });
+
+                // Populate auditState.streams
+                auditState.streams = {};
+                report.wasteStreams.forEach(stream => {
+                    auditState.streams[stream.streamName] = {
+                        questions: {},
+                        generalNotes: stream.generalNotes || ""
+                    };
+                    stream.checklist.forEach((q, qIdx) => {
+                        auditState.streams[stream.streamName].questions[qIdx] = {
+                            answer: q.answer,
+                            note: q.note || "",
+                            photo: q.photo || null
+                        };
+                    });
+                });
+
+            } else {
+                // General Safety
+                const reason = report.safetyReason || 'General';
+                const radios = Array.from(document.querySelectorAll('.reason-radio'));
+                let match = radios.find(r => r.value.toLowerCase() === reason.toLowerCase());
+                if (match) {
+                    match.checked = true;
+                } else {
+                    const grid = document.getElementById('safetyReasonsGrid');
+                    const label = document.createElement('label');
+                    label.className = 'stream-card';
+                    label.innerHTML = `
+                        <input type="radio" name="safetyReason" value="${reason}" checked class="reason-radio">
+                        <span>${reason}</span>
+                    `;
+                    grid.appendChild(label);
+                }
+
+                // Populate safetyObservations state
+                safetyObservations = report.observations.map((o, idx) => {
+                    const photos = o.photos || (o.photo ? [o.photo] : []);
+                    return {
+                        id: idx + 1,
+                        notes: o.notes,
+                        citations: o.citations || "",
+                        selectedCitations: o.selectedCitations || [],
+                        photos: photos
+                    };
+                });
+                observationCounter = safetyObservations.length;
+            }
+
+            // Change UI heading to show "Editing Mode"
+            document.getElementById('preface-title').textContent = "✏️ Edit Inspection Preface";
+            document.getElementById('audit-details-title').textContent = "✏️ Edit Audit Details";
+
+            // Open the form view
+            switchToView('inspection');
+        };
 
         // Helper function to match General Safety observations
         function matchObservations(obs1, obs2) {
@@ -3658,6 +3836,63 @@ CRITICAL CONSTRAINTS:
 
         // Initialize state
         updateQueueIndicator();
+
+        // Data Retention Cleanup: Delete General Safety > 2 years and Waste Area > 4 years
+        async function cleanupExpiredInspections() {
+            if (isOffline) return;
+
+            const now = new Date();
+            
+            // 2 years ago date
+            const twoYearsAgo = new Date();
+            twoYearsAgo.setFullYear(now.getFullYear() - 2);
+            const twoYearsAgoTimestamp = firebase.firestore.Timestamp.fromDate(twoYearsAgo);
+
+            // 4 years ago date
+            const fourYearsAgo = new Date();
+            fourYearsAgo.setFullYear(now.getFullYear() - 4);
+            const fourYearsAgoTimestamp = firebase.firestore.Timestamp.fromDate(fourYearsAgo);
+
+            try {
+                // Query all inspections older than 2 years
+                const snapshot = await db.collection("inspections")
+                    .where("timestamp", "<", twoYearsAgoTimestamp)
+                    .get();
+
+                const deletePromises = [];
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const type = data.inspectionType;
+                    const docTimestamp = data.timestamp;
+
+                    if (type === 'General Safety') {
+                        console.log("Purging expired General Safety inspection:", doc.id, data.dateStr);
+                        deletePromises.push(db.collection("inspections").doc(doc.id).delete());
+                    } else if (type === 'Weekly Waste Area') {
+                        if (docTimestamp && docTimestamp.toDate() < fourYearsAgo) {
+                            console.log("Purging expired Weekly Waste Area inspection:", doc.id, data.dateStr);
+                            deletePromises.push(db.collection("inspections").doc(doc.id).delete());
+                        }
+                    }
+                });
+
+                if (deletePromises.length > 0) {
+                    await Promise.all(deletePromises);
+                    console.log(`Successfully purged ${deletePromises.length} expired inspection report(s) per retention policy.`);
+                }
+            } catch (err) {
+                console.error("Error during data retention cleanup:", err);
+            }
+        }
+
+        // Trigger cleanup once upon successful login
+        let cleanupAttempted = false;
+        auth.onAuthStateChanged((user) => {
+            if (user && isValidCompanyDomain(user.email) && user.emailVerified && !cleanupAttempted) {
+                cleanupAttempted = true;
+                cleanupExpiredInspections();
+            }
+        });
     </script>
 </body>
 </html>
