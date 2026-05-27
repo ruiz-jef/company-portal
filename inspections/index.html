@@ -900,10 +900,10 @@
                         <thead>
                             <tr>
                                 <th>Client / Site</th>
-                                <th>Type / Details</th>
+                                <th>Type</th>
                                 <th>Status</th>
                                 <th>Inspector</th>
-                                <th>Date</th>
+                                <th style="white-space: nowrap;">Date</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -2874,8 +2874,7 @@ CRITICAL CONSTRAINTS:
                 let statusBadge = "";
                 
                 if (ins.inspectionType === 'Weekly Waste Area') {
-                    const streams = ins.wasteStreams ? ins.wasteStreams.map(s => s.streamName).join(', ') : '';
-                    detailText = `<strong>Weekly Waste Audit</strong><br><span style="font-size:0.75rem; color: var(--text-secondary);">${streams}</span>`;
+                    detailText = `<strong>Weekly Waste Audit</strong>`;
                     
                     if (ins.violationsCount > 0) {
                         statusBadge = `<span class="badge-status badge-action">⚠️ ${ins.violationsCount} Violation${ins.violationsCount > 1 ? 's' : ''}</span>`;
@@ -2883,13 +2882,7 @@ CRITICAL CONSTRAINTS:
                         statusBadge = `<span class="badge-status badge-passed">Compliant</span>`;
                     }
                 } else {
-                    let obsSummary = "";
-                    if (Array.isArray(ins.observations)) {
-                        obsSummary = ins.observations.map(o => o.notes).filter(n => n).join(' | ');
-                    } else if (typeof ins.observations === 'string') {
-                        obsSummary = ins.observations;
-                    }
-                    detailText = `<strong>${ins.safetyReason || 'General'} Site Safety Inspection</strong><br><span style="font-size:0.75rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; display: inline-block;" title="${obsSummary.replace(/"/g, '&quot;')}">${obsSummary}</span>`;
+                    detailText = `<strong>${ins.safetyReason || 'General'} Site Safety Inspection</strong>`;
                     statusBadge = `<span class="badge-status badge-passed">Logged</span>`;
                 }
 
@@ -2908,7 +2901,7 @@ CRITICAL CONSTRAINTS:
                     <td>${detailText}</td>
                     <td>${statusBadge}</td>
                     <td style="font-size: 0.8rem; color: var(--text-secondary);">${ins.inspector}</td>
-                    <td>${ins.dateStr}</td>
+                    <td style="white-space: nowrap;">${ins.dateStr}</td>
                     <td>
                         <div style="display: flex; gap: 0.5rem; align-items: center;">
                             <button class="btn-pdf" onclick="printInspectionReport('${ins.id}')">📄 Print/PDF</button>
