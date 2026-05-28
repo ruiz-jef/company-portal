@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Safety Plan Generator - Ruiz & Associates</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../shared/portal.css">
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Firebase Compat SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="../shared/auth.js"></script>
+    
+    <!-- PDF Generation Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <div class="portal-bg"></div>
+
+    <!-- Navigation Bar -->
+    <nav class="portal-navbar">
+        <a href="../dashboard.html" class="navbar-brand">
+            <img src="../shared/APPLE Logo.jpg" alt="Logo" class="navbar-logo" style="height: 36px; border-radius: 4px; object-fit: contain; background: white; padding: 2px;">
+            <div class="navbar-title">RUIZ & ASSOCIATES</div>
+        </a>
+        <ul class="navbar-menu">
+            <li class="menu-item">
+                <a href="../dashboard.html">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+                    Dashboard
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="../clients/Safety Dept Client List.html">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                    Client Database
+                </a>
+            </li>
+            <li class="menu-item active">
+                <a href="#">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                    Safety Plans
+                </a>
+            </li>
+            <li>
+                <button class="btn-logout" onclick="logoutUser(1)">Sign Out</button>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="wizard-container">
+        <!-- Progress Bar Indicator -->
+        <div class="wizard-progress-bar">
+            <div class="progress-step active" id="progStep1">
+                <div class="step-num">1</div>
+                <div class="step-label">Profile & Industry</div>
+            </div>
+            <div class="progress-line" id="progLine1"></div>
+            <div class="progress-step" id="progStep2">
+                <div class="step-num">2</div>
+                <div class="step-label">Safety Modules</div>
+            </div>
+            <div class="progress-line" id="progLine2"></div>
+            <div class="progress-step" id="progStep3">
+                <div class="step-num">3</div>
+                <div class="step-label">Custom Fields</div>
+            </div>
+            <div class="progress-line" id="progLine3"></div>
+            <div class="progress-step" id="progStep4">
+                <div class="step-num">4</div>
+                <div class="step-label">Preview & Export</div>
+            </div>
+        </div>
+
+        <div class="wizard-card glass-panel">
+            <!-- Step 1: Client Selection & Industry Selection -->
+            <section class="wizard-step-section active" id="stepSection1">
+                <h2 class="step-section-title">Step 1: Client Profile & Baseline Industry</h2>
+                <p class="step-section-desc">Select an existing client from your database to load their profile information, or enter plan details manually. Then select a baseline industry to auto-select compliant modules.</p>
+
+                <!-- Client Selector Form Group -->
+                <div class="form-group select-client-group">
+                    <label class="form-label" for="selectClient">Select Client Profile (from Database)</label>
+                    <div class="select-wrapper">
+                        <select class="input-field" id="selectClient">
+                            <option value="">-- Load Client Data (Or Enter Manually Below) --</option>
+                            <!-- Client list loaded via Firestore -->
+                        </select>
+                        <div class="spinner-small" id="clientLoadingSpinner" style="display: none;"></div>
+                    </div>
+                </div>
+
+                <div class="form-grid-2col">
+                    <!-- Client Details Manual Override / Entry -->
+                    <div class="form-column">
+                        <h3 class="form-section-subtitle">Client Information</h3>
+                        <div class="form-group">
+                            <label class="form-label" for="clientName">Client/Company Name *</label>
+                            <input type="text" id="clientName" class="input-field" placeholder="e.g. Ruiz Orchards Inc" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="clientAddress">Physical Office Address *</label>
+                            <input type="text" id="clientAddress" class="input-field" placeholder="e.g. 123 Highway 99, Delano, CA" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="safetyOfficer">Designated Safety Officer *</label>
+                            <input type="text" id="safetyOfficer" class="input-field" placeholder="e.g. Fernando Ruiz" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="planDate">Plan Effective Date *</label>
+                            <input type="date" id="planDate" class="input-field" required>
+                        </div>
+                    </div>
+
+                    <!-- Industry Selector Decks -->
+                    <div class="form-column">
+                        <h3 class="form-section-subtitle">Baseline Compliance Industry</h3>
+                        <p class="form-section-explanation">Selecting a sector pre-configures legally required Cal/OSHA baseline programs (you can adjust them in Step 2).</p>
+                        
+                        <div class="industry-card-grid">
+                            <!-- Agriculture Card -->
+                            <label class="industry-card-label" for="indAg">
+                                <input type="radio" name="industry" id="indAg" value="agriculture" checked>
+                                <div class="industry-card-content">
+                                    <div class="ind-icon">🌾</div>
+                                    <div class="ind-info">
+                                        <div class="ind-title">Agriculture</div>
+                                        <div class="ind-desc">Adds HIPP & defaults Pesticide Handlers Program (PHP) to checked.</div>
+                                    </div>
+                                </div>
+                            </label>
+
+                            <!-- Construction Card -->
+                            <label class="industry-card-label" for="indConst">
+                                <input type="radio" name="industry" id="indConst" value="construction">
+                                <div class="industry-card-content">
+                                    <div class="ind-icon">🏗️</div>
+                                    <div class="ind-info">
+                                        <div class="ind-title">Construction</div>
+                                        <div class="ind-desc">Adds HIPP & pre-checks Respirator Use Program (RUP) baseline.</div>
+                                    </div>
+                                </div>
+                            </label>
+
+                            <!-- Shops Card -->
+                            <label class="industry-card-label" for="indShops">
+                                <input type="radio" name="industry" id="indShops" value="shops">
+                                <div class="industry-card-content">
+                                    <div class="ind-icon">⚙️</div>
+                                    <div class="ind-info">
+                                        <div class="ind-title">Shops / Manufacturing</div>
+                                        <div class="ind-desc">Default industrial setting. Allows manual toggling of RUP/HMBP.</div>
+                                    </div>
+                                </div>
+                            </label>
+
+                            <!-- Cattle Card -->
+                            <label class="industry-card-label" for="indCattle">
+                                <input type="radio" name="industry" id="indCattle" value="cattle">
+                                <div class="industry-card-content">
+                                    <div class="ind-icon">🤠</div>
+                                    <div class="ind-info">
+                                        <div class="ind-title">Cattle / Ranching</div>
+                                        <div class="ind-desc">Adds outdoor heat illness program (HIPP) baseline.</div>
+                                    </div>
+                                </div>
+                            </label>
+
+                            <!-- Public Works Card -->
+                            <label class="industry-card-label" for="indPW">
+                                <input type="radio" name="industry" id="indPW" value="public_works">
+                                <div class="industry-card-content">
+                                    <div class="ind-icon">🚧</div>
+                                    <div class="ind-info">
+                                        <div class="ind-title">Public Works</div>
+                                        <div class="ind-desc">Adds outdoor HIPP compliance checks for field teams.</div>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 2: Dynamic Module Checkboxes (The Modular Engine) -->
+            <section class="wizard-step-section" id="stepSection2">
+                <h2 class="step-section-title">Step 2: Dynamic Safety Modules Checklist</h2>
+                <p class="step-section-desc">Customize your safety binder content. Toggle entire safety programs on or off, or expand each program card to selectively include/exclude sub-sections.</p>
+
+                <!-- Modules Container -->
+                <div class="modules-engine-list" id="modulesEngineContainer">
+                    <!-- Loaded dynamically via app.js -->
+                    <div class="loading-placeholder">
+                        <div class="spinner-large"></div>
+                        <p>Loading compliance templates and modular checklists...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 3: Custom Field Injections -->
+            <section class="wizard-step-section" id="stepSection3">
+                <h2 class="step-section-title">Step 3: Verification & Template Customization</h2>
+                <p class="step-section-desc">The generator scanned your selected safety modules and found the following variables. Modify them here to inject the values throughout the finalized document.</p>
+
+                <div class="placeholder-forms-container">
+                    <div class="form-grid-2col" id="placeholderInputsGrid">
+                        <!-- Loaded dynamically via scanning selected module text templates -->
+                    </div>
+                    <div id="noPlaceholdersState" class="empty-state hidden">
+                        <div class="empty-icon">✓</div>
+                        <h3>No variables found</h3>
+                        <p>No customized placeholders were detected in the selected safety programs.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 4: Preview, Formatting & Binder-Ready Export -->
+            <section class="wizard-step-section" id="stepSection4">
+                <h2 class="step-section-title">Step 4: Safety Plan Document Preview & Export</h2>
+                <p class="step-section-desc">Review your generated print-ready document. Click "Export as PDF" to generate a physical binder layout (complete with page-breaks between programs), "Export as Word Document" to edit, or "Save Plan" to record in the cloud database.</p>
+
+                <div class="export-actions-bar">
+                    <button class="btn btn-primary" id="btnExportPdf" style="background-color: #ef4444; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        Export as PDF
+                    </button>
+                    <button class="btn btn-primary" id="btnExportWord" style="background-color: var(--accent-blue); box-shadow: var(--shadow-blue);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        Export as Word Document
+                    </button>
+                    <button class="btn btn-primary" id="btnSavePlan" style="background-color: var(--success-color); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                        Save Plan to Cloud
+                    </button>
+                </div>
+
+                <!-- Print Preview Area -->
+                <div class="print-preview-wrapper">
+                    <div class="preview-paper" id="documentPreviewPane">
+                        <!-- Fully injected document layout -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Card Navigation Footer -->
+            <div class="wizard-footer">
+                <button class="btn btn-secondary" id="btnPrev" style="display: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    Previous Step
+                </button>
+                <button class="btn btn-primary" id="btnNext" style="margin-left: auto;">
+                    Next Step
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="portal-footer">
+        &copy; 2026 Ruiz & Associates Safety Department. Internal Staff Use Only.
+    </footer>
+
+    <!-- Core App Logic -->
+    <script src="app.js"></script>
+    <script>
+        // Start Auth Guard (depth 1)
+        initAuthGuard(1);
+    </script>
+</body>
+</html>

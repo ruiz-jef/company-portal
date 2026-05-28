@@ -21,6 +21,12 @@
     --accent-blue-light: #eff6ff;   /* Blue-50 */
     --accent-blue-glow: rgba(37, 99, 235, 0.15);
     
+    /* Purple Accents */
+    --accent-purple: #8b5cf6;         /* Purple-500 */
+    --accent-purple-hover: #7c3aed;   /* Purple-600 */
+    --accent-purple-light: #f5f3ff;   /* Purple-50 */
+    --accent-purple-glow: rgba(139, 92, 246, 0.15);
+    
     /* Slate Neutrals */
     --slate-dark: #0f172a;          /* Slate-900 */
     --slate-medium: #1e293b;        /* Slate-800 */
@@ -365,6 +371,10 @@ body {
     background: var(--accent-blue);
 }
 
+.module-card.accent-purple::before {
+    background: var(--accent-purple);
+}
+
 .module-card:hover {
     transform: translateY(-5px);
     box-shadow: var(--shadow-lg);
@@ -441,4 +451,35 @@ body {
         align-items: flex-start;
         gap: 1rem;
     }
+}
+
+/* WIP elements */
+.wip-ribbon {
+    position: absolute;
+    top: 18px;
+    right: -32px;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: #ffffff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.25rem 2.25rem;
+    transform: rotate(45deg);
+    box-shadow: var(--shadow-sm);
+    z-index: 10;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    pointer-events: none;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.nav-wip-badge {
+    background: #ef4444;
+    color: #ffffff;
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+    margin-left: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
