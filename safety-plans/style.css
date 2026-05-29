@@ -302,55 +302,44 @@
     flex: 1;
 }
 
-/* Custom Checkbox */
-.custom-checkbox-wrapper {
-    display: inline-flex;
-    align-items: center;
-    cursor: pointer;
-}
-
-.custom-checkbox-wrapper input[type="checkbox"] {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    height: 0;
-    width: 0;
-}
-
-.checkbox-visual {
-    height: 22px;
-    width: 22px;
-    background-color: #ffffff;
+/* Custom Styled Checkbox */
+input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
     border: 2px solid var(--border-color);
     border-radius: 6px;
-    display: flex;
+    background-color: #ffffff;
+    cursor: pointer;
+    position: relative;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     transition: var(--transition-smooth);
+    margin: 0;
+    vertical-align: middle;
 }
 
-.custom-checkbox-wrapper:hover input ~ .checkbox-visual {
+input[type="checkbox"]:hover {
     border-color: var(--accent-purple);
+    box-shadow: 0 0 0 3px var(--accent-purple-glow);
 }
 
-.custom-checkbox-wrapper input:checked ~ .checkbox-visual {
+input[type="checkbox"]:checked {
     background-color: var(--accent-purple);
     border-color: var(--accent-purple);
 }
 
-.checkbox-visual::after {
+input[type="checkbox"]:checked::after {
     content: "";
-    display: none;
+    display: block;
     width: 5px;
     height: 10px;
     border: solid white;
     border-width: 0 2.5px 2.5px 0;
     transform: rotate(45deg);
     margin-bottom: 2px;
-}
-
-.custom-checkbox-wrapper input:checked ~ .checkbox-visual::after {
-    display: block;
 }
 
 .module-badge-abbrev {
@@ -457,13 +446,8 @@
     background: #ffffff;
 }
 
-.subsection-item-label input[type="checkbox"]:checked + .subsection-visual-wrapper .checkbox-visual {
-    background-color: var(--accent-purple);
-    border-color: var(--accent-purple);
-}
-
-.subsection-item-label input[type="checkbox"]:checked + .subsection-visual-wrapper .checkbox-visual::after {
-    display: block;
+.subsection-item-label input[type="checkbox"] {
+    margin-top: 2px;
 }
 
 .subsection-title {
@@ -770,4 +754,65 @@
     .wizard-step-section {
         padding: 1.5rem;
     }
+}
+
+/* Dynamic Field Repeaters in Step 3 */
+.repeater-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    width: 100%;
+}
+
+.repeater-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    animation: slideInRepeater 0.2s ease-out;
+}
+
+@keyframes slideInRepeater {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.btn-repeater-add {
+    background: transparent;
+    border: none;
+    color: var(--accent-purple);
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-top: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    transition: var(--transition-smooth);
+}
+
+.btn-repeater-add:hover {
+    background: var(--accent-purple-light);
+    color: var(--accent-purple-hover);
+}
+
+.btn-repeater-delete {
+    background: transparent;
+    border: none;
+    color: var(--error-color);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-smooth);
+    border: 1px solid transparent;
+}
+
+.btn-repeater-delete:hover {
+    background: #fef2f2;
+    border-color: rgba(239, 68, 68, 0.2);
 }
