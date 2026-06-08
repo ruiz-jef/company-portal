@@ -1283,28 +1283,182 @@ const defaultModulesSeed = [
 <p>Este Programa para Manejadores de Pesticidas aborda las normas regulatorias para el uso, mezcla, carga y aplicación segura de pesticidas en las operaciones agrícolas de {{client_name}}. Todas las operaciones de manejo de pesticidas son supervisadas por {{safety_officer}} para garantizar el cumplimiento con el Departamento de Regulación de Pesticidas de California (DPR).</p>`,
         subsections: [
             {
-                id: "php_ppe",
-                title: "Personal Protective Equipment (PPE) / Equipo de Protección",
-                content_template: `<h2>1. Personal Protective Equipment (PPE)</h2>
-<p>Handlers must wear appropriate protective clothing (gloves, eye protection, coveralls, chemical resistant boots) as specified by the pesticide product label. The designated PPE locker and changing area is located at {{pesticide_ppe_locker_location}}.</p>`,
-                content_template_es: `<h2>1. Equipo de Protección Personal (PPE)</h2>
-<p>Los manejadores deben usar la ropa protectora adecuada (guantes, protección ocular, overoles, botas resistentes a químicos) según lo especificado por la etiqueta del producto pesticida. El casillero de PPE y el área de cambio designados se encuentran en {{pesticide_ppe_locker_location}}.</p>`
+                id: "php_training_admin",
+                title: "Training Timing, Qualifications & Recordkeeping / Capacitación y Registro",
+                content_template: `<h2>Section 1 - Training Timing, Qualifications & Recordkeeping</h2>
+<p><strong>1.1 - Scope and Frequency:</strong> All employees of {{client_name}} who handle pesticides must receive comprehensive pesticide safety training prior to performing any handling activities and at least annually thereafter, in accordance with 3 CCR §6724(a) and §6724(d). The training covered under this specific program was conducted on <strong>{{pesticide_training_date}}</strong>.</p>
+<p><strong>1.2 - Trainer Qualifications:</strong> Training is conducted by a qualified trainer meeting the requirements of 3 CCR §6724(c) and §6724(e) (such as a licensed agricultural pest control adviser, certified applicator, or county extension agent).</p>
+<p><strong>1.3 - Language and Comprehension:</strong> All safety training is conducted in a language and manner that employees understand. The trainer will verify employee comprehension through active discussion, question-and-answer sessions, and employee feedback in accordance with 3 CCR §6724(d).</p>
+<p><strong>1.4 - Recordkeeping:</strong> Detailed training records—including employee name, training date, trainer name, and topics covered—are maintained for a minimum of two (2) years in accordance with 3 CCR §6724(e) and longer when necessary to support occupational safety, environmental compliance, or legal requirements.</p>`,
+                content_template_es: `<h2>Sección 1 - Tiempos de Capacitación, Calificaciones y Registro</h2>
+<p><strong>1.1 - Alcance y Frecuencia:</strong> Todos los empleados de {{client_name}} que manejan pesticidas deben recibir capacitación integral sobre seguridad en el uso de pesticidas antes de realizar cualquier actividad de manejo y al menos una vez al año a partir de entonces, de acuerdo con las normas 3 CCR §6724(a) y §6724(d). La capacitación cubierta por este programa específico se llevó a cabo el <strong>{{pesticide_training_date}}</strong>.</p>
+<p><strong>1.2 - Calificaciones del Capacitador:</strong> La capacitación es impartida por un capacitador calificado que cumple con los requisitos de las normas 3 CCR §6724(c) y §6724(e) (como un asesor de control de plagas agrícolas con licencia, aplicador certificado o agente de extensión del condado).</p>
+<p><strong>1.3 - Idioma y Comprensión:</strong> Toda la capacitación de seguridad se imparte en un idioma y de una manera que los empleados comprendan. El capacitador verificará la comprensión de los empleados a través de discusiones activas, sesiones de preguntas y respuestas, y comentarios de los empleados, de acuerdo con la norma 3 CCR §6724(d).</p>
+<p><strong>1.4 - Registro de Archivos:</strong> Los registros detallados de la capacitación, que incluyen el nombre del empleado, la fecha de capacitación, el nombre del capacitador y los temas cubiertos, se mantienen durante un mínimo de dos (2) años de conformidad con la norma 3 CCR §6724(e), y más tiempo cuando sea necesario para respaldar la seguridad ocupacional, el cumplimiento ambiental o los requisitos legales.</p>`
             },
             {
-                id: "php_decon",
-                title: "Decontamination & First Aid / Descontaminación",
-                content_template: `<h2>2. Decontamination Facilities</h2>
-<p>Decontamination sites with clean water (at least 3 gallons per handler), soap, and single-use towels must be maintained within 1/4 mile of mixing, loading, or application sites. Emergency eye-flush kits must be immediately accessible. Emergency first-aid kits are stored in {{pesticide_first_aid_kit_location}}.</p>`,
-                content_template_es: `<h2>2. Instalaciones de Descontaminación</h2>
-<p>Se deben mantener sitios de descontaminación con agua limpia (al menos 3 galones por manejador), jabón y toallas de un solo uso dentro de 1/4 de milla de los sitios de mezcla, carga o aplicación. Los kits de lavado de ojos de emergencia deben ser accesibles de inmediato. Los kits de primeros auxilios de emergencia se guardan en {{pesticide_first_aid_kit_location}}.</p>`
+                id: "php_labeling",
+                title: "Pesticide Product Labeling & Precautionary Statements / Etiquetas de Pesticidas",
+                content_template: `<h2>Section 2 - Pesticide Product Labeling & Precautionary Statements</h2>
+<p><strong>2.1 - Format and Meaning:</strong> Employees must understand the format and meaning of information contained in pesticide product labeling, including precautionary statements about human health hazards, signal words (DANGER, WARNING, CAUTION), and environmental or physical hazards.</p>
+<p><strong>2.2 - Sources of Information:</strong> The primary sources of information used to cover this topic include verbal instructions provided during annual training, Pesticide Safety Information Series (PSIS) A-1, page 1, information extracted directly from specific pesticide labels, and Safety Data Sheets (SDS).</p>`,
+                content_template_es: `<h2>Sección 2 - Etiquetas de Productos Pesticidas y Advertencias</h2>
+<p><strong>2.1 - Formato y Significado:</strong> Los empleados deben comprender el formato y el significado de la información contenida en las etiquetas de los productos pesticidas, incluidas las declaraciones de precaución sobre los peligros para la salud humana, las palabras de advertencia (PELIGRO, ADVERTENCIA, PRECAUCIÓN) y los peligros ambientales o físicos.</p>
+<p><strong>2.2 - Fuentes de Información:</strong> Las fuentes primarias de información utilizadas para cubrir este tema incluyen instrucciones verbales proporcionadas durante la capacitación anual, la Serie de Información de Seguridad de Pesticidas (PSIS) A-1, página 1, información extraída directamente de las etiquetas de pesticidas específicos y las Hojas de Datos de Seguridad (SDS).</p>`
             },
             {
-                id: "php_posting",
-                title: "Field Posting & REI / Señalización de Campos",
-                content_template: `<h2>3. Field Posting & REI</h2>
-<p>Treated fields must be posted with warning signs if required by the label. Employees are strictly prohibited from entering treated areas during the Restricted Entry Interval (REI). The standard REI tracking log is maintained by {{pesticide_log_keeper}}.</p>`,
-                content_template_es: `<h2>3. Publicación de Campo y REI</h2>
-<p>Los campos tratados deben ser señalizados con letreros de advertencia si la etiqueta lo requiere. Los empleados tienen estrictamente prohibido ingresar a las áreas tratadas durante el Intervalo de Entrada Restringido (REI). El registro estándar de seguimiento de REI es mantenido por {{pesticide_log_keeper}}.</p>`
+                id: "php_applicator_responsibility",
+                title: "Applicator Responsibilities & Protection of Persons / Responsabilidades del Aplicador",
+                content_template: `<h2>Section 3 - Applicator Responsibilities & Protection of Persons</h2>
+<p><strong>3.1 - Protection of Persons, Animals, and Property:</strong> Applicators have a strict responsibility to protect persons, animals, and property while applying pesticides. Pesticides must never be applied in a manner that results in contact with persons not involved in the application process.</p>
+<p><strong>3.2 - Sources of Information:</strong> Training content for this topic is extracted from Pesticide Safety Information Series (PSIS) A-1, A-6, and A-8, as well as Safety Data Sheets (SDS).</p>`,
+                content_template_es: `<h2>Sección 3 - Responsabilidades del Aplicador y Protección de Personas</h2>
+<p><strong>3.1 - Protección de Personas, Animales y Propiedades:</strong> Los aplicadores tienen la responsabilidad estricta de proteger a las personas, los animales y las propiedades mientras aplican pesticidas. Los pesticidas nunca deben aplicarse de una manera que resulte en contacto con personas que no participen en el proceso de aplicación.</p>
+<p><strong>3.2 - Fuentes de Información:</strong> El contenido de la capacitación para este tema se extrae de la Serie de Información de Seguridad de Pesticidas (PSIS) A-1, A-6 y A-8, así como de las Hojas de Datos de Seguridad (SDS).</p>`
+            },
+            {
+                id: "php_ppe_standards",
+                title: "Personal Protective Equipment (PPE) Standards / Normas de PPE",
+                content_template: `<h2>Section 4 - Personal Protective Equipment (PPE) Standards</h2>
+<p><strong>4.1 - Appropriate Use and Limitations:</strong> Handlers must understand the need for, limitations, appropriate use, removal, and sanitation of any required Personal Protective Equipment (PPE).</p>
+<p><strong>4.2 - Storage and Cleaning:</strong> Employees are verbally instructed about required safety equipment and its regular cleaning and maintenance. {{client_name}} provides a clean, pesticide-free area to store safety equipment when not in use. The designated PPE locker and storage area is located at <strong>{{pesticide_ppe_locker_location}}</strong>.</p>
+<p><strong>4.3 - Sources of Information:</strong> Information regarding PPE is derived from Pesticide Safety Information Series (PSIS) A-1, A-5, and A-6, and instructions from pesticide labels.</p>`,
+                content_template_es: `<h2>Sección 4 - Normas de Equipo de Protección Personal (PPE)</h2>
+<p><strong>4.1 - Uso Adecuado y Limitaciones:</strong> Los manejadores deben comprender la necesidad, las limitaciones, el uso adecuado, el retiro y la desinfección de cualquier Equipo de Protección Personal (PPE) requerido.</p>
+<p><strong>4.2 - Almacenamiento y Limpieza:</strong> Los empleados son instruidos verbalmente sobre el equipo de seguridad requerido y su limpieza y mantenimiento regular. {{client_name}} proporciona un área limpia y libre de pesticidas para almacenar el equipo de seguridad cuando no esté en uso. El casillero de PPE y el área de almacenamiento designada se encuentran en <strong>{{pesticide_ppe_locker_location}}</strong>.</p>
+<p><strong>4.3 - Fuentes de Información:</strong> La información sobre el PPE se deriva de la Serie de Información de Seguridad de Pesticidas (PSIS) A-1, A-5 y A-6, e instrucciones de las etiquetas de los pesticidas.</p>`
+            },
+            {
+                id: "php_safety_transport",
+                title: "Safety Requirements, Transport & Engineering Controls / Requisitos de Seguridad y Transporte",
+                content_template: `<h2>Section 5 - Safety Requirements, Transport, Storage & Engineering Controls</h2>
+<p><strong>5.1 - Safe Procedures:</strong> Specific safety requirements and procedures are established for handling, transporting, storing, disposing of pesticides, and spill cleanups.</p>
+<p><strong>5.2 - Engineering Controls:</strong> Handlers are instructed on the use of engineering controls (such as closed mixing systems and enclosed cabs) as appropriate for each material handled. Employees are verbally instructed on proper safety equipment and procedures for each material.</p>
+<p><strong>5.3 - Sources of Information:</strong> Information is taken from Pesticide Safety Information Series (PSIS) A-3, specific pesticide labels, and Safety Data Sheets (SDS).</p>`,
+                content_template_es: `<h2>Sección 5 - Requisitos de Seguridad, Transporte, Almacenamiento y Controles de Ingeniería</h2>
+<p><strong>5.1 - Procedimientos Seguros:</strong> Se establecen requisitos y procedimientos de seguridad específicos para el manejo, transporte, almacenamiento, eliminación de pesticidas y limpieza de derrames.</p>
+<p><strong>5.2 - Controles de Ingeniería:</strong> Se instruye a los manejadores sobre el uso de controles de ingeniería (como sistemas de mezcla cerrados y cabinas cerradas) según sea apropiado para cada material manejado. Los empleados reciben instrucciones verbales sobre el equipo y los procedimientos de seguridad adecuados para cada material.</p>
+<p><strong>5.3 - Fuentes de Información:</strong> La información se toma de la Serie de Información de Seguridad de Pesticidas (PSIS) A-3, etiquetas específicas de pesticidas y Hojas de Datos de Seguridad (SDS).</p>`
+            },
+            {
+                id: "php_hazards_residues",
+                title: "Exposure Hazards, Residues & Environmental Concerns / Peligros Ambientales y Residuos",
+                content_template: `<h2>Section 6 - Exposure Hazards, Residues & Environmental Concerns</h2>
+<p><strong>6.1 - Exposure Sources:</strong> Handlers must understand where and in what forms pesticides may be encountered, including treated surfaces, residues on clothing, personal protective equipment, application equipment, and drift.</p>
+<p><strong>6.2 - Health Hazards:</strong> Training covers acute, chronic, and delayed health effects, and sensitization effects, as identified in pesticide product labeling, SDS, or PSIS leaflets.</p>
+<p><strong>6.3 - Environmental Protection:</strong> Employees are instructed not to apply pesticides in high winds or to areas where surface water is running off. Applicators must ensure pesticides are applied and kept inside intended target areas, protecting wildlife and preventing runoff or drift. (See Attachment B for detailed environmental concerns).</p>
+<p><strong>6.4 - Sources of Information:</strong> Information is extracted from specific pesticide labels, SDS, Safety Series A-1, A-8, and Attachment B.</p>`,
+                content_template_es: `<h2>Sección 6 - Peligros de Exposición, Residuos y Preocupaciones Ambientales</h2>
+<p><strong>6.1 - Fuentes de Exposición:</strong> Los manejadores deben comprender dónde y en qué formas se pueden encontrar los pesticidas, incluidos los campos tratados, residuos en la ropa, equipo de protección personal, equipo de aplicación y la deriva.</p>
+<p><strong>6.2 - Peligros para la Salud:</strong> La capacitación cubre los efectos agudos, crónicos y tardíos para la salud, así como los efectos de sensibilización, según se identifican en las etiquetas de los productos, SDS o folletos de PSIS.</p>
+<p><strong>6.3 - Protección Ambiental:</strong> Se instruye a los empleados a no aplicar pesticidas cuando hay vientos fuertes o en áreas donde hay escorrentía de agua superficial. Los aplicadores deben asegurarse de que los pesticidas se apliquen y mantengan dentro de las áreas objetivo deseadas, protegiendo la vida silvestre y previniendo la escorrentía o la deriva. (Consulte el Anexo B para conocer los detalles ambientales).</p>
+<p><strong>6.4 - Fuentes de Información:</strong> La información se extrae de etiquetas de pesticidas específicos, SDS, Serie de Seguridad A-1, A-8 y el Anexo B.</p>`
+            },
+            {
+                id: "php_exposure_routes",
+                title: "Routes of Exposure & Signs of Overexposure / Vías y Signos de Exposición",
+                content_template: `<h2>Section 7 - Routes of Exposure & Signs of Overexposure</h2>
+<p><strong>7.1 - Routes of Entry:</strong> Pesticides can enter the body through several routes: dermal (skin), ocular (eyes), inhalation (lungs), and ingestion (mouth). Dermal absorption is the most common route of occupational exposure.</p>
+<p><strong>7.2 - Signs and Symptoms:</strong> Handlers must be trained to recognize the early signs and symptoms of overexposure, which may include headaches, dizziness, nausea, excessive sweating, muscle cramps, skin irritation, or difficulty breathing.</p>
+<p><strong>7.3 - Sources of Information:</strong> This training topic uses information extracted from specific pesticide labels, Safety Data Sheets (SDS), and Safety Series A-4.</p>`,
+                content_template_es: `<h2>Sección 7 - Vías de Exposición y Signos de Sobreexposición</h2>
+<p><strong>7.1 - Vías de Entrada:</strong> Los pesticidas pueden ingresar al cuerpo a través de varias vías: dérmica (piel), ocular (ojos), inhalación (pulmones) e ingestión (boca). La absorción dérmica es la vía más común de exposición ocupacional.</p>
+<p><strong>7.2 - Signos y Síntomas:</strong> Los manejadores deben estar capacitados para reconocer los signos y síntomas tempranos de la sobreexposición, que pueden incluir dolores de cabeza, mareos, náuseas, sudoración excesiva, calambres musculares, irritación de la piel o dificultad para respirar.</p>
+<p><strong>7.3 - Fuentes de Información:</strong> Este tema de capacitación utiliza información extraída de las etiquetas específicas de pesticidas, Hojas de Datos de Seguridad (SDS) y la Serie de Seguridad A-4.</p>`
+            },
+            {
+                id: "php_decon_procedures",
+                title: "Decontamination Procedures / Procedimientos de Descontaminación",
+                content_template: `<h2>Section 8 - Routine Decontamination Procedures</h2>
+<p><strong>8.1 - Routine Hygiene:</strong> Employees must follow routine decontamination procedures immediately after handling pesticides or when any exposure occurs. Handlers are instructed to:</p>
+<ul>
+    <li>Wash hands thoroughly before eating, drinking, using the toilet, chewing gum, or using tobacco.</li>
+    <li>Thoroughly wash or shower with soap and water at the end of the shift.</li>
+    <li>Change into clean clothes as soon as possible after work.</li>
+    <li>Wash work clothes separately from other laundry before wearing them again.</li>
+</ul>
+<p><strong>8.2 - Sources of Information:</strong> Safety Series A-4 is reviewed. Employees are trained to decontaminate immediately after handling pesticides and after any exposure occurs.</p>`,
+                content_template_es: `<h2>Sección 8 - Procedimientos Rutinarios de Descontaminación</h2>
+<p><strong>8.1 - Higiene Rutinaria:</strong> Los empleados deben seguir los procedimientos de descontaminación de rutina inmediatamente después de manejar pesticidas o cuando ocurra cualquier exposición. Se instruye a los manejadores a:</p>
+<ul>
+    <li>Lavarse las manos minuciosamente antes de comer, beber, usar el baño, masticar chicle o usar tabaco.</li>
+    <li>Lavarse o ducharse minuciosamente con agua y jabón al final del turno.</li>
+    <li>Cambiarse de ropa limpia lo antes posible después de terminar el trabajo.</li>
+    <li>Lavar la ropa de trabajo por separado de otra ropa antes de volver a usarla.</li>
+</ul>
+<p><strong>8.2 - Fuentes de Información:</strong> Se revisa la Serie de Seguridad A-4. Los empleados están capacitados para descontaminarse inmediatamente después de manejar pesticidas y después de que ocurra cualquier exposición.</p>`
+            },
+            {
+                id: "php_hazcom_sds",
+                title: "Hazard Communication & Safety Data Sheets (SDS) / Acceso a SDS y HazCom",
+                content_template: `<h2>Section 9 - Hazard Communication & Safety Data Sheets (SDS)</h2>
+<p><strong>9.1 - Safety Data Sheets (SDS) Access:</strong> Safety Data Sheets provide critical hazard, emergency medical treatment, and chemical information. Sample SDS are provided during training, and employees are shown how to read and locate them. Application-specific information and SDS are kept available for all employees at: <strong>{{pesticide_sds_location}}</strong>.</p>
+<p><strong>9.2 - Hazard Communication Rules:</strong> The employer complies with 3 CCR §6723 hazard communication requirements. Information from Safety Series A-8 is reviewed by all employees.</p>
+<p><strong>9.3 - Regulatory Compliance:</strong> Safety requirements of Title 3, Division 6, Chapters 3 and 4 relating to pesticide safety, SDS, and Pesticide Safety Information Series (PSIS) leaflets are reviewed. Training covers information from specific pesticide labels, SDS, and Safety Series A-1 through A-8, and A-10.</p>`,
+                content_template_es: `<h2>Sección 9 - Comunicación de Peligros y Hojas de Datos de Seguridad (SDS)</h2>
+<p><strong>9.1 - Acceso a las Hojas de Datos de Seguridad (SDS):</strong> Las Hojas de Datos de Seguridad proporcionan información crítica sobre peligros, tratamientos médicos de emergencia y datos químicos. Se proporcionan muestras de SDS durante la capacitación, y se muestra a los empleados cómo leerlas y localizarlas. La información específica de la aplicación y las SDS se mantienen disponibles para todos los empleados en: <strong>{{pesticide_sds_location}}</strong>.</p>
+<p><strong>9.2 - Reglas de Comunicación de Peligros:</strong> El empleador cumple con los requisitos de comunicación de peligros de la norma 3 CCR §6723. Todos los empleados revisan la información de la Serie de Seguridad A-8.</p>
+<p><strong>9.3 - Cumplimiento Regulatorio:</strong> Se revisan los requisitos de seguridad del Título 3, División 6, Capítulos 3 y 4 relacionados con la seguridad de pesticidas, SDS y folletos de la Serie de Información de Seguridad de Pesticidas (PSIS). La capacitación cubre información de las etiquetas de pesticidas específicos, SDS y las Series de Seguridad A-1 a A-8, y A-10.</p>`
+            },
+            {
+                id: "php_medical_supervision",
+                title: "Medical Supervision (Organophosphates & Carbamates) / Supervisión Médica",
+                content_template: `<h2>Section 10 - Medical Supervision (Organophosphates & Carbamates)</h2>
+<p><strong>10.1 - Requirements and Purposes:</strong> Medical supervision (including cholinesterase monitoring) is required if organophosphate or carbamate pesticides with the signal word "DANGER" or "WARNING" are mixed, loaded, or applied for the commercial or research production of an agricultural plant commodity.</p>
+<p><strong>10.2 - Sources of Information:</strong> When handling organophosphate and/or carbamate pesticides, employees are trained on the specifics of Safety Series A-10, A-6, and A-8 to understand the purposes and requirements of medical monitoring.</p>`,
+                content_template_es: `<h2>Sección 10 - Supervisión Médica (Organofosforados y Carbamatos)</h2>
+<p><strong>10.1 - Requisitos y Propósitos:</strong> Se requiere supervisión médica (incluido el monitoreo de colinesterasa) si se mezclan, cargan o aplican pesticidas organofosforados o carbamatos con la palabra de advertencia "PELIGRO" o "ADVERTENCIA" para la producción comercial o de investigación de un producto vegetal agrícola.</p>
+<p><strong>10.2 - Fuentes de Información:</strong> Al manejar pesticidas organofosforados y/o carbamatos, los empleados son capacitados en los aspectos específicos de las Series de Seguridad A-10, A-6 y A-8 para comprender los propósitos y requisitos del monitoreo médico.</p>`
+            },
+            {
+                id: "php_first_aid_decon",
+                title: "First Aid & Emergency Decontamination / Primeros Auxilios",
+                content_template: `<h2>Section 11 - First Aid & Emergency Decontamination</h2>
+<p><strong>11.1 - Emergency Response:</strong> In the event of a pesticide spill or spray on the body, the affected employee must wash immediately with emergency decontamination supplies. As soon as possible, they must wash or shower with soap and water and change into clean clothes.</p>
+<p><strong>11.2 - Eye Flushing:</strong> Proper emergency eye-flushing techniques are trained, emphasizing continuous flushing. Emergency first-aid kits and eye flushing supplies are stored at: <strong>{{pesticide_first_aid_kit_location}}</strong>.</p>
+<p><strong>11.3 - Sources of Information:</strong> Review of Safety Series A-4. Employees are trained to decontaminate immediately after handling pesticides and after any exposure occurs.</p>`,
+                content_template_es: `<h2>Sección 11 - Primeros Auxilios y Descontaminación de Emergencia</h2>
+<p><strong>11.1 - Respuesta de Emergencia:</strong> En caso de que se derrame o rocíe pesticida en el cuerpo, el empleado afectado debe lavarse inmediatamente con los suministros de descontaminación de emergencia. Lo antes posible, debe lavarse o ducharse con agua y jabón y cambiarse de ropa limpia.</p>
+<p><strong>11.2 - Lavado de Ojos:</strong> Se enseña la técnica correcta para el lavado de ojos de emergencia, enfatizando el enjuague continuo. Los botiquines de primeros auxilios de emergencia y los suministros para el lavado de ojos se guardan en: <strong>{{pesticide_first_aid_kit_location}}</strong>.</p>
+<p><strong>11.3 - Fuentes de Información:</strong> Revisión de la Serie de Seguridad A-4. Los empleados están capacitados para descontaminarse inmediatamente después de manejar pesticidas y después de que ocurra cualquier exposición.</p>`
+            },
+            {
+                id: "php_emergency_medical",
+                title: "Emergency Medical Care & Heat Illness Prevention / Atención Médica y Prevención de Calor",
+                content_template: `<h2>Section 12 - Emergency Medical Care & Heat Illness Prevention</h2>
+<p><strong>12.1 - Obtaining Emergency Care:</strong> Employees must know how and when to obtain emergency medical care. Emergency medical care information is completed on Safety Series A-8 and prominently displayed at the worksite. All employees are verbally instructed on emergency medical care procedures and location of emergency services.</p>
+<p><strong>12.2 - Heat Illness Prevention:</strong> Pesticide handlers working in hot environments face elevated risks of heat illness. In accordance with Title 8 CCR Section 3395, employees are verbally instructed how to prevent, recognize, and apply first aid for heat stroke or heat exhaustion. The Cal/OSHA handout, "Health Effects of Heat," is reviewed with employees.</p>
+<p><strong>12.3 - Sources of Information:</strong> Safety Series A-4, Safety Series A-8, and the Cal/OSHA Heat Illness handout.</p>`,
+                content_template_es: `<h2>Sección 12 - Atención Médica de Emergencia y Prevención de Enfermedades por Calor</h2>
+<p><strong>12.1 - Obtención de Atención Médica:</strong> Los empleados deben saber cómo y cuándo obtener atención médica de emergencia. La información de la atención médica de emergencia se completa en la Serie de Seguridad A-8 y se exhibe de manera prominente en el sitio de trabajo. Todos los empleados reciben instrucciones verbales sobre los procedimientos de atención médica de emergencia y la ubicación de los servicios de emergencia.</p>
+<p><strong>12.2 - Prevención de Enfermedades por Calor:</strong> Los manejadores de pesticidas que trabajan en ambientes calurosos enfrentan riesgos elevados de enfermedad por calor. De acuerdo con el Título 8 CCR Sección 3395, los empleados reciben instrucciones verbales sobre cómo prevenir, reconocer y aplicar primeros auxilios para la insolación o el agotamiento por calor. El folleto de Cal/OSHA "Efectos del Calor en la Salud" es revisado con los empleados.</p>
+<p><strong>12.3 - Fuentes de Información:</strong> Serie de Seguridad A-4, Serie de Seguridad A-8 y el folleto de Enfermedades por Calor de Cal/OSHA.</p>`
+            },
+            {
+                id: "php_age_restrictions",
+                title: "Age Requirements, Entry Restraints, Family Protection & Employee Rights / Restricciones y Derechos",
+                content_template: `<h2>Section 13 - Age Requirements, Entry Restraints, Family Protection & Employee Rights</h2>
+<p><strong>13.1 - Age Limits:</strong> {{client_name}} shall not permit an employee under 18 years of age to handle any pesticide used in the commercial or research production of an agricultural commodity, or to enter a field under a Restricted Entry Interval (REI).</p>
+<p><strong>13.2 - Field Posting & REI:</strong> Treated fields must be posted with warning signs if required by product labeling. Employees are strictly prohibited from entering treated areas during the Restricted Entry Interval (REI). The standard REI tracking log is maintained by <strong>{{pesticide_log_keeper}}</strong>. California Field Posting Requirements (UC ANR) are reviewed.</p>
+<p><strong>13.3 - Family and Home Protection:</strong> Handlers are instructed never to take pesticides or pesticide containers home. To protect children and pregnant women, handlers must:</p>
+<ul>
+    <li>Keep children and nonworking family members away from treated areas.</li>
+    <li>Remove boots or shoes and work clothes before entering the home.</li>
+    <li>Wash or shower before having physical contact with children or family members.</li>
+</ul>
+<p><strong>13.4 - Reporting Violations:</strong> To report suspected pesticide use violations, employees can call the local County Agricultural Commissioner’s office at <strong>{{agricultural_commissioner_phone}}</strong>, or call toll-free 1-87PestLine (1-877-378-5463). There will be no retaliation for reporting.</p>
+<p><strong>13.5 - Employee Rights:</strong> Handlers have the right to personally receive information about pesticides they may be exposed to, designated physician access to records, protection against retaliation, and the right to report violations. Safety Series A-6 and A-8 cover these rights.</p>`,
+                content_template_es: `<h2>Sección 13 - Requisitos de Edad, Restricciones de Entrada, Protección Familiar y Derechos del Empleado</h2>
+<p><strong>13.1 - Límites de Edad:</strong> {{client_name}} no permitirá que ningún empleado menor de 18 años maneje ningún pesticida utilizado en la producción comercial o de investigación de un producto agrícola, ni que ingrese a un campo bajo un Intervalo de Entrada Restringido (REI).</p>
+<p><strong>13.2 - Publicación de Campos y REI:</strong> Los campos tratados deben señalizarse con letreros de advertencia si la etiqueta del producto lo requiere. Los empleados tienen estrictamente prohibido ingresar a las áreas tratadas durante el Intervalo de Entrada Restringido (REI). El registro de seguimiento de REI estándar es mantenido por <strong>{{pesticide_log_keeper}}</strong>. Se revisan los Requisitos de Publicación de Campos de California (UC ANR).</p>
+<p><strong>13.3 - Protección de la Familia y el Hogar:</strong> Se instruye a los manejadores que nunca lleven pesticidas ni contenedores de pesticidas a casa. Para proteger a los niños y a las mujeres embarazadas, los manejadores deben:</p>
+<ul>
+    <li>Mantener a los niños y familiares que no trabajan alejados de las áreas tratadas.</li>
+    <li>Quitarse las botas o zapatos y la ropa de trabajo antes de entrar al hogar.</li>
+    <li>Lavarse o ducharse antes de tener contacto físico con niños o familiares.</li>
+</ul>
+<p><strong>13.4 - Reportar Violaciones:</strong> Para reportar sospechas de violaciones en el uso de pesticidas, los empleados pueden llamar a la oficina del Comisionado de Agricultura del Condado local al <strong>{{agricultural_commissioner_phone}}</strong>, o llamar sin costo al 1-87PestLine (1-877-378-5463). No habrá represalias por reportar.</p>
+<p><strong>13.5 - Derechos del Empleado:</strong> Los manejadores tienen derecho a recibir personalmente información sobre los pesticidas a los que puedan estar expuestos, acceso de su médico designado a los registros, protección contra medidas de represalia y el derecho a reportar violaciones. Las Series de Seguridad A-6 y A-8 cubren estos derechos.</p>`
             }
         ]
     },
@@ -1514,6 +1668,19 @@ async function seedDatabaseIfNeeded() {
                 if (!data.subsections || data.subsections.length < 7) {
                     needsModulesSeed = true;
                     console.log("Expanding database schemas to integrate new HIPP safety subsections...");
+                }
+            }
+
+            // Find php and check if it has the new subsections length
+            const phpDoc = modulesSnap.docs.find(doc => doc.id === "php");
+            if (!phpDoc) {
+                needsModulesSeed = true;
+            } else {
+                const data = phpDoc.data();
+                // Old PHP had 3 subsections. New PHP has 13 subsections.
+                if (!data.subsections || data.subsections.length < 10) {
+                    needsModulesSeed = true;
+                    console.log("Expanding database schemas to integrate new PHP safety subsections...");
                 }
             }
         }
@@ -1931,6 +2098,18 @@ const defaultBilingualValues = {
     "indoor_evaluation_county": {
         "en": "Imperial County",
         "es": "Condado de Imperial"
+    },
+    "pesticide_sds_location": {
+        "en": "company shop and/or main office",
+        "es": "taller de la empresa y/u oficina principal"
+    },
+    "agricultural_commissioner_phone": {
+        "en": "442-265-1500",
+        "es": "442-265-1500"
+    },
+    "pesticide_training_date": {
+        "en": "03/27/2026",
+        "es": "03/27/2026"
     }
 };
 
