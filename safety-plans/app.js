@@ -1469,37 +1469,441 @@ const defaultModulesSeed = [
         content_template: `<h1>Respiratory Protection Program (RUP)</h1>
 <p><strong>Company Name:</strong> {{client_name}}</p>
 <p><strong>Effective Date:</strong> {{effective_date}}</p>
-<p><strong>Program Administrator:</strong> {{safety_officer}}</p>
+<p><strong>Program Administrator:</strong> {{respirator_program_administrator}}</p>
 <p>This program is established in compliance with Cal/OSHA Title 8, Section 5144. It covers fit-testing, medical evaluations, and maintenance of respirators. {{client_name}} provides respirators to employees when such equipment is necessary to protect their health against dusts, fumes, mists, or organic vapors.</p>`,
         content_template_es: `<h1>Programa de Protección Respiratoria (RUP)</h1>
 <p><strong>Nombre de la Empresa:</strong> {{client_name}}</p>
 <p><strong>Fecha de Entrada en Vigor:</strong> {{effective_date}}</p>
-<p><strong>Administrador del Programa:</strong> {{safety_officer}}</p>
+<p><strong>Administrador del Programa:</strong> {{respirator_program_administrator}}</p>
 <p>Este programa se establece de conformidad con la norma de Cal/OSHA Título 8, Sección 5144. Abarca las pruebas de ajuste, evaluaciones médicas y mantenimiento de respiradores. {{client_name}} proporciona respiradores a los empleados cuando dicho equipo es necesario para proteger su salud contra polvos, humos, neblinas o vapores orgánicos.</p>`,
         subsections: [
             {
-                id: "rup_fit",
-                title: "Fit Testing / Pruebas de Ajuste",
-                content_template: `<h2>1. Respirator Selection & Fit Testing</h2>
-<p>Annual qualitative or quantitative fit-testing is required for all employees of {{client_name}} assigned to wear tight-fitting respirators. Fit testing is conducted by {{fit_test_provider}}. Only approved respirator types (e.g. half-mask, full-face, N95) may be used.</p>`,
-                content_template_es: `<h2>1. Selección de Respirador y Prueba de Ajuste</h2>
-<p>Se requieren pruebas de ajuste anuales cualitativas o cuantitativas para todos los empleados de {{client_name}} asignados a usar respiradores de ajuste apretado. Las pruebas de ajuste son realizadas por {{fit_test_provider}}. Solo se pueden usar tipos de respiradores aprobados (por ejemplo, media máscara, cara completa, N95).</p>`
+                id: "rup_admin_duties",
+                title: "Program Scope, Administration & General Responsibilities / Alcance y Responsabilidades",
+                content_template: `<h2>Section 1 - Program Scope, Administration & General Responsibilities</h2>
+<p><strong>1.1 - Scope:</strong> This Respiratory Protection Program is established in compliance with T8 CCR section 5144 and T3 section 6739 as an important component of our Injury and Illness Prevention Program (IIPP) to enhance employee health and safety. Workers participating in the program do so at no cost. Refer to Appendix I for definitions of terms and acronyms.</p>
+<p><strong>1.2 - Program Administrator:</strong> <strong>{{respirator_program_administrator}}</strong> is the Respiratory Protection Program Administrator and has full authority and responsibility for implementing and maintaining this program. The Administrator's duties include hazard identification, respirator selection, medical surveillance coordination, fit testing oversight, maintenance procedures, cartridge schedules, user seal checks, and recordkeeping.</p>
+<p><strong>1.3 - Supervisor Responsibilities:</strong> Supervisors must ensure employees under their supervision receive training, fit testing, and medical evaluations. They must enforce respirator use, ensure availability of equipment, confirm respirators are properly cleaned/stored, and monitor work areas for new hazards.</p>
+<p><strong>1.4 - Employee Responsibilities:</strong> Employees must wear their respirators when and where required, care for and store them in sanitary locations, change cartridges according to change-out schedules, and inform their supervisor if the respirator no longer fits or of any workplace hazards.</p>`,
+                content_template_es: `<h2>Sección 1 - Alcance del Programa, Administración y Responsabilidades Generales</h2>
+<p><strong>1.1 - Alcance:</strong> Este Programa de Protección Respiratoria se establece de conformidad con las normas T8 CCR sección 5144 y T3 sección 6739 como un componente importante de nuestro Programa de Prevención de Lesiones y Enfermedades (IIPP) para mejorar la salud y la seguridad de los empleados. Los trabajadores que participan en el programa lo hacen sin costo alguno. Consulte el Apéndice I para obtener definiciones de términos y siglas.</p>
+<p><strong>1.2 - Administrador del Programa:</strong> <strong>{{respirator_program_administrator}}</strong> es el Administrador del Programa de Protección Respiratoria y tiene la plena autoridad y responsabilidad de implementar y mantener este programa. Las funciones del Administrador incluyen la identificación de peligros, selección de respiradores, coordinación de la vigilancia médica, supervisión de las pruebas de ajuste, procedimientos de mantenimiento, cronogramas de cartuchos, controles de sellado del usuario y mantenimiento de registros.</p>
+<p><strong>1.3 - Responsabilidades del Supervisor:</strong> Los supervisores deben asegurarse de que los empleados bajo su supervisión reciban capacitación, pruebas de ajuste y evaluaciones médicas. Deben hacer cumplir el uso de respiradores, garantizar la disponibilidad de equipos, confirmar que se limpien/almacenen adecuadamente y monitorear las áreas de trabajo en busca de nuevos peligros.</p>
+<p><strong>1.4 - Responsabilidades del Empleado:</strong> Los empleados deben usar sus respiradores cuando y donde sea requerido, cuidarlos y almacenarlos en lugares sanitarios, cambiar los cartuchos de acuerdo con los cronogramas de cambio e informar a su supervisor si el respirador ya no se ajusta bien o si detectan peligros en el lugar de trabajo.</p>`
             },
             {
-                id: "rup_medical",
-                title: "Medical Evaluations / Evaluaciones Médicas",
-                content_template: `<h2>2. Medical Evaluations</h2>
-<p>Employees must receive medical clearance from a licensed healthcare provider before wearing any respirator. Evaluations are performed using the Cal/OSHA standard medical questionnaire. Clearances are kept on file in the safety office by {{medical_clearance_keeper}}.</p>`,
-                content_template_es: `<h2>2. Evaluaciones Médicas</h2>
-<p>Los empleados deben recibir autorización médica de un proveedor de atención médica con licencia antes de usar cualquier respirador. Las evaluaciones se realizan utilizando el cuestionario médico estándar de Cal/OSHA. Las autorizaciones se mantienen en archivo en la oficina de seguridad por {{medical_clearance_keeper}}.</p>`
+                id: "rup_selection_hazards",
+                title: "Respirator Selection & Hazard Evaluation Procedures / Selección de Respirador y Peligros",
+                content_template: `<h2>Section 2 - Respirator Selection & Hazard Evaluation Procedures</h2>
+<p><strong>2.1 - Hazard Evaluation:</strong> A hazard evaluation will be conducted for each work process or area when it is reasonable to suspect employees may be exposed to airborne contaminants in excess of Cal/OSHA Permissible Exposure Limits (PELs). This includes integrating our Hazard Communication Program, obtaining Safety Data Sheets (SDSs), reviewing processes, and exposure monitoring. IDLH (immediately dangerous to life or health) conditions are assumed if exposures cannot be evaluated.</p>
+<p><strong>2.2 - Selection Criteria:</strong> Respirators are selected based on the hazards, Assigned Protection Factors (APFs), and calculated Maximum Use Concentrations (MUCs). Only National Institute of Occupational Safety and Health (NIOSH)-certified respirators will be selected and used in compliance with their certification.</p>
+<p><strong>2.3 - Non-IDLH Atmospheres:</strong> For non-IDLH atmospheres, respirators must be Air Purifying Respirators (APRs) equipped with end-of-service-life indicators (ESLIs) or NIOSH-certified particulate filters as appropriate for the chemical nature and physical form of the contaminant.</p>`,
+                content_template_es: `<h2>Sección 2 - Procedimientos de Selección de Respirador y Evaluación de Peligros</h2>
+<p><strong>2.1 - Evaluación de Peligros:</strong> Se realizará una evaluación de peligros para cada proceso o área de trabajo cuando sea razonable sospechar que los empleados pueden estar expuestos a contaminantes del aire que excedan los Límites de Exposición Permisibles (PEL) de Cal/OSHA. Esto incluye la integración de nuestro Programa de Comunicación de Peligros, obtención de Hojas de Datos de Seguridad (SDS), revisión de procesos y monitoreo de exposición. Se asumen condiciones IDLH (inmediatamente peligrosas para la vida o la salud) si las exposiciones no pueden evaluarse.</p>
+<p><strong>2.2 - Criterios de Selección:</strong> Los respiradores se seleccionan en función de los peligros, los Factores de Protección Asignados (APF) y las Concentraciones Máximas de Uso (MUC) calculadas. Solo se seleccionarán y usarán respiradores certificados por el Instituto Nacional de Seguridad y Salud Ocupacional (NIOSH) de conformidad con su certificación.</p>
+<p><strong>2.3 - Atmósferas No-IDLH:</strong> Para atmósferas no-IDLH, los respiradores deben ser Respiradores Purificadores de Aire (APR) equipados con indicadores de fin de vida útil (ESLI) o filtros de partículas certificados por NIOSH según corresponda a la naturaleza química y forma física del contaminante.</p>`
             },
             {
-                id: "rup_maintenance",
-                title: "Respirator Care / Cuidado de Respiradores",
-                content_template: `<h2>3. Cleaning, Maintenance & Storage</h2>
-<p>Employees are responsible for inspecting, cleaning, and storing their respirators after each use. Respirators must be stored in a clean, sanitary bag to protect against dust, sunlight, extreme temperatures, and chemical degradation. Replacement filters are available at {{respirator_filter_location}}.</p>`,
-                content_template_es: `<h2>3. Limpieza, Mantenimiento y Almacenamiento</h2>
-<p>Los empleados son responsables de inspeccionar, limpiar y almacenar sus respiradores después de cada uso. Los respiradores deben almacenarse en una bolsa limpia y sanitaria para protegerlos contra el polvo, la luz solar, las temperaturas extremas y la degradación química. Los filtros de repuesto están disponibles en {{respirator_filter_location}}.</p>`
+                id: "rup_medical_standards",
+                title: "Medical Evaluation Standards & Procedures / Evaluaciones Médicas",
+                content_template: `<h2>Section 3 - Medical Evaluation Standards & Procedures</h2>
+<p><strong>3.1 - Clearance Requirement:</strong> Employees are not permitted to wear respirators (except for voluntary dust masks) until a physician or licensed healthcare professional (PLHCP) has determined they are medically able to do so. Our designated PLHCP is <strong>{{respirator_medical_provider}}</strong>, located at <strong>{{respirator_medical_provider_address}}</strong>, Phone: <strong>{{respirator_medical_provider_phone}}</strong>.</p>
+<p><strong>3.2 - Administration & Confidentiality:</strong> The medical questionnaire and exams are administered confidentially during normal working hours at no cost. If an employee cannot read the questionnaire, they will be sent directly to the PLHCP. Sealed envelopes are used to submit questionnaires to protect medical privacy. Clearances are kept on file in the safety office by <strong>{{medical_clearance_keeper}}</strong>.</p>
+<p><strong>3.3 - PAPR Alternative:</strong> If the PLHCP finds a medical condition preventing negative pressure respirator use, we will provide a Powered Air-Purifying Respirator (PAPR) if the employee is cleared to use one.</p>
+<p><strong>3.4 - Reevaluation Triggers:</strong> Additional medical evaluations are provided if the employee reports signs/symptoms affecting respirator use (shortness of breath, dizziness, chest pain), if a supervisor or PLHCP recommends reevaluation, or if changes in workplace conditions increase the physiological burden.</p>`,
+                content_template_es: `<h2>Sección 3 - Normas y Procedimientos de Evaluación Médica</h2>
+<p><strong>3.1 - Requisito de Autorización:</strong> No se permite a los empleados usar respiradores (excepto para el uso voluntario de mascarillas contra el polvo) hasta que un médico o profesional de la salud con licencia (PLHCP) haya determinado que están médicamente aptos para hacerlo. Nuestro PLHCP designado es <strong>{{respirator_medical_provider}}</strong>, ubicado en <strong>{{respirator_medical_provider_address}}</strong>, Teléfono: <strong>{{respirator_medical_provider_phone}}</strong>.</p>
+<p><strong>3.2 - Administración y Confidencialidad:</strong> El cuestionario médico y los exámenes se administran de forma confidencial durante las horas normales de trabajo sin costo alguno. Si un empleado no puede leer el cuestionario, será enviado directamente al PLHCP. Se utilizan sobres sellados para enviar los cuestionarios para proteger la privacidad médica. Las autorizaciones se mantienen en archivo en la oficina de seguridad por <strong>{{medical_clearance_keeper}}</strong>.</p>
+<p><strong>3.3 - Alternativa PAPR:</strong> Si el PLHCP detecta una condición médica que impide el uso de un respirador de presión negativa, proporcionaremos un Respirador Purificador de Aire Motorizado (PAPR) si el empleado está autorizado para usarlo.</p>
+<p><strong>3.4 - Activadores de Reevaluación:</strong> Se proporcionan evaluaciones médicas adicionales si el empleado informa signos/síntomas que afectan el uso del respirador (dificultad para respirar, mareos, dolor en el pecho), si un supervisor o PLHCP recomienda la reevaluación, o si los cambios en las condiciones de trabajo aumentan la carga fisiológica.</p>`
+            },
+            {
+                id: "rup_fit_standards",
+                title: "Fit Testing Protocols & Frequency / Pruebas de Ajuste",
+                content_template: `<h2>Section 4 - Fit Testing Protocols & Frequency</h2>
+<p><strong>4.1 - Requirements and Protocols:</strong> All employees required to wear tight-fitting facepiece respirators must pass a fit test prior to initial use, whenever a different respirator facepiece is used, and at least annually. Fit-testing is conducted by <strong>{{fit_test_provider}}</strong> in accordance with T8 CCR §5144 Appendix A protocols.</p>
+<p><strong>4.2 - Workplace Protocol:</strong> Our workplace uses the Qualitative Fit Test (QLFT) - Saccharin Solution Aerosol protocol. Employees are fit-tested to the same make, model, style, and size of respirator they actually wear.</p>
+<p><strong>4.3 - QLFT Limit:</strong> The maximum Assigned Protection Factor (APF) of any negative pressure tight-fitting APR fit tested via QLFT is 10. To assume a higher APF (e.g. 50 for a full-face APR), a Quantitative Fit Test (QNFT) protocol must be used.</p>`,
+                content_template_es: `<h2>Sección 4 - Protocolos y Frecuencia de las Pruebas de Ajuste</h2>
+<p><strong>4.1 - Requisitos y Protocolos:</strong> Todos los empleados que deben usar respiradores con máscara de ajuste apretado deben pasar una prueba de ajuste antes del uso inicial, cuando se use una máscara diferente y al menos una vez al año. Las pruebas de ajuste son realizadas por <strong>{{fit_test_provider}}</strong> de acuerdo con los protocolos del Apéndice A de T8 CCR §5144.</p>
+<p><strong>4.2 - Protocolo del Sitio de Trabajo:</strong> Nuestro lugar de trabajo utiliza el protocolo de Prueba de Ajuste Cualitativa (QLFT) - Aerosol de Solución de Sacarina. Los empleados se someten a la prueba de ajuste con la misma marca, modelo, estilo y tamaño de respirador que realmente usan.</p>
+<p><strong>4.3 - Límite de QLFT:</strong> El Factor de Protección Asignado (APF) máximo de cualquier APR de ajuste apretado de presión negativa probado a través de QLFT será 10. Para asumir un APF más alto (por ejemplo, 50 para un APR de cara completa), se debe utilizar un protocolo de Prueba de Ajuste Cuantitativa (QNFT).</p>`
+            },
+            {
+                id: "rup_use_procedures",
+                title: "Procedures for Proper Respirator Use / Reglas de Uso de Respiradores",
+                content_template: `<h2>Section 5 - Procedures for Proper Respirator Use</h2>
+<p><strong>5.1 - Donning and Seals:</strong> All filters, cartridges, and canisters must carry appropriate NIOSH labels, which must not be defaced. Employees must conduct user seal checks (according to Appendix F) every time they don a respirator.</p>
+<p><strong>5.2 - Seal Interference:</strong> Tight-fitting respirators must not be worn by employees with facial hair that comes between the sealing surface of the facepiece and the face, or that interferes with valve function. Headphones, jewelry, prescription eyewear, or other PPE must not interfere with the respirator seal.</p>
+<p><strong>5.3 - Leaving the Work Area:</strong> Employees must leave the respirator use area to wash their face and mask to prevent irritation, if they detect breakthrough, leakage, or changes in breathing resistance, or to replace filter cartridges.</p>
+<p><strong>5.4 - Supervisor Oversight:</strong> Supervisors must ensure employees follow use rules and replace/repair respirators immediately if breakthrough, leakage, or breathing resistance changes are detected.</p>`,
+                content_template_es: `<h2>Sección 5 - Procedimientos para el Uso Correcto del Respirador</h2>
+<p><strong>5.1 - Colocación y Sellados:</strong> Todos los filtros y cartuchos deben llevar etiquetas NIOSH correspondientes, que no deben dañarse. Los empleados deben realizar comprobaciones de sellado del usuario (de acuerdo con el Apéndice F) cada vez que se coloquen un respirador.</p>
+<p><strong>5.2 - Interferencia de Sellado:</strong> Los empleados con vello facial que se interponga entre la superficie de sellado de la máscara y la piel, o que interfiera con la función de la válvula, no deben usar respiradores de ajuste apretado. Los auriculares, joyas, lentes recetados u otro PPE no deben interferir con el sello del respirador.</p>
+<p><strong>5.3 - Salida del Área de Trabajo:</strong> Los empleados deben abandonar el área de uso del respirador para lavarse la cara y la máscara para prevenir la irritación, si detectan penetración de vapor, fugas o cambios en la resistencia respiratoria, o para reemplazar cartuchos de filtro.</p>
+<p><strong>5.4 - Supervisión:</strong> Los supervisores deben asegurarse de que los empleados sigan las reglas de uso y reemplacen o reparen los respiradores inmediatamente si se detectan fugas, penetración de gases o resistencia respiratoria.</p>`
+            },
+            {
+                id: "rup_cleaning_maintenance",
+                title: "Respirator Cleaning & Maintenance / Limpieza y Mantenimiento",
+                content_template: `<h2>Section 6 - Respirator Cleaning & Maintenance</h2>
+<p><strong>6.1 - Cleaning Standards:</strong> Respirators must be regularly cleaned and disinfected at our shop/office facilities located at <strong>{{respirator_maintenance_location}}</strong>. Exclusive-use respirators are cleaned as often as necessary to maintain sanitary conditions. Shared respirators are cleaned and disinfected before being worn by different individuals. Cleaning must follow the instructions in Appendix G.</p>
+<p><strong>6.2 - Inspections and Repairs:</strong> Maintenance involves a thorough visual inspection (Appendix H) for cleanliness and defects before each use and during cleaning. Worn or deteriorated parts will be replaced prior to use. No components will be replaced or repairs made beyond those recommended by the manufacturer.</p>`,
+                content_template_es: `<h2>Sección 6 - Procedimientos de Almacenamiento, Limpieza y Mantenimiento</h2>
+<p><strong>6.1 - Normas de Limpieza:</strong> Los respiradores deben limpiarse y desinfectarse regularmente en nuestras instalaciones de taller/oficina ubicadas en <strong>{{respirator_maintenance_location}}</strong>. Los respiradores de uso exclusivo se limpian con la frecuencia necesaria para mantener condiciones sanitarias. Los respiradores compartidos se limpian y desinfectan antes de ser usados por diferentes personas. La limpieza debe seguir las instrucciones del Apéndice G.</p>
+<p><strong>6.2 - Inspecciones y Reparaciones:</strong> El mantenimiento implica una inspección visual exhaustiva (Apéndice H) para detectar limpieza y defectos antes de cada uso y durante la limpieza. Las piezas desgastadas o deterioradas se reemplazarán antes de su uso. No se reemplazarán componentes ni se realizarán reparaciones más allá de las recomendadas por el fabricante.</p>`
+            },
+            {
+                id: "rup_cartridge_schedules",
+                title: "Filter & Cartridge Change-Out Schedules / Programas de Cambio de Cartuchos",
+                content_template: `<h2>Section 7 - Filter & Cartridge Change-Out Schedules</h2>
+<p><strong>7.1 - Particulate Filters:</strong> Employees wearing Air Purifying Respirators (APRs) for protection against airborne particulates must change the filters on their respirators as soon as they experience difficulty breathing (i.e. increased breathing resistance) while wearing their masks.</p>
+<p><strong>7.2 - Gas/Vapor Cartridges:</strong> Cartridge change-out schedules are based on the manufacturer’s instructions and California Department of Pesticide Regulation guidelines (PSIS A-5). The change-out schedule begins as soon as cartridges are unsealed, not when employees start to use them. The table below outlines our change-out schedule for routine operations:</p>
+<table style="width:100%; border-collapse:collapse; margin-top:10px;" border="1" cellpadding="6">
+    <thead>
+        <tr style="background:#f1f5f9;">
+            <th>Task / Location / Operation</th>
+            <th>Respirator Model & Cartridge Type</th>
+            <th>Airborne Contaminants</th>
+            <th>Change-out Schedule (Hours)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Pesticide Mixing/Loading/Applying</td>
+            <td>3M 6200/07025, Organic Vapor (OV)</td>
+            <td>Organic vapors created by pesticides</td>
+            <td>We follow manufacturer's recommendations based on hours or amount of days</td>
+        </tr>
+    </tbody>
+</table>`,
+                content_template_es: `<h2>Sección 7 - Programas de Cambio de Filtros y Cartuchos</h2>
+<p><strong>7.1 - Filtros de Partículas:</strong> Los empleados que usan Respiradores Purificadores de Aire (APR) para protegerse contra partículas suspendidas en el aire deben cambiar los filtros de sus respiradores tan pronto como experimenten dificultad para respirar (es decir, mayor resistencia respiratoria) al usar sus máscaras.</p>
+<p><strong>7.2 - Cartuchos de Gas/Vapor:</strong> Los cronogramas de cambio de cartuchos se basan en las instrucciones del fabricante y en las pautas del Departamento de Regulación de Pesticidas de California (PSIS A-5). El cronograma de cambio comienza tan pronto como se abren los cartuchos, no cuando los empleados comienzan a usarlos. La siguiente tabla describe nuestro cronograma de cambio para las operaciones rutinarias:</p>
+<table style="width:100%; border-collapse:collapse; margin-top:10px;" border="1" cellpadding="6">
+    <thead>
+        <tr style="background:#f1f5f9;">
+            <th>Tarea / Ubicación / Operación</th>
+            <th>Modelo de Respirador y Tipo de Cartucho</th>
+            <th>Contaminantes del Aire</th>
+            <th>Programa de Cambio (Horas)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Mezcla, carga y aplicación de pesticidas</td>
+            <td>3M 6200/07025, Vapor Orgánico (OV)</td>
+            <td>Vapores orgánicos creados por pesticidas</td>
+            <td>Seguimos las recomendaciones del fabricante basadas en horas o cantidad de días</td>
+        </tr>
+    </tbody>
+</table>`
+            },
+            {
+                id: "rup_storage_defects",
+                title: "Respirator Storage & Defective Equipment / Almacenamiento y Equipos Defectuosos",
+                content_template: `<h2>Section 8 - Respirator Storage & Defective Equipment Handling</h2>
+<p><strong>8.1 - Storage:</strong> Respirators must be stored in a clean, dry area in accordance with manufacturer recommendations. Each employee will clean and inspect their own APR and store it inside its original resealable bag or a provided reusable bag in our office storage area. Each employee must write their name on the storage container. A supply of respirators and components in original packaging is stored in the shop at <strong>{{respirator_maintenance_location}}</strong>. Replacement filters are available at <strong>{{respirator_filter_location}}</strong>.</p>
+<p><strong>8.2 - Defective Respirators:</strong> Respirators that are defective or have defective parts must be immediately tagged and taken out of service. Employees must report defects to their supervisor. Supervisors will tag and deliver defective respirators to the Administrator, who will temporarily remove them for repair, perform a simple fix, or dispose of them. Employees will be provided a replacement respirator they have been fit-tested for before returning to work.</p>`,
+                content_template_es: `<h2>Sección 8 - Almacenamiento de Respirador y Manejo de Equipos Defectuosos</h2>
+<p><strong>8.1 - Almacenamiento:</strong> Los respiradores deben almacenarse en un área limpia y seca de acuerdo con las recomendaciones del fabricante. Cada empleado limpiará e inspeccionará su propio APR y lo almacenará dentro de su bolsa resellable original o una bolsa reutilizable provista en nuestro almacenamiento de oficina. Cada empleado debe escribir su nombre en el contenedor de almacenamiento. En el taller de <strong>{{respirator_maintenance_location}}</strong> se almacena un suministro de respiradores y componentes en su empaque original. Los filtros de reemplazo están disponibles en el <strong>{{respirator_filter_location}}</strong>.</p>
+<p><strong>8.2 - Respiradores Defectuosos:</strong> Los respiradores que estén defectuosos o que tengan piezas defectuosas deben etiquetarse de inmediato y retirarse de servicio. Los empleados deben informar los defectos a su supervisor. Los supervisores etiquetarán y entregarán los respiradores defectuosos al Administrador, quien decidirá si los retira temporalmente para reparación, realiza una reparación simple o los desecha. Los empleados recibirán un respirador de reemplazo para el cual hayan sido probados antes de regresar al trabajo.</p>`
+            },
+            {
+                id: "rup_training_evaluation",
+                title: "Training, Retraining & Program Evaluation / Capacitación y Evaluación del Programa",
+                content_template: `<h2>Section 9 - Training, Retraining & Program Evaluation</h2>
+<p><strong>9.1 - Training Requirements:</strong> Training is provided to users and supervisors on program contents, duties, and T8 CCR §5144 standards. Workers are trained prior to using respirators. Training is comprehensive, understandable, and recurs annually. Supervisors are trained prior to supervising workers who wear respirators.</p>
+<p><strong>9.2 - Retraining:</strong> Retraining is provided annually or when workplace changes render previous training obsolete, if deficiencies in employee knowledge are observed, or when retraining appears necessary. Voluntary users are provided Appendix D information, translated into Spanish as needed. For new employees trained within 12 months, retraining is waived if they can demonstrate necessary knowledge.</p>
+<p><strong>9.3 - Program Evaluation:</strong> The Administrator conducts periodic evaluations to ensure program implementation, consulting employees and supervisors, performing inspections, and reviewing records. Problems are reported to management with targets for correction.</p>`,
+                content_template_es: `<h2>Sección 9 - Capacitación, Recapacitación y Evaluación del Programa</h2>
+<p><strong>9.1 - Requisitos de Capacitación:</strong> Se proporciona capacitación a los usuarios y supervisores sobre el contenido del programa, las responsabilidades y las normas de T8 CCR §5144. Los trabajadores reciben capacitación antes de usar respiradores. La capacitación es integral, comprensible y se repite anualmente. Los supervisores son capacitados antes de supervisar a los trabajadores que usan respiradores.</p>
+<p><strong>9.2 - Recapacitación:</strong> La recapacitación se brinda anualmente o cuando los cambios en el lugar de trabajo hacen que la capacitación anterior sea obsoleta, si se observan deficiencias en el conocimiento del empleado, o cuando la recapacitación parezca necesaria. A los usuarios voluntarios se les proporciona la información del Apéndice D, traducida al español según sea necesario. Para los nuevos empleados capacitados dentro de los 12 meses, se exime la recapacitación si demuestran el conocimiento necesario.</p>
+<p><strong>9.3 - Evaluación del Programa:</strong> El Administrador realiza evaluaciones periódicas para asegurar la implementación del programa, consultando a empleados y supervisores, realizando inspecciones y revisando registros. Los problemas se informan a la gerencia con plazos para su corrección.</p>`
+            },
+            {
+                id: "rup_documentation_temp",
+                title: "Documentation, Recordkeeping & Temporary Employees / Documentación y Empleados Temporales",
+                content_template: `<h2>Section 10 - Documentation, Recordkeeping & Temporary Employees</h2>
+<p><strong>10.1 - Records Maintenance:</strong> The Administrator ensures documents (written program, fit test records, training materials) are maintained and available. Fit test records include employee name, test type, make/model/size of respirator, test date, and results. Medical questionnaires and evaluations remain confidential with the PLHCP; only PLHCP written recommendations are retained. Employees can access records by verbal request.</p>
+<p><strong>10.2 - Temporary Staff:</strong> Should temporary employment services be used, temporary employees are treated as our own and included in the Respiratory Protection Program as appropriate.</p>`,
+                content_template_es: `<h2>Sección 10 - Documentación, Registro de Archivos y Empleados Temporales</h2>
+<p><strong>10.1 - Mantenimiento de Registros:</strong> El Administrador garantiza que los documentos (programa escrito, registros de pruebas de ajuste, materiales de capacitación) se mantengan y estén disponibles. Los registros de pruebas de ajuste incluyen el nombre del empleado, tipo de prueba, marca/modelo/tamaño del respirador, fecha y resultados. Los cuestionarios médicos y las evaluaciones son confidenciales con el PLHCP; solo se conservan las recomendaciones escritas. Los empleados pueden acceder a los registros mediante solicitud verbal.</p>
+<p><strong>10.2 - Personal Temporal:</strong> En caso de que se utilicen servicios de empleo temporal, los empleados temporales serán tratados como propios y se incluirán en el Programa de Protección Respiratoria según corresponda.</p>`
+            },
+            {
+                id: "rup_appendices_abc",
+                title: "Appendix A, B & C: Use, Rosters & Exposure Assessments / Apéndices A, B y C",
+                content_template: `<h2>Section 11 - Appendix A, B & C: Respiratory Use & Exposure Assessments</h2>
+<h3>Appendix A - Voluntary and Required Respirator Use</h3>
+<table style="width:100%; border-collapse:collapse; margin-bottom:20px;" border="1" cellpadding="6">
+    <thead>
+        <tr style="background:#f1f5f9;">
+            <th>Work Location & Task</th>
+            <th>Airborne Hazardous Materials</th>
+            <th>Required APF</th>
+            <th>Type of Respiratory Protection</th>
+            <th>Mandatory, Voluntary, or Emergency Use</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Pesticide Application</td>
+            <td>Pesticides – Organic Vapors</td>
+            <td>10</td>
+            <td>Half-face, APR, and N95s</td>
+            <td>Mandatory (when pesticide label and/or CA law requires respirator)</td>
+        </tr>
+        <tr>
+            <td>Employees unvaccinated for COVID-19</td>
+            <td>Respiratory droplets from humans</td>
+            <td>N/A</td>
+            <td>N95s</td>
+            <td>Voluntary</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>Appendix B - Employees Wearing Respirators</h3>
+<table style="width:100%; border-collapse:collapse; margin-bottom:20px;" border="1" cellpadding="6">
+    <thead>
+        <tr style="background:#f1f5f9;">
+            <th>Employee</th>
+            <th>Make, Model, and Size of Respirator</th>
+            <th>Mandatory, Emergency, or Voluntary</th>
+            <th>Date of Last Medical Clearance</th>
+            <th>Date of Last Fit-Test (Annual)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>{{respirator_authorized_employee}}</strong></td>
+            <td><strong>{{respirator_authorized_model}}</strong></td>
+            <td>Mandatory (when pesticide label/CA law requires respirator)</td>
+            <td><strong>{{respirator_authorized_clearance_date}}</strong></td>
+            <td><strong>{{respirator_authorized_fit_test_date}}</strong></td>
+        </tr>
+        <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+        <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+    </tbody>
+</table>
+
+<h3>Appendix C - Employee Airborne Hazardous Chemical Assessments</h3>
+<table style="width:100%; border-collapse:collapse;" border="1" cellpadding="6">
+    <thead>
+        <tr style="background:#f1f5f9;">
+            <th>Work Location/Task</th>
+            <th>Number of Employees</th>
+            <th>Airborne Contaminants Evaluated & Dates</th>
+            <th>Date of Latest Assessment</th>
+            <th>Range of Exposure Levels Determined</th>
+            <th>Cal/OSHA Permitted Concentration Limits</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Pesticide Application</td>
+            <td>-</td>
+            <td>Annually in April-June of each year</td>
+            <td>April 2022</td>
+            <td>PEL determinations per §5155 Table AC-1</td>
+            <td>Cal/OSHA §5155 Airborne Contaminants Table AC-1 limits</td>
+        </tr>
+    </tbody>
+</table>`,
+                content_template_es: `<h2>Sección 11 - Apéndices A, B y C: Uso Respiratorio y Evaluaciones de Exposición</h2>
+<h3>Apéndice A - Uso Voluntario y Obligatorio del Respirador</h3>
+<table style="width:100%; border-collapse:collapse; margin-bottom:20px;" border="1" cellpadding="6">
+    <thead>
+        <tr style="background:#f1f5f9;">
+            <th>Ubicación y Tarea de Trabajo</th>
+            <th>Materiales Peligrosos en el Aire</th>
+            <th>APF Requerido</th>
+            <th>Tipo de Protección Respiratoria</th>
+            <th>Uso Obligatorio, Voluntario o de Emergencia</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Aplicación de pesticidas</td>
+            <td>Pesticidas – Vapores Orgánicos</td>
+            <td>10</td>
+            <td>Media cara, APR y N95</td>
+            <td>Obligatorio (cuando la etiqueta del pesticida y/o la ley de CA requiera respirador)</td>
+        </tr>
+        <tr>
+            <td>Empleados no vacunados para COVID-19</td>
+            <td>Gotas respiratorias de humanos</td>
+            <td>N/A</td>
+            <td>N95</td>
+            <td>Voluntario</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>Apéndice B - Empleados que Usan Respiradores</h3>
+<table style="width:100%; border-collapse:collapse; margin-bottom:20px;" border="1" cellpadding="6">
+    <thead>
+        <tr style="background:#f1f5f9;">
+            <th>Empleado</th>
+            <th>Marca, Modelo y Tamaño del Respirador</th>
+            <th>Obligatorio, de Emergencia o Voluntario</th>
+            <th>Fecha de Última Autorización Médica</th>
+            <th>Fecha de Última Prueba de Ajuste (Anual)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>{{respirator_authorized_employee}}</strong></td>
+            <td><strong>{{respirator_authorized_model}}</strong></td>
+            <td>Obligatorio (cuando la etiqueta/ley de CA requiere respirador)</td>
+            <td><strong>{{respirator_authorized_clearance_date}}</strong></td>
+            <td><strong>{{respirator_authorized_fit_test_date}}</strong></td>
+        </tr>
+        <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+        <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+    </tbody>
+</table>
+
+<h3>Apéndice C - Evaluaciones de Productos Químicos Peligrosos en el Aire de los Empleados</h3>
+<table style="width:100%; border-collapse:collapse;" border="1" cellpadding="6">
+    <thead>
+        <tr style="background:#f1f5f9;">
+            <th>Ubicación/Tarea de Trabajo</th>
+            <th>Número de Empleados</th>
+            <th>Contaminantes Evaluados y Fechas</th>
+            <th>Fecha de Última Evaluación</th>
+            <th>Rango de Niveles de Exposición Determinado</th>
+            <th>Límites de Concentración de Cal/OSHA</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Aplicación de pesticidas</td>
+            <td>-</td>
+            <td>Anualmente en abril-junio de cada año</td>
+            <td>Abril de 2022</td>
+            <td>Determinaciones de PEL según §5155 Tabla AC-1</td>
+            <td>Límites de la Tabla AC-1 de Contaminantes del Aire Cal/OSHA §5155</td>
+        </tr>
+    </tbody>
+</table>`
+            },
+            {
+                id: "rup_appendices_def",
+                title: "Appendix D, E & F: Voluntary Info, Training Checklist & Seal Checks / Apéndices D, E y F",
+                content_template: `<h2>Section 12 - Appendix D, E & F: Employee Info, Training & Seal Checks</h2>
+<h3>Appendix D - Information for Employees Using Respirators When Not Required Under the Standard</h3>
+<p>Respirators are an effective method of protection against designated hazards when properly selected and worn. Respirator use is encouraged even when exposures are below the exposure limit, to provide an additional level of comfort and protection for workers. However, if a respirator is used improperly or not kept clean, the respirator itself can become a hazard to the worker. Sometimes, workers may wear respirators to avoid exposures to hazards, even if the amount of hazardous substance does not exceed the limits set by Cal/OSHA standards. If a respirator is provided for your voluntary use, or if you provide your own respirator, you need to take certain precautions to be sure that the respirator itself does not present a hazard.</p>
+<p>You should do the following:</p>
+<ol>
+    <li>Read and heed all instructions provided by the manufacturer on use, maintenance, cleaning and care, and warnings regarding the respirator’s limitations.</li>
+    <li>Choose respirators certified for use to protect against the contaminant of concern. NIOSH (National Institute for Occupational Safety and Health) certifies respirators. A label or statement of certification should appear on the respirator packaging.</li>
+    <li>Do not wear your respirator into atmospheres containing contaminants for which your respirator is not designated to protect against. For example, a dust filter will not protect you against gases or organic vapors.</li>
+    <li>Keep track of your respirator so that you do not mistakenly use someone else’s.</li>
+</ol>
+<p><em>Employees receive a copy of this material, and for employees who only speak Spanish, a verbal translation is also provided.</em></p>
+
+<h3>Appendix E - Employee Respirator Training Checklist</h3>
+<ul>
+    <li>Why the respirator is necessary and how improper fit, usage, or maintenance can compromise its protective effect.</li>
+    <li>What the limitations and capabilities of the respirator are.</li>
+    <li>How to use the respirator effectively in emergency situations, including malfunctions.</li>
+    <li>How to inspect, put on/remove, use, and check respirator seals.</li>
+    <li>What the procedures are for maintenance and storage.</li>
+    <li>How to recognize medical signs and symptoms that may limit or prevent effective use.</li>
+    <li>The general requirements of the Respiratory Protection standard (T8 CCR §5144).</li>
+</ul>
+
+<h3>Appendix F - User Seal Check Procedures</h3>
+<p><strong>Positive Pressure Check:</strong> Close off the exhalation valve and exhale gently into the facepiece. The face fit is satisfactory if a slight positive pressure can be built up inside the facepiece without any evidence of outward leakage of air at the seal.</p>
+<p><strong>Negative Pressure Check:</strong> Close off the inlet opening of the cartridge(s) by covering with the palm of the hand or a thin latex/nitrile glove. Inhale gently so the facepiece collapses slightly, and hold breath for ten seconds. If the facepiece remains collapsed and no inward leakage is detected, the fit is satisfactory.</p>`,
+                content_template_es: `<h2>Sección 12 - Apéndices D, E y F: Información, Capacitación y Sellados</h2>
+<h3>Apéndice D - Información para Empleados que Usan Respiradores Cuando No es Requerido Bajo la Norma</h3>
+<p>Los respiradores son un método eficaz de protección contra peligros designados cuando se seleccionan y usan adecuadamente. Se fomenta el uso de respiradores incluso cuando las exposiciones están por debajo del límite, para proporcionar un nivel adicional de comodidad y protección. Sin embargo, si un respirador se usa incorrectamente o no se mantiene limpio, el respirador mismo puede convertirse en un peligro para el trabajador. Si se proporciona un respirador para su uso voluntario, o si usted proporciona su propio respirador, debe tomar ciertas precauciones para asegurarse de que el respirador mismo no presente un peligro.</p>
+<p>Usted debe hacer lo siguiente:</p>
+<ol>
+    <li>Lea y siga todas las instrucciones del fabricante sobre el uso, mantenimiento, limpieza y cuidado, y las advertencias sobre las limitaciones del respirador.</li>
+    <li>Elija respiradores certificados para proteger contra el contaminante de preocupación. NIOSH certifica los respiradores. Una etiqueta o declaración de certificación debe aparecer en el empaque.</li>
+    <li>No use su respirador en atmósferas que contengan contaminantes para los cuales su respirador no esté diseñado. Por ejemplo, un filtro de polvo no lo protegerá contra gases o vapores orgánicos.</li>
+    <li>Lleve un control de su respirador para no usar por error el de otra persona.</li>
+</ol>
+<p><em>Los empleados reciben una copia de este material, y para los empleados que solo hablan español, también se proporciona una traducción verbal.</em></p>
+
+<h3>Apéndice E - Lista de Verificación de Capacitación sobre Respiradores para Empleados</h3>
+<ul>
+    <li>Por qué el respirador es necesario y cómo el ajuste, uso o mantenimiento incorrectos pueden comprometer su efecto protector.</li>
+    <li>Cuáles son las limitaciones y capacidades del respirador.</li>
+    <li>Cómo usar el respirador de manera efectiva en situaciones de emergencia, incluidas las fallas.</li>
+    <li>Cómo inspeccionar, ponerse/quitarse, usar y verificar los sellados del respirador.</li>
+    <li>Cuáles son los procedimientos de mantenimiento y almacenamiento.</li>
+    <li>Cómo reconocer los signos y síntomas médicos que pueden limitar o impedir el uso efectivo.</li>
+    <li>Los requisitos generales de la norma de Protección Respiratoria (T8 CCR §5144).</li>
+</ul>
+
+<h3>Apéndice F - Procedimientos de Comprobación del Sello del Usuario</h3>
+<p><strong>Prueba de Presión Positiva:</strong> Cierre la válvula de exhalación y exhale suavemente dentro de la máscara. El ajuste facial es satisfactorio si se puede acumular una ligera presión positiva dentro de la máscara sin evidencia de fuga de aire hacia el exterior en el sello.</p>
+<p><strong>Prueba de Presión Negativa:</strong> Cierre la abertura de entrada de los cartuchos cubriéndola con la palma de la mano o un guante delgado de látex/nitrilo. Inhale suavemente para que la máscara se contraiga ligeramente y contenga la respiración durante diez segundos. Si la máscara permanece contraída y no se detecta fuga hacia el interior, el ajuste es satisfactorio.</p>`
+            },
+            {
+                id: "rup_appendices_ghi",
+                title: "Appendix G, H & I: Cleaning, Inspection & Acronyms / Apéndices G, H e I",
+                content_template: `<h2>Section 13 - Appendix G, H & I: Cleaning, Inspection & Definitions</h2>
+<h3>Appendix G - Respirator Cleaning Procedures</h3>
+<ol>
+    <li>Remove filters, cartridges, or canisters. Disassemble facepieces by removing speaking diaphragms, demand/pressure-demand valve assemblies, or hoses. Discard or repair defective parts.</li>
+    <li>Wash components in warm (43°C [110°F] max) water with a mild detergent or manufacturer-recommended cleaner. A stiff bristle (not wire) brush may be used.</li>
+    <li>Rinse components thoroughly in clean, warm running water. Drain.</li>
+    <li>Immerse components for two minutes in a hypochlorite solution (50 ppm chlorine) or aqueous iodine solution (50 ppm iodine) to disinfect.</li>
+    <li>Rinse components thoroughly in clean, warm running water. Drain. Thorough rinsing is critical to prevent dermatitis and rubber degradation.</li>
+    <li>Dry components with a clean lint-free cloth or air-dry.</li>
+    <li>Reassemble facepiece and test the respirator.</li>
+</ol>
+
+<h3>Appendix H - Respirator Inspection Checklist</h3>
+<ul>
+    <li><strong>Facepiece:</strong> Pliability, cracks, tears, holes, distortion, cracked/loose lenses.</li>
+    <li><strong>Valves:</strong> Residue/dirt, cracks/tears in material, distortion, proper seating.</li>
+    <li><strong>Head Straps:</strong> Breaks/tears, loss of elasticity, functional buckles.</li>
+    <li><strong>Filters/Cartridges:</strong> Approval label, gaskets, cracks/dents in housing, correct cartridge type.</li>
+</ul>
+
+<h3>Appendix I - Terms and Acronyms</h3>
+<ul>
+    <li><strong>APF (Assigned Protection Factor):</strong> The level of protection a respirator is expected to provide when effectively implemented.</li>
+    <li><strong>APR (Air Purifying Respirator):</strong> Relies on filtration to remove airborne contaminants.</li>
+    <li><strong>Fit Factor:</strong> A quantitative estimate of respirator fit.</li>
+    <li><strong>IDLH:</strong> Immediately Dangerous to Life or Health.</li>
+    <li><strong>PLHCP:</strong> Physician or other Licensed Health Care Professional.</li>
+</ul>`,
+                content_template_es: `<h2>Sección 13 - Apéndices G, H e I: Limpieza, Inspección y Definiciones</h2>
+<h3>Apéndice G - Procedimientos de Limpieza de Respiradores</h3>
+<ol>
+    <li>Retire los filtros o cartuchos. Desensamble las máscaras quitando los diafragmas de habla, conjuntos de válvulas de demanda o mangueras. Deseche o repare las piezas defectuosas.</li>
+    <li>Lave los componentes en agua tibia (máximo 43°C [110°F]) con un detergente suave o limpiador recomendado por el fabricante. Se puede utilizar un cepillo de cerdas rígidas (no de alambre).</li>
+    <li>Enjuague bien los componentes en agua corriente limpia y tibia. Escurra.</li>
+    <li>Sumerja los componentes durante dos minutos en una solución de hipoclorito (50 ppm de cloro) o solución acuosa de yodo (50 ppm de yodo) para desinfectar.</li>
+    <li>Enjuague bien los componentes en agua corriente limpia y tibia. Escurra. El enjuague completo es fundamental para prevenir la dermatitis y la degradación del caucho.</li>
+    <li>Seque los componentes con un paño limpio y sin pelusa o séquelos al aire.</li>
+    <li>Vuelva a ensamblar la máscara y pruebe el respirador.</li>
+</ol>
+
+<h3>Apéndice H - Lista de Verificación para Inspección de Respiradores</h3>
+<ul>
+    <li><strong>Máscara:</strong> Flexibilidad, grietas, desgarros, agujeros, distorsión, lentes agrietados o sueltos.</li>
+    <li><strong>Válvulas:</strong> Residuos o suciedad, grietas o desgarros en el material, distorsión y asentamiento adecuado.</li>
+    <li><strong>Correas de la cabeza:</strong> Roturas o desgarros, pérdida de elasticidad, hebillas funcionales.</li>
+    <li><strong>Filtros/Cartuchos:</strong> Etiqueta de aprobación, juntas, grietas o abolladuras en la carcasa, tipo de cartucho correcto.</li>
+</ul>
+
+<h3>Apéndice I - Términos y Siglas</h3>
+<ul>
+    <li><strong>APF (Factor de Protección Asignado):</strong> El nivel de protección que se espera que proporcione un respirador cuando se implementa con eficacia.</li>
+    <li><strong>APR (Respirador Purificador de Aire):</strong> Depende de la filtración para eliminar los contaminantes del aire.</li>
+    <li><strong>Factor de Ajuste:</strong> Una estimación cuantitativa del ajuste del respirador.</li>
+    <li><strong>IDLH:</strong> Inmediatamente Peligroso para la Vida o la Salud.</li>
+    <li><strong>PLHCP:</strong> Médico u otro Profesional de la Salud con Licencia.</li>
+</ul>`
             }
         ]
     },
@@ -1681,6 +2085,19 @@ async function seedDatabaseIfNeeded() {
                 if (!data.subsections || data.subsections.length < 10) {
                     needsModulesSeed = true;
                     console.log("Expanding database schemas to integrate new PHP safety subsections...");
+                }
+            }
+
+            // Find rup and check if it has the new subsections length
+            const rupDoc = modulesSnap.docs.find(doc => doc.id === "rup");
+            if (!rupDoc) {
+                needsModulesSeed = true;
+            } else {
+                const data = rupDoc.data();
+                // Old RUP had 3 subsections. New RUP has 13 subsections.
+                if (!data.subsections || data.subsections.length < 10) {
+                    needsModulesSeed = true;
+                    console.log("Expanding database schemas to integrate new RUP safety subsections...");
                 }
             }
         }
@@ -2110,6 +2527,42 @@ const defaultBilingualValues = {
     "pesticide_training_date": {
         "en": "03/27/2026",
         "es": "03/27/2026"
+    },
+    "respirator_program_administrator": {
+        "en": "Katia McLaughlin",
+        "es": "Katia McLaughlin"
+    },
+    "respirator_maintenance_location": {
+        "en": "4230 White Lilac Rd., Fallbrook, CA 92028",
+        "es": "4230 White Lilac Rd., Fallbrook, CA 92028"
+    },
+    "respirator_medical_provider": {
+        "en": "Mission Family Care",
+        "es": "Mission Family Care"
+    },
+    "respirator_medical_provider_address": {
+        "en": "706 S. Main Ave., Fallbrook, CA",
+        "es": "706 S. Main Ave., Fallbrook, CA"
+    },
+    "respirator_medical_provider_phone": {
+        "en": "(760) 451-3500",
+        "es": "(760) 451-3500"
+    },
+    "respirator_authorized_employee": {
+        "en": "Angel Rodriguez",
+        "es": "Angel Rodriguez"
+    },
+    "respirator_authorized_model": {
+        "en": "3M 6200/07025, Medium",
+        "es": "3M 6200/07025, Mediano"
+    },
+    "respirator_authorized_clearance_date": {
+        "en": "04-04-22",
+        "es": "04-04-22"
+    },
+    "respirator_authorized_fit_test_date": {
+        "en": "04-25-22",
+        "es": "04-25-22"
     }
 };
 
