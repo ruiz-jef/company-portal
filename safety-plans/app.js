@@ -1199,7 +1199,7 @@ const defaultModulesSeed = [
 <p><strong>Administrator Contact:</strong> Phone: {{wvpp_administrator_phone}} | Email: {{wvpp_administrator_email}}</p>
 <p><strong>Program Assistant:</strong> {{wvpp_assistant_name}} ({{wvpp_assistant_title}})</p>
 <p><strong>Assistant Contact:</strong> Phone: {{wvpp_assistant_phone}} | Email: {{wvpp_assistant_email}}</p>
-<p>This Workplace Violence Prevention Program (WVPP) is established in compliance with California Senate Bill 553 (Labor Code Section 6401.9) to protect employees of {{client_name}} from physical and mental harm at work. This program is integrated into the Company's Injury and Illness Prevention Program (IIPP) and applies to all operations and facilities located at {{client_address}}.</p>`,
+<p>This Workplace Violence Prevention Program (WVPP) aids {{client_name}} in protecting workers from physical and mental harm at work. It adds to the Company’s existing and effective Injury and Illness Prevention Program. This plan is maintained in accordance with California Senate Bill 553 (Labor Code Section 6401.9) and applies to all operations and facilities located at {{client_address}}.</p>`,
         content_template_es: `<h1>Programa de Prevención de Violencia en el Lugar de Trabajo (WVPP)</h1>
 <p><strong>Nombre de la Empresa:</strong> {{client_name}}</p>
 <p><strong>Fecha de Inicio del Plan:</strong> {{wvpp_initiation_date}}</p>
@@ -1208,159 +1208,340 @@ const defaultModulesSeed = [
 <p><strong>Contacto del Administrador:</strong> Teléfono: {{wvpp_administrator_phone}} | Correo: {{wvpp_administrator_email}}</p>
 <p><strong>Asistente del Programa:</strong> {{wvpp_assistant_name}} ({{wvpp_assistant_title}})</p>
 <p><strong>Contacto del Asistente:</strong> Teléfono: {{wvpp_assistant_phone}} | Correo: {{wvpp_assistant_email}}</p>
-<p>Este Programa de Prevención de Violencia en el Lugar de Trabajo (WVPP) se establece de conformidad con el Proyecto de Ley del Senado de California 553 (Sección 6401.9 del Código de Trabajo) para proteger a los empleados de {{client_name}} de daños físicos y mentales en el trabajo. Este programa está integrado en el Programa de Prevención de Lesiones y Enfermedades (IIPP) de la Empresa y se aplica a todas las operaciones e instalaciones ubicadas en {{client_address}}.</p>`,
+<p>Este Programa de Prevención de Violencia en el Lugar de Trabajo (WVPP) ayuda a {{client_name}} a proteger a los trabajadores de daños físicos y mentales en el trabajo. Se suma al Programa de Prevención de Lesiones y Enfermedades existente y eficaz de la Empresa. Este plan se mantiene de conformidad con el Proyecto de Ley del Senado de California 553 (Sección 6401.9 del Código de Trabajo) y se aplica a todas las operaciones e instalaciones ubicadas en {{client_address}}.</p>`,
         subsections: [
             {
+                id: "wvpp_scope",
+                title: "Definitions & Scope / Definiciones y Alcance",
+                content_template: `<h2>1. Definitions & Violence Types</h2>
+<p><strong>1.1 Definition:</strong> Workplace violence is any act or threat of violence, harassment, intimidation, or other threatening, disruptive behavior that can occur on the job. It does not include lawful acts of self-defense or the defense of others.</p>
+<p><strong>1.2 Four Workplace Violence Types:</strong></p>
+<ul>
+    <li><strong>Type 1 Violence:</strong> Workplace violence committed by a person who has no legitimate business at the worksite and includes violent acts by anyone who enters the workplace or approaches employees with the intent to commit a crime.</li>
+    <li><strong>Type 2 Violence:</strong> Workplace violence directed at employees by customers, clients, patients, students, inmates, or visitors.</li>
+    <li><strong>Type 3 Violence:</strong> Workplace violence against an employee by a present or former employee, supervisor, or manager.</li>
+    <li><strong>Type 4 Violence:</strong> Workplace violence committed in the workplace by a person who does not work there but has or is known to have had a personal relationship with an employee.</li>
+</ul>`,
+                content_template_es: `<h2>1. Definiciones y Tipos de Violencia</h2>
+<p><strong>1.1 Definición:</strong> La violencia en el lugar de trabajo es cualquier acto o amenaza de violencia, acoso, intimidación u otro comportamiento amenazante o perturbador que pueda ocurrir en el trabajo. No incluye actos legítimos de defensa propia o la defensa de otros.</p>
+<p><strong>1.2 Los Cuatro Tipos de Violencia Laboral:</strong></p>
+<ul>
+    <li><strong>Violencia Tipo 1:</strong> Violencia en el lugar de trabajo cometida por una persona que no tiene un negocio legítimo en el lugar de trabajo e incluye actos violentos cometidos por cualquier persona que ingrese al lugar de trabajo o se acerque a los empleados con la intención de cometer un delito.</li>
+    <li><strong>Violencia Tipo 2:</strong> Violencia en el lugar de trabajo dirigida a los empleados por clientes, usuarios, pacientes, estudiantes, reclusos o visitantes.</li>
+    <li><strong>Violencia Tipo 3:</strong> Violencia en el lugar de trabajo contra un empleado por parte de un empleado, supervisor o gerente actual o anterior.</li>
+    <li><strong>Violencia Tipo 4:</strong> Violencia en el lugar de trabajo cometida por una persona que no trabaja allí pero tiene o se sabe que ha tenido una relación personal con un empleado.</li>
+</ul>`
+            },
+            {
+                id: "wvpp_plan_review",
+                title: "Plan Review / Revisión del Plan",
+                content_template: `<h2>2. Plan Review Protocols</h2>
+<p><strong>2.1 Review Frequency:</strong> The Company will review this plan at least annually. Plan updates will include actively involving employees and authorized employee representatives.</p>
+<p><strong>2.2 Trigger Events:</strong> The plan will also be updated when a deficiency is observed or becomes apparent, and after a workplace violence incident. Changes in federal, state, or local regulations that may reasonably affect workplace violence prevention will also prompt plan updates.</p>`,
+                content_template_es: `<h2>2. Protocolos de Revisión del Plan</h2>
+<p><strong>2.1 Frecuencia de Revisión:</strong> La Empresa revisará este plan al menos anualmente. Las actualizaciones del plan incluirán la participación activa de los empleados y los representantes autorizados de los empleados.</p>
+<p><strong>2.2 Eventos Desencadenantes:</strong> El plan también se actualizará cuando se observe o se manifieste una deficiencia, y después de un incidente de violencia laboral. Los cambios en las regulaciones federales, estatales o locales que puedan afectar razonablemente la prevención de la violencia en el lugar de trabajo también motivarán actualizaciones del plan.</p>`
+            },
+            {
+                id: "wvpp_responsibility",
+                title: "Responsibilities & Administration / Responsabilidades y Administración",
+                content_template: `<h2>3. Program Responsibility & Responsible Persons</h2>
+<p><strong>3.1 WVPP Administrator:</strong> The WVPP administrator, {{wvpp_administrator_name}}, {{wvpp_administrator_title}}, has the authority and responsibility for implementing the provisions of this plan for {{client_name}}.</p>
+<table style="width:100%; border-collapse:collapse; margin-top:10px;" border="1" cellpadding="6">
+    <thead>
+        <tr style="background-color:#f1f5f9;">
+            <th>Responsible Persons</th>
+            <th>Job Title/Position</th>
+            <th>WVPP Responsibility(ies)</th>
+            <th>Phone #</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>{{wvpp_administrator_name}}</strong></td>
+            <td>{{wvpp_administrator_title}}</td>
+            <td>Approves the final plan and any major changes. Implementing, modeling, and maintaining the principles of this plan and workplace violence prevention strategies in their work areas. Ensuring that all workplace security policies and procedures are communicated and understood by all workers. Enforcing the rules fairly and uniformly. Answering related worker questions.</td>
+            <td>{{wvpp_administrator_phone}}</td>
+            <td>{{wvpp_administrator_email}}</td>
+        </tr>
+        <tr>
+            <td><strong>{{wvpp_assistant_name}}</strong></td>
+            <td>{{wvpp_assistant_title}}</td>
+            <td>Assisting in implementing, modeling, and maintaining the principles of this plan and workplace violence prevention strategies in their work areas. Ensuring that all workplace security policies and procedures are communicated and understood by all workers. Enforcing the rules fairly and uniformly. Answering related worker questions.</td>
+            <td>{{wvpp_assistant_phone}}</td>
+            <td>{{wvpp_assistant_email}}</td>
+        </tr>
+    </tbody>
+</table>`,
+                content_template_es: `<h2>3. Responsabilidad del Programa y Personas Responsables</h2>
+<p><strong>3.1 Administrador del WVPP:</strong> El administrador del WVPP, {{wvpp_administrator_name}}, {{wvpp_administrator_title}}, tiene la autoridad y responsabilidad de implementar las disposiciones de este plan para {{client_name}}.</p>
+<table style="width:100%; border-collapse:collapse; margin-top:10px;" border="1" cellpadding="6">
+    <thead>
+        <tr style="background-color:#f1f5f9;">
+            <th>Personas Responsables</th>
+            <th>Puesto / Posición</th>
+            <th>Responsabilidad(es) del WVPP</th>
+            <th>Teléfono</th>
+            <th>Correo</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>{{wvpp_administrator_name}}</strong></td>
+            <td>{{wvpp_administrator_title}}</td>
+            <td>Aprueba el plan final y cualquier cambio importante. Implementar, modelar y mantener los principios de este plan y las estrategias de prevención de violencia laboral en sus áreas de trabajo. Garantizar que todas las políticas y procedimientos de seguridad laboral se comuniquen y sean entendidos por todos los trabajadores. Hacer cumplir las normas de manera justa y uniforme. Responder preguntas relacionadas de los trabajadores.</td>
+            <td>{{wvpp_administrator_phone}}</td>
+            <td>{{wvpp_administrator_email}}</td>
+        </tr>
+        <tr>
+            <td><strong>{{wvpp_assistant_name}}</strong></td>
+            <td>{{wvpp_assistant_title}}</td>
+            <td>Ayudar a implementar, modelar y mantener los principios de este plan y las estrategias de prevención de violencia laboral en sus áreas de trabajo. Garantizar que todas las políticas y procedimientos de seguridad laboral se comuniquen y sean entendidos por todos los trabajadores. Hacer cumplir las normas de manera justa y uniforme. Responder preguntas relacionadas de los trabajadores.</td>
+            <td>{{wvpp_assistant_phone}}</td>
+            <td>{{wvpp_assistant_email}}</td>
+        </tr>
+    </tbody>
+</table>`
+            },
+            {
                 id: "wvpp_involvement",
-                title: "Employee Involvement & Violence Types / Involucramiento de Empleados y Tipos de Violencia",
-                content_template: `<h2>1. Roles, Compliance & Employee Involvement</h2>
-<p><strong>1.1 Policy & Responsibility:</strong> {{client_name}} has a zero-tolerance policy for workplace violence, harassment, or retaliation. The Program Administrator {{wvpp_administrator_name}} has full authority and responsibility to implement and maintain this program. The Program Assistant {{wvpp_assistant_name}} assists in daily oversight and safety audits.</p>
-<p><strong>1.2 Four Types of Workplace Violence:</strong></p>
+                title: "Employee Involvement & Compliance / Involucramiento y Cumplimiento",
+                content_template: `<h2>4. Employee Active Involvement & Compliance</h2>
+<p><strong>4.1 Policies & Procedures for Involvement:</strong> {{client_name}} ensures the following policies and procedures to obtain the active involvement of employees and authorized employee representatives in developing and implementing this plan:</p>
 <ul>
-    <li><strong>Type 1 Violence:</strong> Workplace violence committed by a person who has no legitimate business at the worksite (e.g., criminal acts, robbery).</li>
-    <li><strong>Type 2 Violence:</strong> Workplace violence directed at employees by customers, clients, patients, or visitors.</li>
-    <li><strong>Type 3 Violence:</strong> Workplace violence committed by a current or former employee, supervisor, or manager.</li>
-    <li><strong>Type 4 Violence:</strong> Workplace violence committed by a person who has a personal relationship with an employee (e.g., domestic violence spillover).</li>
-</ul>
-<p><strong>1.3 Active Employee Involvement:</strong> Employees are involved in establishing and implementing this plan by participating in hazard identification, safety discussions, and program evaluations. Employees are required to follow all safety procedures and report any suspicious behavior, threats, or violent acts immediately without fear of retaliation.</p>`,
-                content_template_es: `<h2>1. Funciones, Cumplimiento e Involucramiento de los Empleados</h2>
-<p><strong>1.1 Política y Responsabilidad:</strong> {{client_name}} tiene una política de tolerancia cero para la violencia, el acoso o las represalias en el lugar de trabajo. El Administrador del Programa, {{wvpp_administrator_name}}, tiene plena autoridad y responsabilidad para implementar y mantener este programa. El Asistente del Programa, {{wvpp_assistant_name}}, ayuda en la supervisión diaria y las auditorías de seguridad.</p>
-<p><strong>1.2 Los Cuatro Tipos de Violencia en el Lugar de Trabajo:</strong></p>
+    <li>During monthly safety meetings, Management will ask employees to provide their input and feedback on any areas of concern they may have on Workplace Violence. An employee "Suggestion Box" is available in the {{wvpp_suggestion_box_location}} and input can remain anonymous.</li>
+    <li>We will ensure that all workplace violence policies and procedures within this written plan are clearly communicated and understood by all employees. Managers and supervisors will enforce the rules fairly and uniformly.</li>
+    <li>All employees will follow all workplace violence prevention plan directives, policies, and procedures, and assist in maintaining a safe work environment.</li>
+    <li>The plan shall be in effect at all times and in all work areas and be specific to the hazards and corrective measures for each work area and operation.</li>
+</ul>`,
+                content_template_es: `<h2>4. Involucramiento Activo y Cumplimiento de los Empleados</h2>
+<p><strong>4.1 Políticas y Procedimientos de Involucramiento:</strong> {{client_name}} garantiza las siguientes políticas y procedimientos para obtener la participación activa de los empleados y representantes autorizados en el desarrollo e implementación del plan:</p>
 <ul>
-    <li><strong>Violencia Tipo 1:</strong> Violencia cometida por una persona que no tiene un negocio legítimo en el lugar de trabajo (por ejemplo, actos delictivos, robo).</li>
-    <li><strong>Violencia Tipo 2:</strong> Violencia dirigida a los empleados por clientes, visitantes o usuarios.</li>
-    <li><strong>Violencia Tipo 3:</strong> Violencia cometida por un empleado, supervisor o gerente actual o anterior.</li>
-    <li><strong>Violencia Tipo 4:</strong> Violencia cometida por una persona que tiene una relación personal con un empleado (por ejemplo, repercusiones de violencia doméstica en el trabajo).</li>
-</ul>
-<p><strong>1.3 Involucramiento Activo de los Empleados:</strong> Los empleados participan en el establecimiento e implementación de este plan al participar en la identificación de peligros, discusiones de seguridad y evaluaciones del programa. Se requiere que los empleados sigan todos los procedimientos de seguridad y reporten de inmediato cualquier comportamiento sospechoso, amenaza o acto violento sin temor a represalias.</p>`
+    <li>Durante las reuniones mensuales de seguridad, la Dirección pedirá a los empleados que proporcionen sus comentarios y aportaciones sobre cualquier área de preocupación que puedan tener sobre la Violencia en el Lugar de Trabajo. Un "Buzón de Sugerencias" para empleados está disponible en el {{wvpp_suggestion_box_location}} y las aportaciones pueden ser anónimas.</li>
+    <li>Garantizaremos que todas las políticas y procedimientos de violencia laboral dentro de este plan escrito se comuniquen claramente y sean entendidos por todos los empleados. Los gerentes y supervisores harán cumplir las normas de manera justa y uniforme.</li>
+    <li>Todos los empleados seguirán todas las directivas, políticas y procedimientos del plan de prevención de violencia laboral, y ayudarán a mantener un entorno de trabajo seguro.</li>
+    <li>El plan estará vigente en todo momento y en todas las áreas de trabajo y será específico para los peligros y medidas correctivas de cada área de trabajo y operación.</li>
+</ul>`
             },
             {
                 id: "wvpp_communication",
-                title: "Communication & Training / Comunicación y Capacitación",
-                content_template: `<h2>2. Communication Channels & Employee Training</h2>
-<p><strong>2.1 Open Communication:</strong> {{client_name}} encourages open communication regarding safety concerns. Employees can report threats or concerns directly to their supervisor, to {{wvpp_administrator_name}}, or anonymously via the suggestion box located in the {{wvpp_suggestion_box_location}}.</p>
-<p><strong>2.2 Training Requirements:</strong> Training is provided to all employees at initial hire, annually, and when major program updates occur. Training includes:
+                title: "Employee Communication / Comunicación con Empleados",
+                content_template: `<h2>5. Communication and Training with Employees</h2>
+<p><strong>5.1 Open & Safe Channels:</strong> The Company recognizes that open, two-way communication between management and staff about workplace security issues is essential to a safe and productive workplace. Our communication methods consist of one or more of the following:</p>
 <ul>
-    <li>The requirements of California SB 553 and how to obtain a copy of this written program.</li>
-    <li>Definitions of the four types of workplace violence and how to report concerns.</li>
-    <li>De-escalation strategies, emergency response procedures (Run, Hide, Fight), and lockdown protocols.</li>
-    <li>How to access employee safety records and the Violent Incident Log.</li>
-</ul></p>`,
-                content_template_es: `<h2>2. Canales de Comunicación y Capacitación de Empleados</h2>
-<p><strong>2.1 Comunicación Abierta:</strong> {{client_name}} fomenta la comunicación abierta sobre inquietudes de seguridad. Los empleados pueden reportar amenazas o inquietudes directamente a su supervisor, a {{wvpp_administrator_name}}, o de forma anónima a través del buzón de sugerencias ubicado en el {{wvpp_suggestion_box_location}}.</p>
-<p><strong>2.2 Requisitos de Capacitación:</strong> Se brinda capacitación a todos los empleados en la contratación inicial, anualmente y cuando ocurren actualizaciones importantes del programa. La capacitación incluye:
+    <li>New worker orientation including workplace security policies and procedures.</li>
+    <li>Review of this plan.</li>
+    <li>Workplace security training programs.</li>
+    <li>During our regularly scheduled monthly safety meetings.</li>
+    <li>Effective communication between workers and supervisors about security and violence concerns, including translation where appropriate.</li>
+    <li>Posted or distributed workplace security information.</li>
+    <li>A system for workers to anonymously inform management about workplace security and violence concerns (Employee Suggestion Box in the {{wvpp_suggestion_box_location}}).</li>
+    <li>A system for workers to inform management about workplace security hazards or threats of violence without fear of reprisal or adverse action.</li>
+    <li>Addressing security issues at our workplace security team meetings.</li>
+</ul>`,
+                content_template_es: `<h2>5. Comunicación y Capacitación con los Empleados</h2>
+<p><strong>5.1 Canales Abiertos y Seguros:</strong> La Empresa reconoce que la comunicación abierta y bidireccional entre la dirección y el personal sobre cuestiones de seguridad laboral es esencial para un lugar de trabajo seguro y productivo. Nuestros métodos de comunicación consisten en uno o más de los siguientes:</p>
 <ul>
-    <li>Los requisitos de la ley SB 553 de California y cómo obtener una copia de este programa escrito.</li>
-    <li>Definiciones de los cuatro tipos de violencia laboral y cómo reportar inquietudes.</li>
-    <li>Estrategias de de-escalación, procedimientos de respuesta a emergencias (Correr, Esconderse, Pelear) y protocolos de cierre de emergencia.</li>
-    <li>Cómo acceder a los registros de seguridad de los empleados y al Registro de Incidentes Violentos.</li>
-</ul></p>`
+    <li>Orientación para nuevos trabajadores que incluye políticas y procedimientos de seguridad laboral.</li>
+    <li>Revisión de este plan.</li>
+    <li>Programas de capacitación en seguridad laboral.</li>
+    <li>Durante nuestras reuniones de seguridad mensuales programadas regularmente.</li>
+    <li>Comunicación efectiva entre trabajadores y supervisores sobre inquietudes de seguridad y violencia, incluida traducción cuando corresponda.</li>
+    <li>Información de seguridad laboral publicada o distribuida.</li>
+    <li>Un sistema para que los trabajadores informen de manera anónima a la dirección sobre inquietudes de seguridad y violencia (Buzón de sugerencias de empleados en el {{wvpp_suggestion_box_location}}).</li>
+    <li>Un sistema para que los trabajadores informen a la dirección sobre peligros de seguridad laboral o amenazas de violencia sin temor a represalias o acciones adversas.</li>
+    <li>Abordar los problemas de seguridad en nuestras reuniones del equipo de seguridad laboral.</li>
+</ul>`
+            },
+            {
+                id: "wvpp_reporting",
+                title: "Incident Reporting & Timely Correction / Reporte de Incidentes y Corrección Oportuna",
+                content_template: `<h2>6. Workplace Violent Incident Reporting & Correction</h2>
+<p><strong>6.1 Reporting Procedure:</strong> {{client_name}} implements the following effective procedures to ensure that:</p>
+<ul>
+    <li>All threats or acts of workplace violence are reported to an employee's supervisor, manager, or HR, who will inform the WVPP administrator. This will be accomplished verbally or in written form.</li>
+    <li>Hazards that pose a higher risk for violence in the workplace will be corrected in a timely manner, based on the severity of the hazards. The higher the risk of violence, the greater priority the Company will take in correcting the matter.</li>
+    <li>A strict non-retaliation policy is in place, and any instances of retaliation are dealt with swiftly and decisively.</li>
+</ul>`,
+                content_template_es: `<h2>6. Reporte de Incidentes y Corrección de Peligros de Violencia Laboral</h2>
+<p><strong>6.1 Procedimiento de Reporte:</strong> {{client_name}} implementa los siguientes procedimientos eficaces para garantizar que:</p>
+<ul>
+    <li>Todas las amenazas o actos de violencia laboral se reporten al supervisor, gerente o departamento de recursos humanos del empleado, quien informará al administrador del WVPP. Esto se realizará de forma verbal o escrita.</li>
+    <li>Los peligros que planteen un mayor riesgo de violencia en el lugar de trabajo se corregirán de manera oportuna, según la gravedad de los mismos. Cuanto mayor sea el riesgo de violencia, mayor prioridad dará la Empresa para corregir el asunto.</li>
+    <li>Existe una estricta política de no represalias, y cualquier caso de represalia se abordará de manera rápida y decisiva.</li>
+</ul>`
             },
             {
                 id: "wvpp_hazards",
-                title: "Hazard Assessment & Inspections / Evaluación de Peligros e Inspecciones",
-                content_template: `<h2>3. Hazard Identification, Evaluation & Inspections</h2>
-<p><strong>3.1 Routine Audits & Inspections:</strong> Safety inspections to identify and evaluate workplace violence hazards are conducted {{wvpp_inspection_frequency}} by the Program Administrator or Assistant. These audits evaluate:
-<ul>
-    <li>Physical security conditions (lighting, door locks, cameras, escape routes).</li>
-    <li>Administrative security conditions (cash handling protocols, late-night shift staffing).</li>
-    <li>Previous reports of incidents or threatening behaviors.</li>
-</ul>
-<p><strong>3.2 Corrective Action:</strong> Any identified hazard will be corrected immediately or scheduled for correction as soon as possible. Employees will be informed of corrected hazards and temporary safety measures in place.</p>`,
-                content_template_es: `<h2>3. Identificación, Evaluación e Inspección de Peligros</h2>
-<p><strong>3.1 Auditorías e Inspecciones Rutinarias:</strong> Las inspecciones de seguridad para identificar y evaluar los peligros de violencia laboral se realizan {{wvpp_inspection_frequency}} por el Administrador o Asistente del Programa. Estas auditorías evalúan:
-<ul>
-    <li>Condiciones de seguridad física (iluminación, cerraduras de puertas, cámaras, rutas de escape).</li>
-    <li>Condiciones de seguridad administrativa (protocolos de manejo de efectivo, personal en turnos nocturnos).</li>
-    <li>Reportes anteriores de incidentes o comportamientos amenazantes.</li>
-</ul>
-<p><strong>3.2 Medidas Correctivas:</strong> Cualquier peligro identificado se corregirá de inmediato o se programará para su corrección lo antes posible. Se informará a los empleados sobre los peligros corregidos y las medidas de seguridad temporales implementadas.</p>`
+                title: "Hazard Identification / Identificación de Peligros",
+                content_template: `<h2>7. Workplace Violence Hazard Identification & Evaluation</h2>
+<p><strong>7.1 Identification Triggers:</strong> Policies and procedures are established and required to be conducted by {{client_name}} to ensure that workplace violence hazards are identified and evaluated at the following intervals:</p>
+<ol>
+    <li>When Company initially adopted this Workplace Violence Prevention Program.</li>
+    <li>When new workplace security hazards are introduced into the workplace.</li>
+    <li>When new, previously unidentified workplace security hazards are recognized.</li>
+    <li>When workplace security incidents occur.</li>
+    <li>When Company hires and/or reassigns permanent or intermittent workers to processes, operations, or tasks for which a workplace security evaluation has not yet been conducted.</li>
+    <li>Whenever workplace security conditions warrant an inspection.</li>
+</ol>`,
+                content_template_es: `<h2>7. Identificación y Evaluación de Peligros de Violencia Laboral</h2>
+<p><strong>7.1 Desencadenantes de Identificación:</strong> Se establecen y requieren políticas y procedimientos a realizar por {{client_name}} para garantizar que los peligros de violencia en el lugar de trabajo se identifiquen y evalúen en los siguientes intervalos:</p>
+<ol>
+    <li>Cuando la Empresa adoptó inicialmente este Programa de Prevención de Violencia en el Lugar de Trabajo.</li>
+    <li>Cuando se introducen nuevos peligros de seguridad laboral en el lugar de trabajo.</li>
+    <li>Cuando se reconocen nuevos peligros de seguridad laboral previamente no identificados.</li>
+    <li>Cuando ocurren incidentes de seguridad laboral.</li>
+    <li>Cuando la Empresa contrata y/o reasigna trabajadores permanentes o intermitentes a procesos, operaciones o tareas para las cuales aún no se ha realizado una evaluación de seguridad laboral.</li>
+    <li>Siempre que las condiciones de seguridad laboral justifiquen una inspección.</li>
+</ol>`
+            },
+            {
+                id: "wvpp_inspections",
+                title: "Periodic Inspections / Inspecciones Periódicas",
+                content_template: `<h2>8. Periodic Inspections</h2>
+<p><strong>8.1 Scope & Frequency:</strong> Periodic inspections of workplace violence hazards will identify unsafe conditions and work practices. This may require assessment for more than one type of workplace violence. Periodic Inspections shall be conducted {{wvpp_inspection_frequency}}.</p>`,
+                content_template_es: `<h2>8. Inspecciones Periódicas</h2>
+<p><strong>8.1 Alcance y Frecuencia:</strong> Las inspecciones periódicas de los peligros de violencia laboral identificarán condiciones y prácticas de trabajo inseguras. Esto puede requerir la evaluación de más de un tipo de violencia en el lugar de trabajo. Las inspecciones periódicas se realizarán {{wvpp_inspection_frequency}}.</p>`
             },
             {
                 id: "wvpp_response",
-                title: "Emergency Response Protocols / Protocolos de Respuesta a Emergencias",
-                content_template: `<h2>4. Emergency Response & De-escalation</h2>
-<p><strong>4.1 Immediate Response:</strong> In the event of an active threat or violent incident:
+                title: "Emergency Response / Respuesta a Emergencias",
+                content_template: `<h2>9. Emergency Response Procedures</h2>
+<p><strong>9.1 Coordination & Threat Action:</strong> As warranted, the Company may work with law enforcement or other experts to assess workplace security and response. Any individual observing violent or threatening behavior that poses an immediate danger to themselves, others, or Company property is expected to:</p>
 <ul>
-    <li><strong>Alert:</strong> Verbal alert "EMERGENCY - SECURE ROOM" or "EMERGENCY - EVACUATE". Call 9-1-1 immediately when safe to do so.</li>
-    <li><strong>Run:</strong> If there is an escape path, attempt to evacuate the premises immediately.</li>
-    <li><strong>Hide:</strong> If evacuation is impossible, lock doors, barricade entrances, turn off lights, and silence phones.</li>
-    <li><strong>Fight:</strong> As a last resort, and only when your life is in imminent danger, attempt to disrupt or disable the assailant.</li>
-</ul>
-<p><strong>4.2 De-escalation Techniques:</strong> For agitated or hostile individuals, remain calm, maintain distance, avoid aggressive postures, listen attentively, and avoid arguing or escalating the tension while seeking support or an exit.</p>`,
-                content_template_es: `<h2>4. Respuesta a Emergencias y De-escalación</h2>
-<p><strong>4.1 Respuesta Inmediata:</strong> En caso de una amenaza activa o incidente violento:
+    <li>Contact Local Law Enforcement via 911 or other appropriate emergency contacts for that facility, particularly if the situation requires immediate medical personnel.</li>
+    <li>Remain calm and contact your supervisor.</li>
+    <li>Secure your personal safety first.</li>
+    <li>Leave the area if your safety is at risk.</li>
+    <li>Cooperate with law enforcement personnel when they respond to the situation.</li>
+</ul>`,
+                content_template_es: `<h2>9. Procedimientos de Respuesta a Emergencias</h2>
+<p><strong>9.1 Coordinación y Acción ante Amenazas:</strong> Según se justifique, la Empresa puede colaborar con las fuerzas del orden u otros expertos para evaluar la seguridad laboral y la respuesta. Se espera que cualquier persona que observe un comportamiento violento o amenazante que represente un peligro inmediato para sí mismo, para los demás o para la propiedad de la Empresa:</p>
 <ul>
-    <li><strong>Alerta:</strong> Alerta verbal "EMERGENCIA - ASEGURAR HABITACIÓN" o "EMERGENCIA - EVACUAR". Llame al 9-1-1 de inmediato cuando sea seguro hacerlo.</li>
-    <li><strong>Correr:</strong> Si hay una ruta de escape, intente evacuar las instalaciones de inmediato.</li>
-    <li><strong>Esconderse:</strong> Si la evacuación es imposible, cierre las puertas con llave, ponga barricadas en las entradas, apague las luces y silencie los teléfonos.</li>
-    <li><strong>Pelear:</strong> Como último recurso, y solo cuando su vida esté en peligro inminente, intente desarmar o neutralizar al agresor.</li>
-</ul>
-<p><strong>4.2 Técnicas de De-escalación:</strong> Para personas agitadas o de comportamiento hostil, mantenga la calma, conserve la distancia, evite posturas agresivas, escuche con atención y evite discutir o aumentar la tensión mientras busca apoyo o una salida.</p>`
+    <li>Se comunique con las autoridades policiales locales a través del 911 u otros contactos de emergencia apropiados para esa instalación, especialmente si la situación requiere personal médico inmediato.</li>
+    <li>Mantenga la calma y se comunique con su supervisor.</li>
+    <li>Asegure su seguridad personal primero.</li>
+    <li>Abandone el área si su seguridad está en riesgo.</li>
+    <li>Coopere con el personal de las fuerzas del orden cuando respondan a la situación.</li>
+</ul>`
+            },
+            {
+                id: "wvpp_correction",
+                title: "Hazard Correction & Discipline / Corrección de Peligros y Disciplina",
+                content_template: `<h2>10. Workplace Violence Hazard Correction & Discipline</h2>
+<p><strong>10.1 Zero Tolerance:</strong> The Company does not tolerate harassment or violence of employees, customers or clients, vendors, or suppliers. Any form of harassment or violence that violates federal, state, or local law will be treated as a disciplinary matter up to and including termination.</p>
+<p><strong>10.2 Harassment Definition:</strong> For these purposes, the term "harassment" includes slurs and any other offensive remarks, jokes, or other verbal, graphic, or physical misconduct.</p>`,
+                content_template_es: `<h2>10. Corrección de Peligros de Violencia Laboral y Disciplina</h2>
+<p><strong>10.1 Tolerancia Cero:</strong> La Empresa no tolera el acoso ni la violencia hacia los empleados, clientes, proveedores o contratistas. Cualquier forma de acoso o violencia que viole las leyes federales, estatales o locales se tratará como un asunto disciplinario que puede resultar en despido inmediato.</p>
+<p><strong>10.2 Definición de Acoso:</strong> Para estos fines, el término "acoso" incluye insultos y cualquier otro comentario ofensivo, bromas u otra conducta inapropiada de carácter verbal, gráfico o físico.</p>`
             },
             {
                 id: "wvpp_post_incident",
-                title: "Post-Incident & Investigations / Post-Incidente e Investigaciones",
-                content_template: `<h2>5. Post-Incident Response & Investigation</h2>
-<p><strong>5.1 Immediate Care:</strong> Following any incident, {{client_name}} will ensure immediate medical attention is provided to injured individuals and will offer trauma counseling and employee assistance programs (EAP) to affected staff.</p>
-<p><strong>5.2 Incident Investigation:</strong> The Program Administrator will conduct a comprehensive investigation into every violent incident, review security footage (if available), interview witnesses, evaluate physical security factors, and identify improvements to prevent future occurrences.</p>`,
-                content_template_es: `<h2>5. Respuesta e Investigación Post-Incidente</h2>
-<p><strong>5.1 Atención Inmediata:</strong> Después de cualquier incidente, {{client_name}} garantizará atención médica inmediata para las personas lesionadas y ofrecerá asesoramiento por trauma y programas de asistencia al empleado (EAP) al personal afectado.</p>
-<p><strong>5.2 Investigación del Incidente:</strong> El Administrador del Programa realizará una investigación exhaustiva de cada incidente violento, revisará las imágenes de seguridad (si están disponibles), entrevistará a los testigos, evaluará los factores de seguridad física e identificará mejoras para prevenir incidentes futuros.</p>`
+                title: "Post-Incident & Investigation / Post-Incidente e Investigación",
+                content_template: `<h2>11. Procedures for Post-Incident Response & Investigation</h2>
+<p><strong>11.1 Investigation Team:</strong> The Plan Administrator will appoint at least 2 people to conduct the following activities after a workplace violence concern is reported or a non-emergency incident occurs. Safety is paramount and involving law enforcement may be necessary.</p>
+<ol>
+    <li>Visit the incident scene as soon as possible.</li>
+    <li>Interview threatened and injured workers and witnesses.</li>
+    <li>Examine the workplace for factors associated with workplace security, including any previous reports of inappropriate behavior by the perpetrator.</li>
+    <li>Determine the cause of the incident.</li>
+    <li>Take corrective action to prevent the incident from reoccurring.</li>
+    <li>Record the findings and corrective actions taken. Notify involved employees about the results of the investigation.</li>
+    <li>Produce a written incident report that includes the date, time, location, description of the type of the event and circumstances leading up to it, as well as the identity of the persons involved.</li>
+</ol>
+<p><strong>11.2 Privacy Safeguards:</strong> Ensure that no personal identifying information is recorded or documented in the written investigation report. This includes information which would reveal identification of any person involved in a violent incident, such as the person's name, address, electronic mail address, telephone number, social security number, or other information that, alone or in combination with other publicly available information, reveals the person's identity.</p>`,
+                content_template_es: `<h2>11. Procedimientos para la Respuesta e Investigación Post-Incidente</h2>
+<p><strong>11.1 Equipo de Investigación:</strong> El Administrador del Plan designará al menos a 2 personas para llevar a cabo las siguientes actividades después de que se informe una inquietud de violencia laboral o ocurra un incidente que no sea de emergencia. La seguridad es primordial y puede ser necesario involucrar a las fuerzas del orden.</p>
+<ol>
+    <li>Visitar la escena del incidente tan pronto como sea posible.</li>
+    <li>Entrevistar a los trabajadores amenazados y lesionados y a los testigos.</li>
+    <li>Examinar el lugar de trabajo en busca de factores asociados con la seguridad laboral, incluidos los informes anteriores de comportamiento inapropiado por parte del agresor.</li>
+    <li>Determinar la causa del incidente.</li>
+    <li>Tomar medidas correctivas para evitar que el incidente vuelva a ocurrir.</li>
+    <li>Registrar los hallazgos y las medidas correctivas tomadas. Notificar a los empleados involucrados sobre los resultados de la investigación.</li>
+    <li>Producir un informe escrito del incidente que incluya la fecha, hora, ubicación, descripción del tipo de evento y circunstancias que llevaron al mismo, así como la identidad de las personas involucradas.</li>
+</ol>
+<p><strong>11.2 Protección de la Privacidad:</strong> Asegúrese de que no se registre ni documente información de identificación personal en el informe escrito de la investigación. Esto incluye información que revelaría la identidad de cualquier persona involucrada en un incidente violento, como el nombre, dirección, correo electrónico, número de teléfono, número de seguro social u otra información que, por sí sola o en combinación con otra información disponible públicamente, revele la identidad de la persona.</p>`
+            },
+            {
+                id: "wvpp_training",
+                title: "Training Requirements / Requisitos de Capacitación",
+                content_template: `<h2>12. Training and Instruction</h2>
+<p><strong>12.1 Program Intervals:</strong> All employees, including managers and supervisors, will have training and instruction on general and job-specific workplace violence practices. These sessions could involve presentations, discussions, and practical exercises. Training and instruction will be provided as follows:
+<ul>
+    <li>When the WVPP was first established.</li>
+    <li>Annually to ensure all employees understand and comply with the plan.</li>
+    <li>Whenever a new or previously unrecognized workplace violence hazard has been identified and when changes are made to the plan. The additional training may be limited to addressing the new workplace violence hazard or changes to the plan.</li>
+</ul></p>`,
+                content_template_es: `<h2>12. Capacitación e Instrucción</h2>
+<p><strong>12.1 Intervalos del Programa:</strong> Todos los empleados, incluidos los gerentes y supervisores, recibirán capacitación e instrucción sobre prácticas generales y específicas de violencia laboral. Estas sesiones podrían incluir presentaciones, discusiones y ejercicios prácticos. La capacitación e instrucción se proporcionarán de la siguiente manera:
+<ul>
+    <li>Cuando se estableció por primera vez el WVPP.</li>
+    <li>Anualmente para garantizar que todos los empleados comprendan y cumplan con el plan.</li>
+    <li>Siempre que se haya identificado un peligro de violencia laboral nuevo o previamente no reconocido y cuando se realicen cambios en el plan. La capacitación adicional puede limitarse a abordar el nuevo peligro de violencia laboral o los cambios en el plan.</li>
+</ul></p>`
             },
             {
                 id: "wvpp_records",
-                title: "Record Keeping & Plan Review / Mantenimiento de Registros y Revisión",
-                content_template: `<h2>6. Record Keeping, Access & Program Review</h2>
-<p><strong>6.1 Record Retention:</strong> {{client_name}} maintains the following records for the required periods:
+                title: "Record Keeping & Employee Access / Registro y Acceso a Expedientes",
+                content_template: `<h2>13. Record Keeping & Access Protocols</h2>
+<p><strong>13.1 Retention Periods:</strong> In accordance with laws and legal best practices, the Company keeps records of workplace violence hazard identification, evaluation, and correction for the following periods:</p>
 <ul>
-    <li>Training records (training dates, summaries, names/qualifications of instructors, attendee lists) for at least 1 year.</li>
-    <li>Violent Incident Logs and incident investigation records for at least 5 years.</li>
-    <li>Workplace hazard identification, evaluation, and correction records for at least 5 years.</li>
+    <li>Records of workplace security hazard assessment inspections, including the person(s) conducting the inspection, the workplace security concerns identified, and the action taken to correct the identified concerns, are recorded on a hazard assessment and correction form and maintained for a minimum of 5 years.</li>
+    <li>Training records shall be created and maintained for a minimum of 1 year and include training dates, contents or a summary of the training sessions, names and qualifications of persons conducting the training, and names and job titles of all persons attending the training sessions.</li>
+    <li>Violent incident logs shall be maintained for a minimum of 5 years.</li>
+    <li>Records of workplace violence incident investigations conducted shall be maintained for a minimum of 5 years. These records shall not contain "medical information."</li>
 </ul>
-<p><strong>6.2 Employee Access:</strong> Employees and their representatives have the right to review and obtain copies of training records, hazard assessment reports, and anonymous incident logs within 15 calendar days of request.</p>
-<p><strong>6.3 Annual Review:</strong> This program is reviewed at least annually, and modified as necessary to address changing operational requirements or security findings.</p>
-<div style="margin-top: 2rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
-    <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+<p><strong>13.2 Employee Access Rights:</strong> All required records (hazard assessment, training, and violent incident logs) shall be made available to employees and their representatives, upon request and without cost, for examination and copying within 15 calendar days of a request.</p>
+<p><strong>13.3 Written Plan Access:</strong> {{client_name}} ensures that the WVPP plan shall be in writing and shall always be available and easily accessible to employees, authorized employee representatives, and representatives of Cal/OSHA.</p>
+<p><strong>13.4 Employer Reporting Responsibilities:</strong> As required by California Code of Regulations (CCR), Title 8, Section 342(a) Reporting Work-Connected Fatalities and Serious Injuries, {{client_name}} will immediately report to Cal/OSHA any serious injury or illness (as defined by CCR, Title 8, Section 330(h)), or death (including any due to Workplace Violence) of an employee occurring in a place of employment or in connection with any employment.</p>`,
+                content_template_es: `<h2>13. Mantenimiento de Registros y Protocolos de Acceso</h2>
+<p><strong>13.1 Períodos de Retención:</strong> De acuerdo con las leyes y las mejores prácticas legales, la Empresa mantiene registros de identificación, evaluación y corrección de peligros de violencia laboral durante los siguientes períodos:</p>
+<ul>
+    <li>Los registros de las inspecciones de evaluación de peligros de seguridad laboral, incluida la persona que realiza la inspección, los problemas de seguridad laboral identificados y las medidas tomadas para corregir los problemas identificados, se registran en un formulario de evaluación y corrección de peligros y se mantienen por un mínimo de 5 años.</li>
+    <li>Los registros de capacitación se crearán y mantendrán por un mínimo de 1 año e incluirán las fechas de capacitación, el contenido o resumen de las sesiones de capacitación, los nombres y calificaciones de las personas que realizaron la capacitación, y los nombres y puestos de trabajo de todas las personas que asistieron a las sesiones de capacitación.</li>
+    <li>Los registros de incidentes violentos se mantendrán por un mínimo de 5 años.</li>
+    <li>Los registros de las investigaciones de incidentes de violencia laboral realizadas se mantendrán por un mínimo de 5 años. Estos registros no deberán contener "información médica".</li>
+</ul>
+<p><strong>13.2 Derechos de Acceso de los Empleados:</strong> Todos los registros requeridos (evaluación de peligros, capacitación y registros de incidentes violentos) estarán disponibles para los empleados y sus representantes, previa solicitud y sin costo, para su examen y copia dentro de los 15 días hábiles posteriores a la solicitud.</p>
+<p><strong>13.3 Acceso al Plan Escrito:</strong> {{client_name}} garantiza que el plan WVPP estará por escrito y siempre estará disponible y será fácilmente accesible para los empleados, los representantes autorizados de los empleados y los representantes de Cal/OSHA.</p>
+<p><strong>13.4 Responsabilidades del Empleador para Reportar:</strong> Según lo exige el Título 8 del Código de Regulaciones de California (CCR), Sección 342(a) Reporte de Muertes y Lesiones Graves Relacionadas con el Trabajo, {{client_name}} reportará inmediatamente a Cal/OSHA cualquier lesión o enfermedad grave (como se define en el Título 8 del CCR, Sección 330(h)), o muerte (incluyendo cualquiera debida a Violencia Laboral) de un empleado que ocurra en un lugar de empleo o en conexión con cualquier empleo.</p>`
+            },
+            {
+                id: "wvpp_signoff",
+                title: "Program Authorization / Autorización del Programa",
+                content_template: `<h2>14. Program Authorization</h2>
+<p>"I, {{wvpp_administrator_name}}, {{wvpp_administrator_title}} of {{client_name}} (hereinafter referred to as the Company), hereby authorize and ensure the establishment, implementation, and maintenance of this written workplace violence prevention plan and the documents/forms within this written plan. I believe that these policies and procedures will bring positive changes to the workflow, business operations, and overall health and safety as it relates to workplace violence prevention."</p>
+<div style="margin-top: 3rem;">
+    <table style="width: 100%; border-collapse: collapse;">
         <tr>
             <td style="width: 50%; padding: 0.5rem; vertical-align: top;">
-                <strong>Program Administrator Signature:</strong><br><br>
+                <strong>Authorized Signature:</strong><br><br>
                 _______________________________________<br>
                 Name: {{wvpp_administrator_name}}<br>
-                Date: _________________________________
+                Title: {{wvpp_administrator_title}}, {{client_name}}
             </td>
             <td style="width: 50%; padding: 0.5rem; vertical-align: top;">
-                <strong>Program Assistant Signature:</strong><br><br>
-                _______________________________________<br>
-                Name: {{wvpp_assistant_name}}<br>
-                Date: _________________________________
+                <strong>Date Authorized:</strong><br><br>
+                _______________________________________
             </td>
         </tr>
     </table>
 </div>`,
-                content_template_es: `<h2>6. Mantenimiento de Registros, Acceso y Revisión del Programa</h2>
-<p><strong>6.1 Retención de Registros:</strong> {{client_name}} mantiene los siguientes registros durante los períodos requeridos:
-<ul>
-    <li>Registros de capacitación (fechas, resúmenes, nombres/calificaciones de instructores, listas de asistentes) por al menos 1 año.</li>
-    <li>Registros de Incidentes Violentos y registros de investigación por al menos 5 años.</li>
-    <li>Registros de identificación, evaluación y corrección de peligros laborales por al menos 5 años.</li>
-</ul>
-<p><strong>6.2 Acceso de los Empleados:</strong> Los empleados y sus representantes tienen derecho a revisar y obtener copias de los registros de capacitación, informes de evaluación de peligros y registros anónimos de incidentes dentro de los 15 días calendario posteriores a la solicitud.</p>
-<p><strong>6.3 Revisión Anual:</strong> Este programa se revisa al menos anualmente y se modifica según sea necesario para abordar los requisitos operativos cambiantes o los hallazgos de seguridad.</p>
-<div style="margin-top: 2rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
-    <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+                content_template_es: `<h2>14. Autorización del Programa</h2>
+<p>"Yo, {{wvpp_administrator_name}}, {{wvpp_administrator_title}} de {{client_name}} (en lo sucesivo denominada la Compañía), por la presente autorizo y garantizo el establecimiento, implementación y mantenimiento de este plan escrito de prevención de violencia laboral y de los documentos/formularios contenidos en este plan escrito. Creo que estas políticas y procedimientos traerán cambios positivos al flujo de trabajo, las operaciones comerciales y la salud y seguridad en general en lo que respecta a la prevención de la violencia en el lugar de trabajo".</p>
+<div style="margin-top: 3rem;">
+    <table style="width: 100%; border-collapse: collapse;">
         <tr>
             <td style="width: 50%; padding: 0.5rem; vertical-align: top;">
-                <strong>Firma del Administrador del Programa:</strong><br><br>
-                _______________________________________<br>
+                <strong>Firma Autorizada:</strong><br><br>
                 Nombre: {{wvpp_administrator_name}}<br>
-                Fecha: _________________________________
+                Puesto: {{wvpp_administrator_title}}, {{client_name}}
             </td>
             <td style="width: 50%; padding: 0.5rem; vertical-align: top;">
-                <strong>Firma del Asistente del Programa:</strong><br><br>
-                _______________________________________<br>
-                Nombre: {{wvpp_assistant_name}}<br>
-                Fecha: _________________________________
+                <strong>Fecha de Autorización:</strong><br><br>
+                _______________________________________
             </td>
         </tr>
     </table>
@@ -1370,14 +1551,14 @@ const defaultModulesSeed = [
                 id: "wvpp_log",
                 title: "Violent Incident Log Form / Formulario de Registro de Incidentes Violentos",
                 content_template: `<div class="print-page-break"></div>
-<h2>7. Appendix - Violent Incident Log Form (Fillable)</h2>
+<h2>15. Appendix - Violent Incident Log Form (Fillable)</h2>
 <p>This log must be completed for every incident of workplace violence, including threats, harassment, intimidation, or physical force. <strong>DO NOT include personal identifying details of victims (names, SSNs, phone numbers) in this public log.</strong></p>
 <table style="width: 100%; border-collapse: collapse; margin-top: 1rem; border: 1.5px solid var(--border-color);" border="1" cellpadding="8">
     <tr>
         <td style="background-color: #f8fafc; font-weight: bold; width: 25%;">Date of Incident:</td>
         <td style="width: 25%;">_________________</td>
         <td style="background-color: #f8fafc; font-weight: bold; width: 25%;">Time of Incident:</td>
-        <td style="width: 25%;">_________________</td>
+        <td style="width: 25%;">_________________ am/pm</td>
     </tr>
     <tr>
         <td style="background-color: #f8fafc; font-weight: bold;">Specific Location:</td>
@@ -1387,57 +1568,94 @@ const defaultModulesSeed = [
         <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Type of Violence:</td>
         <td colspan="3">
             [ ] <strong>Type 1:</strong> No legitimate business at worksite (e.g. robbery, criminal intent)<br>
-            [ ] <strong>Type 2:</strong> Committed by client, customer, patient, or visitor<br>
+            [ ] <strong>Type 2:</strong> Committed by client, customer, patient, student, inmate, visitor<br>
             [ ] <strong>Type 3:</strong> Committed by coworker, former employee, supervisor, or manager<br>
             [ ] <strong>Type 4:</strong> Spillover of personal relationship (e.g. domestic partner)
         </td>
     </tr>
     <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Violent Acts / Threats Included:</td>
+        <td colspan="3">
+            [ ] Physical attack without a weapon (biting, choking, grabbing, hair pulling, kicking, punching, slapping, pushing, scratching, spitting)<br>
+            [ ] Attack with a weapon or object (firearm, knife, or other object)<br>
+            [ ] Threat of physical force or threat of the use of a weapon or other object<br>
+            [ ] Sexual assault or threat (rape, attempted rape, physical display, unwanted verbal or physical sexual contact)<br>
+            [ ] Animal attack<br>
+            [ ] Other (specify): ___________________________________________
+        </td>
+    </tr>
+    <tr>
         <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Detailed Event Description:</td>
         <td colspan="3" style="height: 100px; vertical-align: top; color: var(--text-muted);">
-            Describe what happened (verbal threat, physical contact, weapon brandished, property damage, etc.):<br><br><br>
+            Provide a detailed description of the incident and what it included:<br><br><br>
         </td>
     </tr>
     <tr>
-        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Assailant Details:</td>
-        <td colspan="3">
-            Assailant was a: [ ] Customer/Client [ ] Coworker [ ] Stranger [ ] Spouse/Relative [ ] Other: __________
-        </td>
+        <td style="background-color: #f8fafc; font-weight: bold;">Workplace Violence Committed By:</td>
+        <td colspan="3">____________________________________________________________________</td>
     </tr>
     <tr>
-        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Environmental Factors:</td>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Circumstances at Time of Incident:</td>
         <td colspan="3" style="height: 60px; vertical-align: top; color: var(--text-muted);">
-            List any contributing physical factors (poor lighting, blocked exit, isolated workstation, lack of camera):<br><br>
+            Describe what task was being performed, lighting, weather, staffing, etc.:<br><br>
         </td>
     </tr>
     <tr>
-        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Immediate Action Taken:</td>
-        <td colspan="3" style="height: 80px; vertical-align: top; color: var(--text-muted);">
-            Specify response (called 911, de-escalation, locked down, first aid provided):<br><br>
+        <td style="background-color: #f8fafc; font-weight: bold;">Where Incident Occurred:</td>
+        <td colspan="3">____________________________________________________________________</td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Consequences of the Incident:</td>
+        <td colspan="3" style="height: 60px; vertical-align: top; color: var(--text-muted);">
+            Describe medical, administrative, operational, or legal actions taken:<br><br>
         </td>
     </tr>
     <tr>
-        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Corrective / Preventive Action:</td>
-        <td colspan="3" style="height: 80px; vertical-align: top; color: var(--text-muted);">
-            What safety measures have been/will be added to prevent a recurrence?<br><br>
+        <td style="background-color: #f8fafc; font-weight: bold;">Were there any injuries?</td>
+        <td colspan="3">
+            [ ] Yes [ ] No &nbsp;&nbsp;&nbsp; Explain: ________________________________________________________________
         </td>
     </tr>
     <tr>
-        <td style="background-color: #f8fafc; font-weight: bold;">Log Prepared By:</td>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Emergency Responders Contacted?</td>
+        <td colspan="3">
+            [ ] Yes [ ] No &nbsp;&nbsp;&nbsp; (Fire, Paramedics, First-aid certified staff) Explain: ___________________________________
+        </td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Reportable to Cal/OSHA?</td>
+        <td colspan="3">
+            [ ] Yes [ ] No &nbsp;&nbsp;&nbsp; If yes, document Date: ______________ Time: ______________ Representative Name: ________________
+        </td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Log Copy Provided to Employer?</td>
+        <td colspan="3">
+            [ ] Yes [ ] No &nbsp;&nbsp;&nbsp; If yes, Date: ______________ To Whom: _____________________________________
+        </td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold;">Log Completed By (Name):</td>
         <td>______________________</td>
-        <td style="background-color: #f8fafc; font-weight: bold;">Title / Date:</td>
+        <td style="background-color: #f8fafc; font-weight: bold;">Job Title:</td>
+        <td>______________________</td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold;">Signature:</td>
+        <td>______________________</td>
+        <td style="background-color: #f8fafc; font-weight: bold;">Date Completed:</td>
         <td>______________________</td>
     </tr>
 </table>`,
                 content_template_es: `<div class="print-page-break"></div>
-<h2>7. Apéndice - Formulario de Registro de Incidentes Violentos (Llenable)</h2>
+<h2>15. Apéndice - Formulario de Registro de Incidentes Violentos (Llenable)</h2>
 <p>Este registro debe completarse para cada incidente de violencia en el lugar de trabajo, incluidas amenazas, acoso, intimidación o fuerza física. <strong>NO incluya detalles de identificación personal de las víctimas (nombres, números de seguro social, teléfonos) en este registro público.</strong></p>
 <table style="width: 100%; border-collapse: collapse; margin-top: 1rem; border: 1.5px solid var(--border-color);" border="1" cellpadding="8">
     <tr>
         <td style="background-color: #f8fafc; font-weight: bold; width: 25%;">Fecha del Incidente:</td>
         <td style="width: 25%;">_________________</td>
         <td style="background-color: #f8fafc; font-weight: bold; width: 25%;">Hora del Incidente:</td>
-        <td style="width: 25%;">_________________</td>
+        <td style="width: 25%;">_________________ am/pm</td>
     </tr>
     <tr>
         <td style="background-color: #f8fafc; font-weight: bold;">Ubicación Específica:</td>
@@ -3431,6 +3649,10 @@ let currentStep = 1;
 
 // Document Cache
 let scannedPlaceholders = [];
+let placeholdersByModule = {};
+let modulesWithPlaceholders = [];
+let customFieldsSubStep = 0;
+let customFieldValues = {};
 
 // DOM Elements
 const wizard = {
@@ -3648,23 +3870,42 @@ function renderModulesChecklist() {
         card.id = `card_${mod.id}`;
 
         let subHtml = '';
+        let showToggle = false;
+
         if (mod.subsections && mod.subsections.length > 0) {
-            subHtml = `
-            <div class="module-subsections-body">
-                <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.75rem; letter-spacing: 0.05em;">Sections to Include:</div>
-                <div class="subsections-grid">
-                    ${mod.subsections.map(sub => `
-                        <label class="subsection-item-label" for="sub_${sub.id}">
-                            <input type="checkbox" id="sub_${sub.id}" value="${sub.id}" class="sub-checkbox" checked>
-                            <span class="subsection-title">${sub.title}</span>
-                        </label>
-                    `).join('')}
-                </div>
-            </div>`;
+            const isIIPP = mod.id === 'iipp';
+            const isHIPP = mod.id === 'hipp';
+            const showList = isIIPP || isHIPP;
+
+            if (showList) {
+                showToggle = true;
+                subHtml = `
+                <div class="module-subsections-body">
+                    <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.75rem; letter-spacing: 0.05em;">Sections to Include:</div>
+                    <div class="subsections-grid">
+                        ${mod.subsections.map(sub => {
+                            if (isHIPP && sub.id !== 'hipp_indoor') {
+                                // For HIPP, hide all checkboxes except hipp_indoor (Indoor Operations)
+                                return `<input type="checkbox" id="sub_${sub.id}" value="${sub.id}" class="sub-checkbox" checked style="display:none;">`;
+                            }
+                            return `
+                            <label class="subsection-item-label" for="sub_${sub.id}">
+                                <input type="checkbox" id="sub_${sub.id}" value="${sub.id}" class="sub-checkbox" checked>
+                                <span class="subsection-title">${sub.title}</span>
+                            </label>`;
+                        }).join('')}
+                    </div>
+                </div>`;
+            } else {
+                // For HMBP, RUP, PHP, EPP, WVPP, render checkboxes as hidden and checked so they are always included
+                subHtml = mod.subsections.map(sub => `
+                    <input type="checkbox" id="sub_${sub.id}" value="${sub.id}" class="sub-checkbox" checked style="display:none;">
+                `).join('');
+            }
         }
 
         card.innerHTML = `
-            <div class="module-config-header" onclick="toggleCardExpand('${mod.id}')">
+            <div class="module-config-header" onclick="${showToggle ? `toggleCardExpand('${mod.id}')` : ''}" style="${showToggle ? '' : 'cursor: default;'}">
                 <div class="header-left">
                     <input type="checkbox" id="mod_${mod.id}" value="${mod.id}" class="main-module-checkbox" onchange="toggleModuleCheck('${mod.id}')" onclick="event.stopPropagation();">
                     <span class="module-badge-abbrev">${mod.abbreviation}</span>
@@ -3673,7 +3914,7 @@ function renderModulesChecklist() {
                 <div class="header-right">
                     <span class="module-status-pill included">Included</span>
                     <span class="module-status-pill excluded">Excluded</span>
-                    ${mod.subsections && mod.subsections.length > 0 ? `
+                    ${showToggle ? `
                         <button class="btn-toggle-subsections" type="button" aria-label="Toggle subsections">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                         </button>
@@ -3800,6 +4041,25 @@ function updateBaselineFromIndustry() {
     });
 }
 
+// Save current custom field values in state from the DOM inputs
+function saveCurrentCustomFieldValues() {
+    const activeModId = modulesWithPlaceholders[customFieldsSubStep];
+    if (!activeModId) return;
+
+    const placeholders = placeholdersByModule[activeModId] || [];
+    placeholders.forEach(ph => {
+        const inputsEN = Array.from(document.querySelectorAll(`input[data-ph="${ph}"][data-lang="en"]`))
+                            .map(inp => inp.value.trim());
+        const inputsES = Array.from(document.querySelectorAll(`input[data-ph="${ph}"][data-lang="es"]`))
+                            .map(inp => inp.value.trim());
+
+        customFieldValues[ph] = {
+            en: inputsEN,
+            es: inputsES
+        };
+    });
+}
+
 // Wizard Step Navigation
 async function navigateNext() {
     if (currentStep === 1) {
@@ -3820,20 +4080,53 @@ async function navigateNext() {
         // Scan for placeholders
         scanSelectedModulesForPlaceholders();
         
-        // Render step 3 inputs with repeaters
+        // Render step 3 inputs starting at first program sub-step
+        customFieldsSubStep = 0;
         renderPlaceholderInputs();
         
         transitionStep(3);
     } else if (currentStep === 3) {
-        // Compile Document layout & print to preview pane
-        compileSafetyPlan();
-        
-        transitionStep(4);
+        // Validate active sub-step inputs
+        const activeInputs = Array.from(wizard.placeholdersGrid.querySelectorAll('input[required]'));
+        const invalid = activeInputs.some(input => !input.value.trim());
+        if (invalid) {
+            alert("Please fill in all required custom fields for this program.");
+            return;
+        }
+
+        saveCurrentCustomFieldValues();
+
+        if (customFieldsSubStep < modulesWithPlaceholders.length - 1) {
+            customFieldsSubStep++;
+            renderPlaceholderInputs();
+            
+            // Adjust next button text if needed
+            if (customFieldsSubStep === modulesWithPlaceholders.length - 1) {
+                wizard.btnNext.innerHTML = `Compile Plan <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>`;
+            } else {
+                wizard.btnNext.innerHTML = `Next Step <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>`;
+            }
+        } else {
+            compileSafetyPlan();
+            transitionStep(4);
+        }
     }
 }
 
 function navigatePrev() {
-    if (currentStep > 1) {
+    if (currentStep === 3) {
+        saveCurrentCustomFieldValues();
+        
+        if (customFieldsSubStep > 0) {
+            customFieldsSubStep--;
+            renderPlaceholderInputs();
+            
+            // Ensure next button text is "Next Step" since it's no longer the last step
+            wizard.btnNext.innerHTML = `Next Step <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>`;
+        } else {
+            transitionStep(2);
+        }
+    } else if (currentStep > 1) {
         transitionStep(currentStep - 1);
     }
 }
@@ -3867,7 +4160,11 @@ function transitionStep(step) {
         wizard.btnPrev.style.display = 'inline-flex';
         
         if (step === 3) {
-            wizard.btnNext.innerHTML = `Compile Plan <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>`;
+            if (customFieldsSubStep === modulesWithPlaceholders.length - 1) {
+                wizard.btnNext.innerHTML = `Compile Plan <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>`;
+            } else {
+                wizard.btnNext.innerHTML = `Next Step <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>`;
+            }
         } else if (step === 4) {
             wizard.btnNext.style.display = 'none';
         } else {
@@ -3880,25 +4177,69 @@ function transitionStep(step) {
 }
 
 // Scans templates for custom {{placeholders}} (Checks both English and Spanish templates)
+// Scans templates for custom {{placeholders}} (Checks both English and Spanish templates)
 function scanSelectedModulesForPlaceholders() {
     scannedPlaceholders = [];
+    placeholdersByModule = {};
+    modulesWithPlaceholders = [];
+    
     const reserved = ["client_name", "company_name", "client_address", "safety_officer", "effective_date"];
     const checkedModules = Array.from(document.querySelectorAll('.main-module-checkbox:checked')).map(cb => cb.value);
+
+    // Order of modules to preserve logical progression
+    const order = ["iipp", "hipp", "wvpp", "epp", "php", "rup", "hmbp"];
+    checkedModules.sort((a, b) => order.indexOf(a) - order.indexOf(b));
 
     checkedModules.forEach(modId => {
         const mod = dbModules.find(m => m.id === modId);
         if (!mod) return;
 
-        extractRegexMatches(mod.content_template, reserved);
-        extractRegexMatches(mod.content_template_es, reserved);
+        const modPlaceholders = [];
+        
+        function extractForMod(text) {
+            if (!text) return;
+            const regex = /\{\{([a-zA-Z0-9_]+)\}\}/g;
+            let match;
+            while ((match = regex.exec(text)) !== null) {
+                const ph = match[1];
+                if (!reserved.includes(ph)) {
+                    if (!modPlaceholders.includes(ph)) {
+                        modPlaceholders.push(ph);
+                    }
+                    if (!scannedPlaceholders.includes(ph)) {
+                        scannedPlaceholders.push(ph);
+                    }
+                }
+            }
+        }
+
+        extractForMod(mod.content_template);
+        extractForMod(mod.content_template_es);
 
         mod.subsections.forEach(sub => {
             const subCheck = document.getElementById(`sub_${sub.id}`);
             if (subCheck && subCheck.checked) {
-                extractRegexMatches(sub.content_template, reserved);
-                extractRegexMatches(sub.content_template_es, reserved);
+                extractForMod(sub.content_template);
+                extractForMod(sub.content_template_es);
             }
         });
+
+        if (modPlaceholders.length > 0) {
+            modPlaceholders.sort();
+            placeholdersByModule[modId] = modPlaceholders;
+            modulesWithPlaceholders.push(modId);
+
+            // Populate default values
+            modPlaceholders.forEach(ph => {
+                if (!customFieldValues[ph]) {
+                    const defValObj = defaultBilingualValues[ph] || { en: "", es: "" };
+                    customFieldValues[ph] = {
+                        en: [defValObj.en],
+                        es: [defValObj.es || defValObj.en]
+                    };
+                }
+            });
+        }
     });
 }
 
@@ -4122,24 +4463,41 @@ const defaultBilingualValues = {
     }
 };
 
-// Render dynamic fields for Custom Placeholders with Add Value repeaters
+// Render dynamic fields for Custom Placeholders of the CURRENT sub-step module
 function renderPlaceholderInputs() {
     wizard.placeholdersGrid.innerHTML = '';
     
-    if (scannedPlaceholders.length === 0) {
+    if (modulesWithPlaceholders.length === 0) {
         wizard.noPlaceholdersState.classList.remove('hidden');
         wizard.placeholdersGrid.style.display = 'none';
+        
+        const titleEl = document.querySelector('#stepSection3 .step-section-title');
+        const descEl = document.querySelector('#stepSection3 .step-section-desc');
+        if (titleEl) titleEl.textContent = `Step 3: Verification & Template Customization`;
+        if (descEl) descEl.textContent = `The generator scanned your selected safety modules and found no custom variables.`;
         return;
     }
 
     wizard.noPlaceholdersState.classList.add('hidden');
     wizard.placeholdersGrid.style.display = 'grid';
 
-    scannedPlaceholders.sort();
+    const activeModId = modulesWithPlaceholders[customFieldsSubStep];
+    const activeMod = dbModules.find(m => m.id === activeModId);
+    const placeholdersToRender = placeholdersByModule[activeModId] || [];
+
+    // Update Step 3 header description dynamically
+    const titleEl = document.querySelector('#stepSection3 .step-section-title');
+    const descEl = document.querySelector('#stepSection3 .step-section-desc');
+    if (titleEl && activeMod) {
+        titleEl.textContent = `Step 3: Custom Fields for ${activeMod.name} (${activeMod.abbreviation})`;
+    }
+    if (descEl && activeMod) {
+        descEl.textContent = `Configure the custom variables for the ${activeMod.name} safety program (Page ${customFieldsSubStep + 1} of ${modulesWithPlaceholders.length}).`;
+    }
 
     const showSpanish = wizard.includeSpanish.checked;
 
-    scannedPlaceholders.forEach(ph => {
+    placeholdersToRender.forEach(ph => {
         const card = document.createElement('div');
         card.className = 'placeholder-input-card';
         card.id = `ph_card_${ph}`;
@@ -4147,20 +4505,22 @@ function renderPlaceholderInputs() {
         const friendlyName = ph.replace(/_/g, ' ')
                                .replace(/\b\w/g, c => c.toUpperCase());
 
-        const defValObj = defaultBilingualValues[ph] || { en: "", es: "" };
-        const defaultValEN = defValObj.en;
-        const defaultValES = defValObj.es || defValObj.en;
+        const savedVals = customFieldValues[ph] || { en: [], es: [] };
+        const valsEN = savedVals.en && savedVals.en.length > 0 ? savedVals.en : [""];
+        const valsES = savedVals.es && savedVals.es.length > 0 ? savedVals.es : [""];
 
         let langGroupsHtml = `
             <div class="repeater-language-group">
                 <span class="language-group-label">English Value(s)</span>
                 <div class="repeater-list" id="list_${ph}_en">
-                    <div class="repeater-item">
-                        <input type="text" class="input-field placeholder-user-input" data-ph="${ph}" data-lang="en" value="${defaultValEN}" placeholder="Enter English details..." required>
-                        <button type="button" class="btn-repeater-delete" onclick="removeRepeaterRow(this)" aria-label="Delete value">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-                        </button>
-                    </div>
+                    ${valsEN.map(val => `
+                        <div class="repeater-item">
+                            <input type="text" class="input-field placeholder-user-input" data-ph="${ph}" data-lang="en" value="${val}" placeholder="Enter English details..." required>
+                            <button type="button" class="btn-repeater-delete" onclick="removeRepeaterRow(this)" aria-label="Delete value">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                            </button>
+                        </div>
+                    `).join('')}
                 </div>
                 <button type="button" class="btn-repeater-add" onclick="addRepeaterRow('${ph}', 'en', '')">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
@@ -4174,12 +4534,14 @@ function renderPlaceholderInputs() {
                 <div class="repeater-language-group spanish-group" style="margin-top: 1.25rem; border-top: 1px dashed var(--border-color); padding-top: 1.25rem;">
                     <span class="language-group-label" style="color: var(--accent-purple);">Spanish Value(s) (Valores en Español)</span>
                     <div class="repeater-list" id="list_${ph}_es">
-                        <div class="repeater-item">
-                            <input type="text" class="input-field placeholder-user-input" data-ph="${ph}" data-lang="es" value="${defaultValES}" placeholder="Ingrese detalles en español..." required>
-                            <button type="button" class="btn-repeater-delete" onclick="removeRepeaterRow(this)" aria-label="Delete value">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-                            </button>
-                        </div>
+                        ${valsES.map(val => `
+                            <div class="repeater-item">
+                                <input type="text" class="input-field placeholder-user-input" data-ph="${ph}" data-lang="es" value="${val}" placeholder="Ingrese detalles en español..." required>
+                                <button type="button" class="btn-repeater-delete" onclick="removeRepeaterRow(this)" aria-label="Delete value">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                                </button>
+                            </div>
+                        `).join('')}
                     </div>
                     <button type="button" class="btn-repeater-add" onclick="addRepeaterRow('${ph}', 'es', '')">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
@@ -4247,15 +4609,20 @@ function compileSafetyPlan() {
         "effective_date": formatDateStringES(wizard.planDate.value)
     };
 
-    // Gather step 3 inputs (grammatical list structures)
+    // First, save the current step's inputs to customFieldValues before compiling
+    saveCurrentCustomFieldValues();
+
+    // Gather step 3 inputs from state
     scannedPlaceholders.forEach(ph => {
-        const inputsEN = Array.from(document.querySelectorAll(`input[data-ph="${ph}"][data-lang="en"]`))
-                            .map(inp => inp.value.trim())
+        const savedVal = customFieldValues[ph] || { en: [], es: [] };
+        
+        const inputsEN = (savedVal.en || [])
+                            .map(val => val.trim())
                             .filter(val => val !== "");
 
         const inputsES = isSpanishChecked 
-                            ? Array.from(document.querySelectorAll(`input[data-ph="${ph}"][data-lang="es"]`))
-                                .map(inp => inp.value.trim())
+                            ? (savedVal.es || [])
+                                .map(val => val.trim())
                                 .filter(val => val !== "")
                             : [...inputsEN];
 
