@@ -1189,81 +1189,1553 @@ const defaultModulesSeed = [
     },
     {
         id: "wvpp",
-        name: "Workplace Violence Prevention Plan",
+        name: "Workplace Violence Prevention Plan (WVPP)",
         abbreviation: "WVPP",
         content_template: `<h1>Workplace Violence Prevention Plan (WVPP)</h1>
 <p><strong>Company Name:</strong> {{client_name}}</p>
-<p><strong>Effective Date:</strong> {{effective_date}}</p>
-<p><strong>Designated Administrator:</strong> {{safety_officer}}</p>
-<p>This program is established in compliance with California Senate Bill 553 (Labor Code Section 6401.9), requiring California employers to implement a Workplace Violence Prevention Plan. {{client_name}} has a zero-tolerance policy for workplace violence, including threats, harassment, intimidation, and physical assaults at {{client_address}}.</p>`,
-        content_template_es: `<h1>Plan de Prevención de Violencia en el Lugar de Trabajo (WVPP)</h1>
+<p><strong>Plan Initiation Date:</strong> {{wvpp_initiation_date}}</p>
+<p><strong>Date of Last Review:</strong> {{wvpp_last_review_date}}</p>
+<p><strong>Program Administrator:</strong> {{wvpp_administrator_name}} ({{wvpp_administrator_title}})</p>
+<p><strong>Administrator Contact:</strong> Phone: {{wvpp_administrator_phone}} | Email: {{wvpp_administrator_email}}</p>
+<p><strong>Program Assistant:</strong> {{wvpp_assistant_name}} ({{wvpp_assistant_title}})</p>
+<p><strong>Assistant Contact:</strong> Phone: {{wvpp_assistant_phone}} | Email: {{wvpp_assistant_email}}</p>
+<p>This Workplace Violence Prevention Program (WVPP) is established in compliance with California Senate Bill 553 (Labor Code Section 6401.9) to protect employees of {{client_name}} from physical and mental harm at work. This program is integrated into the Company's Injury and Illness Prevention Program (IIPP) and applies to all operations and facilities located at {{client_address}}.</p>`,
+        content_template_es: `<h1>Programa de Prevención de Violencia en el Lugar de Trabajo (WVPP)</h1>
 <p><strong>Nombre de la Empresa:</strong> {{client_name}}</p>
-<p><strong>Fecha de Entrada en Vigor:</strong> {{effective_date}}</p>
-<p><strong>Administrador Designado:</strong> {{safety_officer}}</p>
-<p>Este programa se establece de conformidad con el Proyecto de Ley del Senado de California 553 (Sección 6401.9 del Código de Trabajo), que exige a los empleadores de California implementar un Plan de Prevención de Violencia en el Lugar de Trabajo. {{client_name}} tiene una política de tolerancia cero para la violencia en el lugar de trabajo, incluyendo amenazas, acoso, intimidación y agresiones físicas en {{client_address}}.</p>`,
+<p><strong>Fecha de Inicio del Plan:</strong> {{wvpp_initiation_date}}</p>
+<p><strong>Fecha de la Última Revisión:</strong> {{wvpp_last_review_date}}</p>
+<p><strong>Administrador del Programa:</strong> {{wvpp_administrator_name}} ({{wvpp_administrator_title}})</p>
+<p><strong>Contacto del Administrador:</strong> Teléfono: {{wvpp_administrator_phone}} | Correo: {{wvpp_administrator_email}}</p>
+<p><strong>Asistente del Programa:</strong> {{wvpp_assistant_name}} ({{wvpp_assistant_title}})</p>
+<p><strong>Contacto del Asistente:</strong> Teléfono: {{wvpp_assistant_phone}} | Correo: {{wvpp_assistant_email}}</p>
+<p>Este Programa de Prevención de Violencia en el Lugar de Trabajo (WVPP) se establece de conformidad con el Proyecto de Ley del Senado de California 553 (Sección 6401.9 del Código de Trabajo) para proteger a los empleados de {{client_name}} de daños físicos y mentales en el trabajo. Este programa está integrado en el Programa de Prevención de Lesiones y Enfermedades (IIPP) de la Empresa y se aplica a todas las operaciones e instalaciones ubicadas en {{client_address}}.</p>`,
         subsections: [
             {
-                id: "wvpp_roles",
-                title: "Roles & Responsibilities / Roles y Responsabilidades",
-                content_template: `<h2>1. Roles & Active Involvement</h2>
-<p>{{safety_officer}} is responsible for administering this WVPP. Every manager, supervisor, and employee is active in implementing safety protocols. Employees are encouraged to report any concerns without fear of retaliation, utilizing the anonymous report channel at {{anonymous_report_channel}}.</p>`,
-                content_template_es: `<h2>1. Funciones e Involucramiento Activo</h2>
-<p>{{safety_officer}} es responsible de administrar este WVPP. Cada gerente, supervisor y empleado participa activamente en la implementación de los protocolos de seguridad. Se alienta a los empleados a reportar cualquier inquietud sin temor a represalias, utilizando el canal de reporte anónimo en {{anonymous_report_channel}}.</p>`
+                id: "wvpp_involvement",
+                title: "Employee Involvement & Violence Types / Involucramiento de Empleados y Tipos de Violencia",
+                content_template: `<h2>1. Roles, Compliance & Employee Involvement</h2>
+<p><strong>1.1 Policy & Responsibility:</strong> {{client_name}} has a zero-tolerance policy for workplace violence, harassment, or retaliation. The Program Administrator {{wvpp_administrator_name}} has full authority and responsibility to implement and maintain this program. The Program Assistant {{wvpp_assistant_name}} assists in daily oversight and safety audits.</p>
+<p><strong>1.2 Four Types of Workplace Violence:</strong></p>
+<ul>
+    <li><strong>Type 1 Violence:</strong> Workplace violence committed by a person who has no legitimate business at the worksite (e.g., criminal acts, robbery).</li>
+    <li><strong>Type 2 Violence:</strong> Workplace violence directed at employees by customers, clients, patients, or visitors.</li>
+    <li><strong>Type 3 Violence:</strong> Workplace violence committed by a current or former employee, supervisor, or manager.</li>
+    <li><strong>Type 4 Violence:</strong> Workplace violence committed by a person who has a personal relationship with an employee (e.g., domestic violence spillover).</li>
+</ul>
+<p><strong>1.3 Active Employee Involvement:</strong> Employees are involved in establishing and implementing this plan by participating in hazard identification, safety discussions, and program evaluations. Employees are required to follow all safety procedures and report any suspicious behavior, threats, or violent acts immediately without fear of retaliation.</p>`,
+                content_template_es: `<h2>1. Funciones, Cumplimiento e Involucramiento de los Empleados</h2>
+<p><strong>1.1 Política y Responsabilidad:</strong> {{client_name}} tiene una política de tolerancia cero para la violencia, el acoso o las represalias en el lugar de trabajo. El Administrador del Programa, {{wvpp_administrator_name}}, tiene plena autoridad y responsabilidad para implementar y mantener este programa. El Asistente del Programa, {{wvpp_assistant_name}}, ayuda en la supervisión diaria y las auditorías de seguridad.</p>
+<p><strong>1.2 Los Cuatro Tipos de Violencia en el Lugar de Trabajo:</strong></p>
+<ul>
+    <li><strong>Violencia Tipo 1:</strong> Violencia cometida por una persona que no tiene un negocio legítimo en el lugar de trabajo (por ejemplo, actos delictivos, robo).</li>
+    <li><strong>Violencia Tipo 2:</strong> Violencia dirigida a los empleados por clientes, visitantes o usuarios.</li>
+    <li><strong>Violencia Tipo 3:</strong> Violencia cometida por un empleado, supervisor o gerente actual o anterior.</li>
+    <li><strong>Violencia Tipo 4:</strong> Violencia cometida por una persona que tiene una relación personal con un empleado (por ejemplo, repercusiones de violencia doméstica en el trabajo).</li>
+</ul>
+<p><strong>1.3 Involucramiento Activo de los Empleados:</strong> Los empleados participan en el establecimiento e implementación de este plan al participar en la identificación de peligros, discusiones de seguridad y evaluaciones del programa. Se requiere que los empleados sigan todos los procedimientos de seguridad y reporten de inmediato cualquier comportamiento sospechoso, amenaza o acto violento sin temor a represalias.</p>`
+            },
+            {
+                id: "wvpp_communication",
+                title: "Communication & Training / Comunicación y Capacitación",
+                content_template: `<h2>2. Communication Channels & Employee Training</h2>
+<p><strong>2.1 Open Communication:</strong> {{client_name}} encourages open communication regarding safety concerns. Employees can report threats or concerns directly to their supervisor, to {{wvpp_administrator_name}}, or anonymously via the suggestion box located in the {{wvpp_suggestion_box_location}}.</p>
+<p><strong>2.2 Training Requirements:</strong> Training is provided to all employees at initial hire, annually, and when major program updates occur. Training includes:
+<ul>
+    <li>The requirements of California SB 553 and how to obtain a copy of this written program.</li>
+    <li>Definitions of the four types of workplace violence and how to report concerns.</li>
+    <li>De-escalation strategies, emergency response procedures (Run, Hide, Fight), and lockdown protocols.</li>
+    <li>How to access employee safety records and the Violent Incident Log.</li>
+</ul></p>`,
+                content_template_es: `<h2>2. Canales de Comunicación y Capacitación de Empleados</h2>
+<p><strong>2.1 Comunicación Abierta:</strong> {{client_name}} fomenta la comunicación abierta sobre inquietudes de seguridad. Los empleados pueden reportar amenazas o inquietudes directamente a su supervisor, a {{wvpp_administrator_name}}, o de forma anónima a través del buzón de sugerencias ubicado en el {{wvpp_suggestion_box_location}}.</p>
+<p><strong>2.2 Requisitos de Capacitación:</strong> Se brinda capacitación a todos los empleados en la contratación inicial, anualmente y cuando ocurren actualizaciones importantes del programa. La capacitación incluye:
+<ul>
+    <li>Los requisitos de la ley SB 553 de California y cómo obtener una copia de este programa escrito.</li>
+    <li>Definiciones de los cuatro tipos de violencia laboral y cómo reportar inquietudes.</li>
+    <li>Estrategias de de-escalación, procedimientos de respuesta a emergencias (Correr, Esconderse, Pelear) y protocolos de cierre de emergencia.</li>
+    <li>Cómo acceder a los registros de seguridad de los empleados y al Registro de Incidentes Violentos.</li>
+</ul></p>`
             },
             {
                 id: "wvpp_hazards",
-                title: "Threat Assessment / Evaluación de Amenazas",
-                content_template: `<h2>2. Hazard Identification & Evaluation</h2>
-<p>Periodic evaluations of workplace threat levels are conducted. This includes looking for environmental hazards (poor lighting, lack of security cameras, cash handling risks) and evaluating any history of employee-on-employee, client-on-employee, or domestic violence spillover. Inspections are conducted {{wvpp_inspection_frequency}}.</p>`,
-                content_template_es: `<h2>2. Identificación y Evaluación de Peligros</h2>
-<p>Se realizan evaluaciones periódicas de los niveles de amenaza en el lugar de trabajo. Esto incluye la búsqueda de peligros ambientales (iluminación deficiente, falta de cámaras de seguridad, riesgos en el manejo de efectivo) y la evaluación de cualquier antecedente de violencia de empleado a empleado, de cliente a empleado o violencia doméstica que afecte al trabajo. Las inspecciones se realizan {{wvpp_inspection_frequency}}.</p>`
+                title: "Hazard Assessment & Inspections / Evaluación de Peligros e Inspecciones",
+                content_template: `<h2>3. Hazard Identification, Evaluation & Inspections</h2>
+<p><strong>3.1 Routine Audits & Inspections:</strong> Safety inspections to identify and evaluate workplace violence hazards are conducted {{wvpp_inspection_frequency}} by the Program Administrator or Assistant. These audits evaluate:
+<ul>
+    <li>Physical security conditions (lighting, door locks, cameras, escape routes).</li>
+    <li>Administrative security conditions (cash handling protocols, late-night shift staffing).</li>
+    <li>Previous reports of incidents or threatening behaviors.</li>
+</ul>
+<p><strong>3.2 Corrective Action:</strong> Any identified hazard will be corrected immediately or scheduled for correction as soon as possible. Employees will be informed of corrected hazards and temporary safety measures in place.</p>`,
+                content_template_es: `<h2>3. Identificación, Evaluación e Inspección de Peligros</h2>
+<p><strong>3.1 Auditorías e Inspecciones Rutinarias:</strong> Las inspecciones de seguridad para identificar y evaluar los peligros de violencia laboral se realizan {{wvpp_inspection_frequency}} por el Administrador o Asistente del Programa. Estas auditorías evalúan:
+<ul>
+    <li>Condiciones de seguridad física (iluminación, cerraduras de puertas, cámaras, rutas de escape).</li>
+    <li>Condiciones de seguridad administrativa (protocolos de manejo de efectivo, personal en turnos nocturnos).</li>
+    <li>Reportes anteriores de incidentes o comportamientos amenazantes.</li>
+</ul>
+<p><strong>3.2 Medidas Correctivas:</strong> Cualquier peligro identificado se corregirá de inmediato o se programará para su corrección lo antes posible. Se informará a los empleados sobre los peligros corregidos y las medidas de seguridad temporales implementadas.</p>`
+            },
+            {
+                id: "wvpp_response",
+                title: "Emergency Response Protocols / Protocolos de Respuesta a Emergencias",
+                content_template: `<h2>4. Emergency Response & De-escalation</h2>
+<p><strong>4.1 Immediate Response:</strong> In the event of an active threat or violent incident:
+<ul>
+    <li><strong>Alert:</strong> Verbal alert "EMERGENCY - SECURE ROOM" or "EMERGENCY - EVACUATE". Call 9-1-1 immediately when safe to do so.</li>
+    <li><strong>Run:</strong> If there is an escape path, attempt to evacuate the premises immediately.</li>
+    <li><strong>Hide:</strong> If evacuation is impossible, lock doors, barricade entrances, turn off lights, and silence phones.</li>
+    <li><strong>Fight:</strong> As a last resort, and only when your life is in imminent danger, attempt to disrupt or disable the assailant.</li>
+</ul>
+<p><strong>4.2 De-escalation Techniques:</strong> For agitated or hostile individuals, remain calm, maintain distance, avoid aggressive postures, listen attentively, and avoid arguing or escalating the tension while seeking support or an exit.</p>`,
+                content_template_es: `<h2>4. Respuesta a Emergencias y De-escalación</h2>
+<p><strong>4.1 Respuesta Inmediata:</strong> En caso de una amenaza activa o incidente violento:
+<ul>
+    <li><strong>Alerta:</strong> Alerta verbal "EMERGENCIA - ASEGURAR HABITACIÓN" o "EMERGENCIA - EVACUAR". Llame al 9-1-1 de inmediato cuando sea seguro hacerlo.</li>
+    <li><strong>Correr:</strong> Si hay una ruta de escape, intente evacuar las instalaciones de inmediato.</li>
+    <li><strong>Esconderse:</strong> Si la evacuación es imposible, cierre las puertas con llave, ponga barricadas en las entradas, apague las luces y silencie los teléfonos.</li>
+    <li><strong>Pelear:</strong> Como último recurso, y solo cuando su vida esté en peligro inminente, intente desarmar o neutralizar al agresor.</li>
+</ul>
+<p><strong>4.2 Técnicas de De-escalación:</strong> Para personas agitadas o de comportamiento hostil, mantenga la calma, conserve la distancia, evite posturas agresivas, escuche con atención y evite discutir o aumentar la tensión mientras busca apoyo o una salida.</p>`
+            },
+            {
+                id: "wvpp_post_incident",
+                title: "Post-Incident & Investigations / Post-Incidente e Investigaciones",
+                content_template: `<h2>5. Post-Incident Response & Investigation</h2>
+<p><strong>5.1 Immediate Care:</strong> Following any incident, {{client_name}} will ensure immediate medical attention is provided to injured individuals and will offer trauma counseling and employee assistance programs (EAP) to affected staff.</p>
+<p><strong>5.2 Incident Investigation:</strong> The Program Administrator will conduct a comprehensive investigation into every violent incident, review security footage (if available), interview witnesses, evaluate physical security factors, and identify improvements to prevent future occurrences.</p>`,
+                content_template_es: `<h2>5. Respuesta e Investigación Post-Incidente</h2>
+<p><strong>5.1 Atención Inmediata:</strong> Después de cualquier incidente, {{client_name}} garantizará atención médica inmediata para las personas lesionadas y ofrecerá asesoramiento por trauma y programas de asistencia al empleado (EAP) al personal afectado.</p>
+<p><strong>5.2 Investigación del Incidente:</strong> El Administrador del Programa realizará una investigación exhaustiva de cada incidente violento, revisará las imágenes de seguridad (si están disponibles), entrevistará a los testigos, evaluará los factores de seguridad física e identificará mejoras para prevenir incidentes futuros.</p>`
+            },
+            {
+                id: "wvpp_records",
+                title: "Record Keeping & Plan Review / Mantenimiento de Registros y Revisión",
+                content_template: `<h2>6. Record Keeping, Access & Program Review</h2>
+<p><strong>6.1 Record Retention:</strong> {{client_name}} maintains the following records for the required periods:
+<ul>
+    <li>Training records (training dates, summaries, names/qualifications of instructors, attendee lists) for at least 1 year.</li>
+    <li>Violent Incident Logs and incident investigation records for at least 5 years.</li>
+    <li>Workplace hazard identification, evaluation, and correction records for at least 5 years.</li>
+</ul>
+<p><strong>6.2 Employee Access:</strong> Employees and their representatives have the right to review and obtain copies of training records, hazard assessment reports, and anonymous incident logs within 15 calendar days of request.</p>
+<p><strong>6.3 Annual Review:</strong> This program is reviewed at least annually, and modified as necessary to address changing operational requirements or security findings.</p>
+<div style="margin-top: 2rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+    <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+        <tr>
+            <td style="width: 50%; padding: 0.5rem; vertical-align: top;">
+                <strong>Program Administrator Signature:</strong><br><br>
+                _______________________________________<br>
+                Name: {{wvpp_administrator_name}}<br>
+                Date: _________________________________
+            </td>
+            <td style="width: 50%; padding: 0.5rem; vertical-align: top;">
+                <strong>Program Assistant Signature:</strong><br><br>
+                _______________________________________<br>
+                Name: {{wvpp_assistant_name}}<br>
+                Date: _________________________________
+            </td>
+        </tr>
+    </table>
+</div>`,
+                content_template_es: `<h2>6. Mantenimiento de Registros, Acceso y Revisión del Programa</h2>
+<p><strong>6.1 Retención de Registros:</strong> {{client_name}} mantiene los siguientes registros durante los períodos requeridos:
+<ul>
+    <li>Registros de capacitación (fechas, resúmenes, nombres/calificaciones de instructores, listas de asistentes) por al menos 1 año.</li>
+    <li>Registros de Incidentes Violentos y registros de investigación por al menos 5 años.</li>
+    <li>Registros de identificación, evaluación y corrección de peligros laborales por al menos 5 años.</li>
+</ul>
+<p><strong>6.2 Acceso de los Empleados:</strong> Los empleados y sus representantes tienen derecho a revisar y obtener copias de los registros de capacitación, informes de evaluación de peligros y registros anónimos de incidentes dentro de los 15 días calendario posteriores a la solicitud.</p>
+<p><strong>6.3 Revisión Anual:</strong> Este programa se revisa al menos anualmente y se modifica según sea necesario para abordar los requisitos operativos cambiantes o los hallazgos de seguridad.</p>
+<div style="margin-top: 2rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+    <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+        <tr>
+            <td style="width: 50%; padding: 0.5rem; vertical-align: top;">
+                <strong>Firma del Administrador del Programa:</strong><br><br>
+                _______________________________________<br>
+                Nombre: {{wvpp_administrator_name}}<br>
+                Fecha: _________________________________
+            </td>
+            <td style="width: 50%; padding: 0.5rem; vertical-align: top;">
+                <strong>Firma del Asistente del Programa:</strong><br><br>
+                _______________________________________<br>
+                Nombre: {{wvpp_assistant_name}}<br>
+                Fecha: _________________________________
+            </td>
+        </tr>
+    </table>
+</div>`
             },
             {
                 id: "wvpp_log",
-                title: "Incident Logs & Investigation / Registro de Incidentes",
-                content_template: `<h2>3. Violent Incident Log</h2>
-<p>Every incident of workplace violence, including threats or verbal abuse, must be recorded in the Violent Incident Log. The log will exclude personal identifying information of victims. Investigations will analyze what occurred, what factors contributed, and what security measures need improvement.</p>`,
-                content_template_es: `<h2>3. Registro de Incidentes Violentos</h2>
-<p>Cada incidente de violencia en el lugar de trabajo, incluidas las amenazas o el abuso verbal, debe registrarse en el Registro de Incidentes Violentos. El registro excluirá la información de identificación personal de las víctimas. Las investigaciones analizarán lo sucedido, qué factores contribuyeron y qué medidas de seguridad deben mejorarse.</p>`
+                title: "Violent Incident Log Form / Formulario de Registro de Incidentes Violentos",
+                content_template: `<div class="print-page-break"></div>
+<h2>7. Appendix - Violent Incident Log Form (Fillable)</h2>
+<p>This log must be completed for every incident of workplace violence, including threats, harassment, intimidation, or physical force. <strong>DO NOT include personal identifying details of victims (names, SSNs, phone numbers) in this public log.</strong></p>
+<table style="width: 100%; border-collapse: collapse; margin-top: 1rem; border: 1.5px solid var(--border-color);" border="1" cellpadding="8">
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; width: 25%;">Date of Incident:</td>
+        <td style="width: 25%;">_________________</td>
+        <td style="background-color: #f8fafc; font-weight: bold; width: 25%;">Time of Incident:</td>
+        <td style="width: 25%;">_________________</td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold;">Specific Location:</td>
+        <td colspan="3">____________________________________________________________________</td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Type of Violence:</td>
+        <td colspan="3">
+            [ ] <strong>Type 1:</strong> No legitimate business at worksite (e.g. robbery, criminal intent)<br>
+            [ ] <strong>Type 2:</strong> Committed by client, customer, patient, or visitor<br>
+            [ ] <strong>Type 3:</strong> Committed by coworker, former employee, supervisor, or manager<br>
+            [ ] <strong>Type 4:</strong> Spillover of personal relationship (e.g. domestic partner)
+        </td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Detailed Event Description:</td>
+        <td colspan="3" style="height: 100px; vertical-align: top; color: var(--text-muted);">
+            Describe what happened (verbal threat, physical contact, weapon brandished, property damage, etc.):<br><br><br>
+        </td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Assailant Details:</td>
+        <td colspan="3">
+            Assailant was a: [ ] Customer/Client [ ] Coworker [ ] Stranger [ ] Spouse/Relative [ ] Other: __________
+        </td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Environmental Factors:</td>
+        <td colspan="3" style="height: 60px; vertical-align: top; color: var(--text-muted);">
+            List any contributing physical factors (poor lighting, blocked exit, isolated workstation, lack of camera):<br><br>
+        </td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Immediate Action Taken:</td>
+        <td colspan="3" style="height: 80px; vertical-align: top; color: var(--text-muted);">
+            Specify response (called 911, de-escalation, locked down, first aid provided):<br><br>
+        </td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Corrective / Preventive Action:</td>
+        <td colspan="3" style="height: 80px; vertical-align: top; color: var(--text-muted);">
+            What safety measures have been/will be added to prevent a recurrence?<br><br>
+        </td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold;">Log Prepared By:</td>
+        <td>______________________</td>
+        <td style="background-color: #f8fafc; font-weight: bold;">Title / Date:</td>
+        <td>______________________</td>
+    </tr>
+</table>`,
+                content_template_es: `<div class="print-page-break"></div>
+<h2>7. Apéndice - Formulario de Registro de Incidentes Violentos (Llenable)</h2>
+<p>Este registro debe completarse para cada incidente de violencia en el lugar de trabajo, incluidas amenazas, acoso, intimidación o fuerza física. <strong>NO incluya detalles de identificación personal de las víctimas (nombres, números de seguro social, teléfonos) en este registro público.</strong></p>
+<table style="width: 100%; border-collapse: collapse; margin-top: 1rem; border: 1.5px solid var(--border-color);" border="1" cellpadding="8">
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; width: 25%;">Fecha del Incidente:</td>
+        <td style="width: 25%;">_________________</td>
+        <td style="background-color: #f8fafc; font-weight: bold; width: 25%;">Hora del Incidente:</td>
+        <td style="width: 25%;">_________________</td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold;">Ubicación Específica:</td>
+        <td colspan="3">____________________________________________________________________</td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Tipo de Violencia:</td>
+        <td colspan="3">
+            [ ] <strong>Tipo 1:</strong> Sin negocio legítimo en el lugar (ej. robo, intento delictivo)<br>
+            [ ] <strong>Tipo 2:</strong> Cometida por cliente, usuario, visitante o paciente<br>
+            [ ] <strong>Tipo 3:</strong> Cometida por compañero de trabajo, ex empleado, supervisor o gerente<br>
+            [ ] <strong>Tipo 4:</strong> Repercusiones de relación personal (ej. pareja doméstica)
+        </td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Descripción del Evento:</td>
+        <td colspan="3" style="height: 100px; vertical-align: top; color: var(--text-muted);">
+            Describa lo sucedido (amenaza verbal, contacto físico, exhibición de arma, daño a propiedad, etc.):<br><br><br>
+        </td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Detalles del Agresor:</td>
+        <td colspan="3">
+            El agresor era: [ ] Cliente/Usuario [ ] Compañero de trabajo [ ] Desconocido [ ] Cónyuge/Pariente [ ] Otro: __________
+        </td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Factores Ambientales:</td>
+        <td colspan="3" style="height: 60px; vertical-align: top; color: var(--text-muted);">
+            Enumere cualquier factor físico contribuyente (iluminación deficiente, salida bloqueada, estación aislada, falta de cámaras):<br><br>
+        </td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Acción Inmediata Tomada:</td>
+        <td colspan="3" style="height: 80px; vertical-align: top; color: var(--text-muted);">
+            Especifique la respuesta (llamada al 911, de-escalación, cierre, primeros auxilios):<br><br>
+        </td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Acción Correctiva / Preventiva:</td>
+        <td colspan="3" style="height: 80px; vertical-align: top; color: var(--text-muted);">
+            ¿Qué medidas de seguridad se han agregado/agregarán para prevenir una recurrencia?<br><br>
+        </td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold;">Registro Preparado Por:</td>
+        <td>______________________</td>
+        <td style="background-color: #f8fafc; font-weight: bold;">Título / Fecha:</td>
+        <td>______________________</td>
+    </tr>
+</table>`
             }
         ]
     },
     {
         id: "epp",
-        name: "Emergency Preparedness Plan",
-        abbreviation: "EPP",
-        content_template: `<h1>Emergency Preparedness & Action Plan (EPP)</h1>
+        name: "Emergency Action Plan (EAP)",
+        abbreviation: "EAP",
+        content_template: `<h1>Emergency Action Plan (EAP)</h1>
 <p><strong>Company Name:</strong> {{client_name}}</p>
 <p><strong>Effective Date:</strong> {{effective_date}}</p>
-<p>This plan describes actions to take in emergencies (fire, earthquake, toxic release, severe weather) to ensure life safety at {{client_address}}. Under the direction of {{safety_officer}}, evacuation procedures are outlined.</p>`,
-        content_template_es: `<h1>Plan de Acción y Preparación para Emergencias (EPP)</h1>
+<p><strong>Program Name:</strong> {{eap_program_name}}</p>
+<p><strong>Facility Location:</strong> {{client_address}}</p>
+<p><strong>Facility Phone:</strong> {{client_phone}}</p>
+<p><strong>Designated Emergency Coordinator:</strong> {{safety_officer}} ({{safety_officer_title}})</p>
+<p>This Emergency Action Plan (EAP) is established in compliance with California Code of Regulations (CCR) Title 8, Section 3220. It covers those designated actions that {{client_name}} and its employees must take to ensure safety from fire, environmental hazards, medical emergencies, and violent incidents during office operations and field work at residential homes.</p>`,
+        content_template_es: `<h1>Plan de Acción de Emergencia (EAP)</h1>
 <p><strong>Nombre de la Empresa:</strong> {{client_name}}</p>
 <p><strong>Fecha de Entrada en Vigor:</strong> {{effective_date}}</p>
-<p>Este plan describe las acciones a tomar en emergencies (incendios, terremotos, fugas de sustancias tóxicas, clima severo) para garantizar la seguridad de la vida en {{client_address}}. Bajo la dirección de {{safety_officer}}, se detallan los procedimientos de evacuación.</p>`,
+<p><strong>Nombre del Programa:</strong> {{eap_program_name}}</p>
+<p><strong>Ubicación de la Instalación:</strong> {{client_address}}</p>
+<p><strong>Teléfono de la Instalación:</strong> {{client_phone}}</p>
+<p><strong>Coordinador de Emergencia Designado:</strong> {{safety_officer}} ({{safety_officer_title}})</p>
+<p>Este Plan de Acción de Emergencia (EAP) se establece de conformidad con el Título 8 del Código de Regulaciones de California (CCR), Sección 3220. Cubre las acciones designadas que {{client_name}} y sus empleados deben tomar para garantizar la seguridad contra incendios, peligros ambientales, emergencias médicas e incidentes violentos durante operaciones de oficina y trabajo de campo en hogares residenciales.</p>`,
         subsections: [
             {
-                id: "epp_evac",
-                title: "Evacuation Procedures / Evacuación",
-                content_template: `<h2>1. Evacuation Routes & Assembly Points</h2>
-<p>Evacuation maps are posted at exit points. In an emergency, employees of {{client_name}} must evacuate in an orderly manner and assemble at the designated safety zone: {{assembly_point}}. Supervisors will account for all personnel using rosters.</p>`,
-                content_template_es: `<h2>1. Rutas de Evacuación y Puntos de Reunión</h2>
-<p>Los mapas de evacuación están publicados en los puntos de salida. En una emergencia, los empleados de {{client_name}} deben evacuar de manera ordenada y reunirse en la zona de seguridad designada: {{assembly_point}}. Los supervisores contabilizarán a todo el personal utilizando listas de asistencia.</p>`
+                id: "eap_scope",
+                title: "Purpose & Scope / Propósito y Alcance",
+                content_template: `<h2>1. Purpose & Scope [T8 CCR §3220(a)]</h2>
+<p>This Emergency Action Plan (EAP) establishes written procedures for responding to emergencies that may occur during office operations and field work at residential homes for {{client_name}}. The intent is to ensure employee safety from fire, environmental hazards, medical emergencies, and violent incidents. It applies to all office administrative staff and field technicians participating in weatherization or related home improvement services.</p>`,
+                content_template_es: `<h2>1. Propósito y Alcance [T8 CCR §3220(a)]</h2>
+<p>Este Plan de Acción de Emergencia (EAP) establece procedimientos escritos para responder a las emergencias que puedan ocurrir durante las operaciones de oficina y el trabajo de campo en hogares residenciales para {{client_name}}. La intención es garantizar la seguridad de los empleados frente a incendios, peligros ambientales, emergencias médicas e incidentes violentos. Se aplica a todo el personal administrativo de la oficina y a los técnicos de campo que participan en servicios de climatización o mejoras del hogar relacionadas.</p>`
             },
             {
-                id: "epp_shutdown",
+                id: "eap_evac",
+                title: "Evacuation Procedures / Procedimientos de Evacuación",
+                content_template: `<h2>2. Emergency Evacuation Procedures [T8 CCR §3220(b)(1)]</h2>
+<p><strong>2.1 General Evacuation Procedures (Office & Field):</strong></p>
+<ol>
+    <li>STOP work immediately upon recognition of an emergency.</li>
+    <li>Secure equipment if safe to do so (turn off power tools, ladders, gas lines).</li>
+    <li>WALK – DO NOT RUN to the nearest safe exit or away from the hazard.</li>
+    <li><strong>Field Employees:</strong>
+        <ul>
+            <li>Exit the residence immediately.</li>
+            <li>Move to a safe location (street/sidewalk away from structure).</li>
+        </ul>
+    </li>
+    <li><strong>Proceed to designated staging area:</strong>
+        <ul>
+            <li><strong>Office Staff:</strong> Go to the {{eap_office_staging_area}}.</li>
+            <li><strong>Field Crews:</strong> Go to a safe distance from the residential structure (minimum 50–100 feet) represented by the {{eap_field_staging_area}}.</li>
+        </ul>
+    </li>
+    <li>Remain at the designated staging area for accountability checks and further instructions.</li>
+</ol>`,
+                content_template_es: `<h2>2. Procedimientos de Evacuación de Emergencia [T8 CCR §3220(b)(1)]</h2>
+<p><strong>2.1 Procedimientos Generales de Evacuación (Oficina y Campo):</strong></p>
+<ol>
+    <li>DETENGA el trabajo inmediatamente al reconocer una emergencia.</li>
+    <li>Asegure el equipo si es seguro hacerlo (apague herramientas eléctricas, escaleras, líneas de gas).</li>
+    <li>CAMINE, NO CORRA, hacia la salida segura más cercana o lejos del peligro.</li>
+    <li><strong>Empleados de Campo:</strong>
+        <ul>
+            <li>Salga de la residencia inmediatamente.</li>
+            <li>Trasládese a una ubicación segura (calle/acera lejos de la estructura).</li>
+        </ul>
+    </li>
+    <li><strong>Proceda al área de reunión designada:</strong>
+        <ul>
+            <li><strong>Personal de Oficina:</strong> Vaya a la {{eap_office_staging_area}}.</li>
+            <li><strong>Cargos/Equipos de Campo:</strong> Trasládese a una distancia segura de la estructura residencial (mínimo 50–100 pies) representada por la {{eap_field_staging_area}}.</li>
+        </ul>
+    </li>
+    <li>Permanezca en el área de reunión designada para los controles de rendición de cuentas y más instrucciones.</li>
+</ol>`
+            },
+            {
+                id: "eap_critical_ops",
                 title: "Critical Operations / Operaciones Críticas",
-                content_template: `<h2>2. Critical Operations</h2>
-<p>Before evacuating, designated employees must shut down critical machinery or utilities if safe to do so. The designated employee for utility shutdown is {{utility_shutdown_person}}.</p>`,
-                content_template_es: `<h2>2. Operaciones Críticas</h2>
-<p>Antes de evacuar, los empleados designados deben apagar la maquinaria o los servicios públicos críticos si es seguro hacerlo. El empleado designado para el corte de servicios públicos es {{utility_shutdown_person}}.</p>`
+                content_template: `<h2>3. Critical Operations Before Evacuation [T8 CCR §3220(b)(2)]</h2>
+<p><strong>3.1 Limited Actions:</strong> Employees may perform limited actions before evacuating ONLY if it is safe to do so. Examples of critical shutdown actions include:
+<ul>
+    <li>Shut off gas lines (specifically at water heaters or main controls).</li>
+    <li>Shut off electrical circuits at breaker panels.</li>
+    <li>Turn off and unplug power tools and machinery.</li>
+    <li>Stabilize or lay down ladders to prevent falls/damage.</li>
+</ul>
+<p><strong>WARNING: IF ANY ACTION PUTS YOU AT RISK — ABANDON IT AND EVACUATE IMMEDIATELY.</strong></p>`,
+                content_template_es: `<h2>3. Operaciones Críticas Antes de la Evacuación [T8 CCR §3220(b)(2)]</h2>
+<p><strong>3.1 Acciones Limitadas:</strong> Los empleados pueden realizar acciones limitadas antes de evacuar ÚNICAMENTE si es seguro hacerlo. Ejemplos de acciones de apagado crítico incluyen:
+<ul>
+    <li>Cerrar las líneas de gas (específicamente en calentadores de agua o controles principales).</li>
+    <li>Cerrar circuitos eléctricos en los paneles de interruptores.</li>
+    <li>Apagar y desenchufar herramientas eléctricas y maquinaria.</li>
+    <li>Estabilizar o bajar escaleras para evitar caídas o daños.</li>
+</ul>
+<p><strong>ADVERTENCIA: SI CUALQUIER ACCIÓN LO PONE EN RIESGO, ABANDÓNELA Y EVACÚE DE INMEDIATO.</strong></p>`
             },
             {
-                id: "epp_contacts",
+                id: "eap_accounting",
+                title: "Employee Accountability / Contabilización de Personal",
+                content_template: `<h2>4. Accounting for Employees After Evacuation [T8 CCR §3220(b)(3)]</h2>
+<p><strong>4.1 Accountability Protocol:</strong></p>
+<ol>
+    <li>All evacuated employees must report immediately to their designated staging area (Office Staging Area or Field Staging Area).</li>
+    <li>The Supervisor or Lead Technician must conduct a headcount immediately using the daily crew roster/sign-in sheets.</li>
+    <li>Any missing employee must be reported immediately to the Emergency Coordinator {{safety_officer}} and to the responding emergency personnel (Fire/Police).</li>
+    <li>NO ONE is permitted to leave the staging area until accountability is complete and the Emergency Coordinator authorizes dismissal.</li>
+</ol>`,
+                content_template_es: `<h2>4. Contabilización de los Empleados Después de Evacuar [T8 CCR §3220(b)(3)]</h2>
+<p><strong>4.1 Protocolo de Contabilización:</strong></p>
+<ol>
+    <li>Todos los empleados evacuados deben reportarse de inmediato a su área de reunión designada (Área de la Oficina o Área de Campo).</li>
+    <li>El supervisor o técnico líder debe realizar un recuento de inmediato utilizando la lista de asistencia diaria del equipo.</li>
+    <li>Cualquier empleado desaparecido debe ser reportado de inmediato al Coordinador de Emergencia {{safety_officer}} y al personal de respuesta a emergencias (Bomberos/Policía).</li>
+    <li>NINGUNA PERSONA tiene permitido abandonar el área de reunión hasta que se complete la contabilización y el Coordinador de Emergencia autorice la salida.</li>
+</ol>`
+            },
+            {
+                id: "eap_rescue_medical",
+                title: "Rescue & Medical Duties / Deberes de Rescate y Médicos",
+                content_template: `<h2>5. Rescue & Medical Duties [T8 CCR §3220(b)(4)]</h2>
+<p><strong>5.1 No Fire Brigade:</strong> {{client_name}} does NOT maintain a fire brigade. Employees are NOT required or permitted to fight fires or perform rescue operations. Evacuation is the primary response for all fires.</p>
+<p><strong>5.2 Medical Response:</strong> Designated trained personnel may provide First Aid / CPR if qualified and safe to do so. In any life-threatening situation, employees must:
+<ul>
+    <li>Call 9-1-1 immediately.</li>
+    <li>Provide: (1) Exact address of the incident, (2) Nature of the emergency, (3) Number of injured.</li>
+    <li>Assign someone to meet emergency responders and guide them to the exact location of the emergency.</li>
+</ul>
+<p><strong>NOTE: All field employees MUST identify and write down the exact job site address prior to starting work each day to ensure they can provide the location during a 9-1-1 call.</strong></p>`,
+                content_template_es: `<h2>5. Deberes de Rescate y Primeros Auxilios [T8 CCR §3220(b)(4)]</h2>
+<p><strong>5.1 Sin Brigada de Incendios:</strong> {{client_name}} NO mantiene una brigada de incendios. No se requiere ni se permite que los empleados combatan incendios o realicen operaciones de rescate. La evacuación es la respuesta principal en caso de incendio.</p>
+<p><strong>5.2 Respuesta Médica:</strong> El personal capacitado designado puede brindar primeros auxilios / RCP si está calificado y es seguro hacerlo. En cualquier situación que ponga en peligro la vida, los empleados deben:
+<ul>
+    <li>Llamar al 9-1-1 de inmediato.</li>
+    <li>Proporcionar: (1) Dirección exacta del incidente, (2) Naturaleza de la emergencia, (3) Número de personas lesionadas.</li>
+    <li>Asignar a alguien para que reciba al personal de emergencia y lo guíe hasta la ubicación exacta de la emergencia.</li>
+</ul>
+<p><strong>NOTA: Todos los empleados de campo DEBEN identificar y anotar la dirección exacta del sitio de trabajo antes de comenzar a trabajar cada día para asegurarse de poder dar la ubicación al llamar al 9-1-1.</strong></p>`
+            },
+            {
+                id: "eap_reporting",
+                title: "Reporting Emergencies / Reportar Emergencias",
+                content_template: `<h2>6. Reporting Emergencies & Alarm Systems [T8 CCR §3220(b)(5) & (c)]</h2>
+<p><strong>6.1 Reporting Methods:</strong>
+<ul>
+    <li><strong>Primary Method:</strong> Dial 9-1-1 for all life-threatening emergencies.</li>
+    <li><strong>Secondary Method:</strong> Notify the Supervisor and the Emergency Coordinator {{safety_officer}} at {{client_phone}}.</li>
+</ul>
+<p><strong>6.2 Alarm System (Field Adapted):</strong>
+<ul>
+    <li><strong>Verbal Alert:</strong> Shout "EMERGENCY - EVACUATE" or "EMERGENCY - SHELTER IN PLACE".</li>
+    <li><strong>Communication:</strong> Use air horns or mobile phone group communication if available at the job site.</li>
+</ul></p>`,
+                content_template_es: `<h2>6. Reportar Emergencias y Sistemas de Alarma [T8 CCR §3220(b)(5) y (c)]</h2>
+<p><strong>6.1 Métodos para Reportar:</strong>
+<ul>
+    <li><strong>Método Primario:</strong> Marque 9-1-1 para todas las emergencias que amenacen la vida.</li>
+    <li><strong>Método Secundario:</strong> Notifique al supervisor y al Coordinador de Emergencia {{safety_officer}} al {{client_phone}}.</li>
+</ul>
+<p><strong>6.2 Sistema de Alarma (Adaptado al Campo):</strong>
+<ul>
+    <li><strong>Alerta Verbal:</strong> Grite "EMERGENCIA - EVACUAR" o "EMERGENCIA - REFUGIARSE EN EL LUGAR".</li>
+    <li><strong>Comunicación:</strong> Utilice bocinas de aire o comunicación grupal por teléfono celular si está disponible en el sitio de trabajo.</li>
+</ul></p>`
+            },
+            {
+                id: "eap_responsible",
+                title: "Responsible Persons / Personas Responsables",
+                content_template: `<h2>7. Responsible Persons & Contacts [T8 CCR §3220(b)(6)]</h2>
+<p>The following personnel have designated roles in executing or managing this Emergency Action Plan:</p>
+<table style="width:100%; border-collapse:collapse; margin-top:10px;" border="1" cellpadding="6">
+    <thead>
+        <tr style="background-color:#f1f5f9;">
+            <th>Name</th>
+            <th>Title</th>
+            <th>EAP Responsibility</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>{{safety_officer}}</strong></td>
+            <td>{{safety_officer_title}}</td>
+            <td><strong>Emergency Coordinator:</strong> Implementation of EAP, training compliance, emergency services coordination, and post-incident documentation.</td>
+        </tr>
+        <tr>
+            <td><strong>Field Supervisors / Crew Leads</strong></td>
+            <td>Crew Leaders / Foremen</td>
+            <td><strong>On-site Emergency Control:</strong> Coordinate immediate evacuations, conduct headcounts, and report missing workers.</td>
+        </tr>
+        <tr>
+            <td><strong>Office Administrative Staff</strong></td>
+            <td>Admin / HR</td>
+            <td><strong>Communication & Coordination:</strong> Liaison with coordinator, notify staff, and document training logs.</td>
+        </tr>
+    </tbody>
+</table>`,
+                content_template_es: `<h2>7. Personas Responsables y Contactos [T8 CCR §3220(b)(6)]</h2>
+<p>El siguiente personal tiene funciones asignadas en la ejecución o administración de este Plan de Acción de Emergencia:</p>
+<table style="width:100%; border-collapse:collapse; margin-top:10px;" border="1" cellpadding="6">
+    <thead>
+        <tr style="background-color:#f1f5f9;">
+            <th>Nombre</th>
+            <th>Título</th>
+            <th>Responsabilidad del EAP</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>{{safety_officer}}</strong></td>
+            <td>{{safety_officer_title}}</td>
+            <td><strong>Coordinador de Emergencia:</strong> Implementación del EAP, cumplimiento de la capacitación, coordinación de servicios de emergencia y documentación post-incidente.</td>
+        </tr>
+        <tr>
+            <td><strong>Supervisores de Campo / Líderes de Equipo</strong></td>
+            <td>Líderes de Equipo / Capataces</td>
+            <td><strong>Control de Emergencia en el Sitio:</strong> Coordinar evacuaciones inmediatas, realizar recuentos de personal y reportar trabajadores desaparecidos.</td>
+        </tr>
+        <tr>
+            <td><strong>Personal Administrativo de Oficina</strong></td>
+            <td>Admin / RRHH</td>
+            <td><strong>Comunicación y Coordinación:</strong> Enlace con el coordinador, notificar al personal y documentar los registros de capacitación.</td>
+        </tr>
+    </tbody>
+</table>`
+            },
+            {
+                id: "eap_evac_types",
+                title: "Types of Evacuation / Tipos de Evacuación",
+                content_template: `<h2>8. Types of Evacuation [T8 CCR §3220(d)]</h2>
+<p><strong>8.1 Immediate Evacuation:</strong> Initiated for fires, major gas leaks, chemical spills, or structural instability. Employees must drop equipment, exit immediately, and move to the designated staging area.</p>
+<p><strong>8.2 Shelter-in-Place:</strong> Initiated for active shooter incidents, severe weather, or external toxic releases. Lock doors, close windows, turn off HVAC (if safe), and stay away from windows.</p>
+<p><strong>8.3 Controlled Evacuation:</strong> Initiated for earthquake aftermath, medical emergencies, or minor structural concerns where immediate panic is avoided and evacuation routes are checked for hazards before moving.</p>`,
+                content_template_es: `<h2>8. Tipos de Evacuación [T8 CCR §3220(d)]</h2>
+<p><strong>8.1 Evacuación Inmediata:</strong> Se inicia ante incendios, fugas de gas importantes, derrames químicos o inestabilidad estructural. Los empleados deben soltar el equipo, salir de inmediato y trasladarse al área de reunión designada.</p>
+<p><strong>8.2 Refugio en el Lugar (Shelter-in-Place):</strong> Se inicia en caso de un atacante activo, clima severo o emisiones tóxicas externas. Cierre las puertas con llave, cierre las ventanas, apague la calefacción/aire acondicionado (si es seguro) y permanezca alejado de las ventanas.</p>
+<p><strong>8.3 Evacuación Controlada:</strong> Se inicia después de un terremoto, emergencias médicas o problemas estructurales menores, donde se evita el pánico inmediato y se revisan las rutas de evacuación en busca de peligros antes de trasladarse.</p>`
+            },
+            {
+                id: "eap_procedures",
+                title: "Emergency-Specific Procedures / Procedimientos de Emergencias Específicas",
+                content_template: `<h2>9. Emergency-Specific Action Procedures</h2>
+<p><strong>9.1 Fire Emergencies:</strong>
+<ul>
+    <li>Alert others and evacuate immediately. Call 9-1-1.</li>
+    <li>Use a portable fire extinguisher ONLY on small (incipient-stage) fires, and only if trained and safe to do so.</li>
+    <li>Stay low if smoke is present to avoid inhalation.</li>
+</ul>
+<p><strong>9.2 Earthquake:</strong>
+<ul>
+    <li><strong>Indoors:</strong> Duck, Cover, and Hold. Protect your head.</li>
+    <li><strong>On Roof:</strong> Stay in place, protect head, avoid edges. Do not attempt to run on rooftops.</li>
+    <li><strong>Outdoors:</strong> Move away from structures, power lines, and trees.</li>
+    <li><strong>After Shaking:</strong> Evacuate carefully, watching for damaged gas/water lines and sparking wires.</li>
+</ul>
+<p><strong>9.3 Active Shooter:</strong>
+<ol>
+    <li><strong>RUN:</strong> Escape if a safe path is available.</li>
+    <li><strong>HIDE:</strong> Lock doors, block entry, turn off lights, and silence phones.</li>
+    <li><strong>FIGHT:</strong> Act only as a last resort, using physical aggression and makeshift weapons.</li>
+    <li>Call 9-1-1 when safe. Do not re-enter until cleared by police.</li>
+</ol>
+<p><strong>9.4 Life-Threatening Injury / Trauma:</strong> Call 9-1-1. Provide clear directions. Do NOT move the victim unless they are in immediate hazard (e.g. fire). Administer First Aid/CPR if trained.</p>
+<p><strong>9.5 Heat Exposure (Field Hazard):</strong> Move worker to shade, provide cool water, and apply wet cloths. Call 9-1-1 if the worker shows confusion, slurred speech, or loss of consciousness.</p>
+<p><strong>9.6 Ladder Fall Incident:</strong> Do not move the victim. Call 9-1-1. Secure the area and ladders for inspection.</p>
+<p><strong>9.7 Roof Work / Structural Failure:</strong> Evacuate the structure/roof immediately, keep others away from the hazard zone, and notify supervisor.</p>
+<p><strong>9.8 Lead / Hazardous Exposure:</strong> Stop work, wash exposed skin, and notify supervisor for cleanup procedures.</p>
+<p><strong>9.9 Water Heater / Gas Incident:</strong> Evacuate immediately. DO NOT operate electrical switches (risk of sparks). Call 9-1-1 and notify the gas company and supervisor from a safe distance.</p>`,
+                content_template_es: `<h2>9. Procedimientos de Acción ante Emergencias Específicas</h2>
+<p><strong>9.1 Emergencias por Incendio:</strong>
+<ul>
+    <li>Alerte a otros y evacúe de inmediato. Llame al 9-1-1.</li>
+    <li>Use un extintor de incendios portátil ÚNICAMENTE en incendios pequeños (etapa incipiente), y solo si está capacitado y es seguro hacerlo.</li>
+    <li>Permanezca bajo si hay humo para evitar la inhalación.</li>
+</ul>
+<p><strong>9.2 Terremoto:</strong>
+<ul>
+    <li><strong>En interiores:</strong> Agáchese, cúbrase y sujétese. Proteja su cabeza.</li>
+    <li><strong>En techos:</strong> Permanezca en su lugar, proteja la cabeza, evite los bordes. No intente correr sobre tejados.</li>
+    <li><strong>En exteriores:</strong> Aléjese de estructuras, líneas eléctricas y árboles.</li>
+    <li><strong>Después del sismo:</strong> Evacúe con cuidado, prestando atención a las líneas de gas/agua dañadas y cables eléctricos con chispas.</li>
+</ul>
+<p><strong>9.3 Atacante Activo:</strong>
+<ol>
+    <li><strong>CORRER:</strong> Escape si hay una ruta de escape segura disponible.</li>
+    <li><strong>ESCONDERSE:</strong> Cierre las puertas con llave, bloquee la entrada, apague las luces y silencie los teléfonos.</li>
+    <li><strong>PELEAR:</strong> Actúe solo como último recurso, usando agresión física y armas improvisadas.</li>
+    <li>Llame al 9-1-1 cuando sea seguro. No vuelva a ingresar hasta que la policía lo autorice.</li>
+</ol>
+<p><strong>9.4 Lesión Grave / Trauma:</strong> Llame al 9-1-1. Proporcione indicaciones claras. NO mueva a la víctima a menos que esté en peligro inminente (ej. fuego). Aplique primeros auxilios/RCP si está capacitado.</p>
+<p><strong>9.5 Exposición al Calor:</strong> Mueva al trabajador a la sombra, proporcione agua fresca y aplique paños húmedos. Llame al 9-1-1 si el trabajador muestra confusión, dificultad para hablar o pérdida del conocimiento.</p>
+<p><strong>9.6 Caída de Escalera:</strong> No mueva a la víctima. Llame al 9-1-1. Asegure el área y las escaleras para su inspección.</p>
+<p><strong>9.7 Trabajo en Techos / Falla Estructural:</strong> Evacúe la estructura/techo de inmediato, mantenga a otros alejados de la zona de peligro y notifique al supervisor.</p>
+<p><strong>9.8 Exposición a Plomo / Materiales Peligrosos:</strong> Detenga el trabajo, lave la piel expuesta y notifique al supervisor para los procedimientos de limpieza.</p>
+<p><strong>9.9 Incidente de Calentador de Agua / Gas:</strong> Evacúe de inmediato. NO opere interruptores eléctricos (riesgo de chispas). Llame al 9-1-1 y notifique a la compañía de gas y al supervisor desde una distancia segura.</p>`
+            },
+            {
+                id: "eap_training",
+                title: "Training Requirements / Requisitos de Capacitación",
+                content_template: `<h2>10. Training Requirements [T8 CCR §3220(e)]</h2>
+<p><strong>10.1 Required Intervals:</strong> Training on this EAP shall be conducted at minimum annually and documented. Training must occur:
+<ul>
+    <li>At the initial hire of a new employee.</li>
+    <li>Initially when the plan is developed or newly introduced.</li>
+    <li>Whenever the employee's designated duties or emergency assignments change.</li>
+    <li>Whenever the EAP is updated or major revisions occur.</li>
+</ul>
+<p><strong>10.2 Training Elements:</strong> Training includes evacuation procedures, staging areas, emergency coordinator responsibilities, hazard recognition (including lead, heat, ladder safety), and de-escalation/active shooter responses.</p>`,
+                content_template_es: `<h2>10. Requisitos de Capacitación [T8 CCR §3220(e)]</h2>
+<p><strong>10.1 Intervalos Requeridos:</strong> La capacitación sobre este EAP se debe realizar como mínimo anualmente y documentarse. La capacitación debe ocurrir:
+<ul>
+    <li>En la contratación inicial de un nuevo empleado.</li>
+    <li>Inicialmente cuando se desarrolla el plan o se introduce por primera vez.</li>
+    <li>Cada vez que cambien los deberes asignados al empleado o las tareas de emergencia.</li>
+    <li>Cada vez que se actualice el EAP o se realicen revisiones importantes.</li>
+</ul>
+<p><strong>10.2 Elementos de la Capacitación:</strong> La capacitación incluye procedimientos de evacuación, áreas de reunión, responsabilidades del coordinador, reconocimiento de peligros (incluyendo plomo, calor, escaleras) y respuestas de de-escalación/atacante activo.</p>`
+            },
+            {
+                id: "eap_availability",
+                title: "Availability & Coordinator Responsibilities / Disponibilidad y Responsabilidades",
+                content_template: `<h2>11. Plan Availability & Management Responsibilities</h2>
+<p><strong>11.1 Plan Location:</strong> This EAP is maintained at the main office ({{client_address}}, Attn: {{safety_officer}}). It is available to all employees upon request. Field crews receive a copy of this plan summary and participate in tailgate safety reviews.</p>
+<p><strong>11.2 Emergency Coordinator Duties:</strong> {{safety_officer}} is responsible for implementing the EAP, maintaining training records, coordinating with responders, and authorizing re-entry into evacuated sites.</p>
+<p><strong>11.3 Supervisors Duties:</strong> Conduct headcounts, direct evacuations, report missing personnel, and assist the coordinator.</p>
+<p><strong>11.4 Re-entry Rule:</strong> ONLY the Emergency Coordinator or responding Emergency Personnel may authorize employee re-entry into a work area after evacuation.</p>`,
+                content_template_es: `<h2>11. Disponibilidad del Plan y Responsabilidades de la Dirección</h2>
+<p><strong>11.1 Ubicación del Plan:</strong> Este EAP se mantiene en la oficina principal ({{client_address}}, Atención: {{safety_officer}}). Está disponible para todos los empleados previa solicitud. Los equipos de campo reciben una copia de este resumen y participan en pláticas de seguridad de campo.</p>
+<p><strong>11.2 Deberes del Coordinador de Emergencia:</strong> {{safety_officer}} es responsable de implementar el EAP, mantener registros de capacitación, coordinar con los socorristas y autorizar el reingreso a los sitios evacuados.</p>
+<p><strong>11.3 Deberes de los Supervisores:</strong> Realizar recuentos de personal, dirigir evacuaciones, reportar personal desaparecido y ayudar al coordinador.</p>
+<p><strong>11.4 Regla de Reingreso:</strong> ÚNICAMENTE el Coordinador de Emergencia o el personal de emergencia de respuesta pueden autorizar el reingreso de los empleados a un área de trabajo después de una evacuación.</p>`
+            },
+            {
+                id: "eap_contacts",
                 title: "Emergency Contacts / Contactos de Emergencia",
-                content_template: `<h2>3. Emergency Notification</h2>
-<p>In case of emergency, contact the Designated Safety Officer ({{safety_officer}}). Dial 911 immediately for local police, fire, or ambulance. The local non-emergency dispatch number is {{local_non_emergency_phone}}.</p>`,
-                content_template_es: `<h2>3. Notificación de Emergencia</h2>
-<p>En caso de emergencia, comuníquese con el Oficial de Seguridad Designado ({{safety_officer}}). Llame al 911 de inmediato para la policía local, bomberos o ambulancia. El número de despacho que no es de emergencia local es {{local_non_emergency_phone}}.</p>`
+                content_template: `<h2>12. Emergency Contacts Directory [T8 CCR §3220(b)(5)]</h2>
+<p>Use the following phone directory during an emergency situation:</p>
+<table style="width: 100%; border-collapse: collapse; margin-top: 1rem;" border="1" cellpadding="8">
+    <tr style="background-color: #f8fafc; font-weight: bold;">
+        <td style="width: 40%;">Emergency Service</td>
+        <td style="width: 30%;">Primary Line</td>
+        <td style="width: 30%;">Notes / Specifics</td>
+    </tr>
+    <tr>
+        <td><strong>Life-Threatening Emergency</strong></td>
+        <td><strong style="color: #ef4444;">9-1-1</strong></td>
+        <td>Police, Fire, Ambulance</td>
+    </tr>
+    <tr>
+        <td><strong>{{client_name}} Program Office</strong></td>
+        <td>{{client_phone}}</td>
+        <td>Office Coordinator</td>
+    </tr>
+    <tr>
+        <td><strong>Emergency Coordinator ({{safety_officer}})</strong></td>
+        <td>{{safety_officer_phone}}</td>
+        <td>Toni Carrillo (Program Manager)</td>
+    </tr>
+    <tr>
+        <td><strong>Brawley Fire Department</strong></td>
+        <td>{{fire_dept_non_emergency_phone}}</td>
+        <td>Non-Emergency / Business Line</td>
+    </tr>
+    <tr>
+        <td><strong>Nearest Hospital</strong></td>
+        <td>{{hospital_phone}}</td>
+        <td><strong>{{hospital_name}}</strong><br>{{hospital_address}}</td>
+    </tr>
+    <tr>
+        <td><strong>Department of Toxic Substances Control (DTSC)</strong></td>
+        <td>{{dtsc_phone}}</td>
+        <td>Hazardous Material & Spill Incidents</td>
+    </tr>
+</table>`,
+                content_template_es: `<h2>12. Directorio de Contactos de Emergencia [T8 CCR §3220(b)(5)]</h2>
+<p>Utilice el siguiente directorio telefónico durante una situación de emergencia:</p>
+<table style="width: 100%; border-collapse: collapse; margin-top: 1rem;" border="1" cellpadding="8">
+    <tr style="background-color: #f8fafc; font-weight: bold;">
+        <td style="width: 40%;">Servicio de Emergencia</td>
+        <td style="width: 30%;">Línea Principal</td>
+        <td style="width: 30%;">Notas / Específicos</td>
+    </tr>
+    <tr>
+        <td><strong>Emergencia con Peligro de Vida</strong></td>
+        <td><strong style="color: #ef4444;">9-1-1</strong></td>
+        <td>Policía, Bomberos, Ambulancia</td>
+    </tr>
+    <tr>
+        <td><strong>Oficina del Programa {{client_name}}</strong></td>
+        <td>{{client_phone}}</td>
+        <td>Coordinador de Oficina</td>
+    </tr>
+    <tr>
+        <td><strong>Coordinador de Emergencia ({{safety_officer}})</strong></td>
+        <td>{{safety_officer_phone}}</td>
+        <td>Toni Carrillo (Gerente de Programa)</td>
+    </tr>
+    <tr>
+        <td><strong>Departamento de Bomberos de Brawley</strong></td>
+        <td>{{fire_dept_non_emergency_phone}}</td>
+        <td>Línea comercial que no es de emergencia</td>
+    </tr>
+    <tr>
+        <td><strong>Hospital Más Cercano</strong></td>
+        <td>{{hospital_phone}}</td>
+        <td><strong>{{hospital_name}}</strong><br>{{hospital_address}}</td>
+    </tr>
+    <tr>
+        <td><strong>Departamento de Control de Sustancias Tóxicas (DTSC)</strong></td>
+        <td>{{dtsc_phone}}</td>
+        <td>Incidentes con Materiales Peligrosos y Derrames</td>
+    </tr>
+</table>`
+            },
+            {
+                id: "eap_rosters",
+                title: "Appendices & Record Keeping Forms / Apéndices y Formularios de Registro",
+                content_template: `<div class="print-page-break"></div>
+<h2>13. EAP Appendices & Field Worksheets</h2>
+<p>The following pages contain record-keeping logs, checklists, flowcharts, and sign-in sheets to comply with Cal/OSHA requirements and assist field crews in operations.</p>
+
+<div class="print-page-break"></div>
+<h3 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 0.5rem;">DOCUMENT 1: EMPLOYEE ACCOUNTABILITY ROSTER (FILLABLE)</h3>
+<p style="text-align: center; font-style: italic;">[T8 CCR §3220(b)(3)]</p>
+<table style="width: 100%; border-collapse: collapse; margin-top: 1rem; border: 1.5px solid #000;" border="1" cellpadding="6">
+    <tr style="background-color: #f1f5f9; font-weight: bold;">
+        <td style="width: 8%;">#</td>
+        <td style="width: 30%;">Employee Name</td>
+        <td style="width: 25%;">Job Title</td>
+        <td style="width: 20%;">Crew / Location</td>
+        <td style="width: 17%;">Present (✔/✖)</td>
+    </tr>
+    ${Array.from({length: 10}, (_, i) => `
+    <tr>
+        <td>${i+1}</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>`).join('')}
+</table>
+<div style="margin-top: 1.5rem; background-color: #f8fafc; border: 1px dashed var(--border-color); padding: 1rem; border-radius: 4px;">
+    <strong>Accountability Procedure:</strong>
+    <ol style="margin-top: 0.5rem; margin-bottom: 0;">
+        <li>All employees report immediately to the designated staging area.</li>
+        <li>Supervisor conducts headcount using this daily crew roster.</li>
+        <li>Missing employees are reported immediately to the Emergency Coordinator and Responders.</li>
+        <li>DO NOT leave the staging area until dismissed by the Supervisor in charge.</li>
+    </ol>
+</div>
+
+<div class="print-page-break"></div>
+<h3 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 0.5rem;">DOCUMENT 2: EMERGENCY RESPONSE QUICK CHECKLIST (FIELD USE)</h3>
+<table style="width: 100%; border-collapse: collapse; margin-top: 1.5rem; border: 1px solid var(--border-color);" border="1" cellpadding="8">
+    <tr style="background-color: #f8fafc;">
+        <th colspan="2" style="text-align: left; padding: 10px;">SUPERVISOR EMERGENCY TASKS</th>
+    </tr>
+    <tr>
+        <td style="width: 10%; text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Identify the emergency:</strong> What happened? Fire, earthquake, shooter, major fall?</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Check for injuries:</strong> How many workers or clients are hurt? Are they conscious?</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Call 9-1-1:</strong> Call immediately. State exact job site address and details.</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Secure the area:</strong> If safe, isolate hazard, turn off gas/power, turn off ladders.</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Evacuate personnel:</strong> Direct crew away from residence to staging area.</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Conduct headcount:</strong> Verify all workers are accounted for on roster.</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Notify coordinator:</strong> Call Toni Carrillo (Emergency Coordinator) at {{safety_officer_phone}}.</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Guide responders:</strong> Assign someone to wait at the street to meet and lead responders.</td>
+    </tr>
+    <tr style="background-color: #f8fafc;">
+        <th colspan="2" style="text-align: left; padding: 10px;">UTILITIES CONTROL (IF SAFE)</th>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Gas Shut-off:</strong> Turn off valve at water heater or main gas line meter if leak suspected.</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Electrical Shut-off:</strong> Flip main breaker panel switch to shut down structural power.</td>
+    </tr>
+</table>
+
+<div class="print-page-break"></div>
+<h3 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 0.5rem;">DOCUMENT 3: EMERGENCY FLOWCHART POSTER (FIELD VERSION)</h3>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; margin-top: 1.5rem; text-align: center; font-family: sans-serif;">
+    <div style="border: 2px solid #000; padding: 0.75rem 1.5rem; font-weight: bold; background-color: #f8fafc; border-radius: 6px; width: 80%;">1. IDENTIFY EMERGENCY</div>
+    <div style="font-size: 1.5rem;">⬇</div>
+    <div style="border: 2px solid #000; padding: 0.75rem 1.5rem; font-weight: bold; background-color: #f8fafc; border-radius: 6px; width: 80%;">2. STOP WORK</div>
+    <div style="font-size: 1.5rem;">⬇</div>
+    <div style="border: 2px solid #000; padding: 0.75rem 1.5rem; font-weight: bold; background-color: #f8fafc; border-radius: 6px; width: 80%;">3. ALERT OTHERS (Shout "EMERGENCY")</div>
+    <div style="font-size: 1.5rem;">⬇</div>
+    <div style="border: 2px solid #ef4444; color: #ef4444; padding: 0.75rem 1.5rem; font-weight: bold; background-color: #fef2f2; border-radius: 6px; width: 80%;">4. CALL 9-1-1</div>
+    <div style="font-size: 1.5rem;">⬇</div>
+    <div style="border: 2px solid #000; padding: 0.75rem 1.5rem; font-weight: bold; background-color: #f8fafc; border-radius: 6px; width: 80%;">5. EVACUATE STRUCTURE / TAKE COVER</div>
+    <div style="font-size: 1.5rem;">⬇</div>
+    <div style="border: 2px solid #000; padding: 0.75rem 1.5rem; font-weight: bold; background-color: #f8fafc; border-radius: 6px; width: 80%;">6. PROCEED TO STAGING AREA</div>
+    <div style="font-size: 1.5rem;">⬇</div>
+    <div style="border: 2px solid #000; padding: 0.75rem 1.5rem; font-weight: bold; background-color: #f8fafc; border-radius: 6px; width: 80%;">7. CONDUCT HEADCOUNT</div>
+    <div style="font-size: 1.5rem;">⬇</div>
+    <div style="border: 2px solid #000; padding: 0.75rem 1.5rem; font-weight: bold; background-color: #f8fafc; border-radius: 6px; width: 80%;">8. WAIT FOR INSTRUCTIONS</div>
+</div>
+<div style="margin-top: 1.5rem; border: 1.5px solid #ef4444; padding: 0.75rem; background-color: #fef2f2; border-radius: 4px;">
+    <strong>SPECIAL CONDITIONS:</strong>
+    <ul style="margin-top: 0.25rem; margin-bottom: 0;">
+        <li><strong>FIRE:</strong> Evacuate structure immediately. Do not delay.</li>
+        <li><strong>INJURY:</strong> Do not move the injured victim unless they are in immediate danger.</li>
+        <li><strong>SHOOTER:</strong> Run (escape), Hide (barricade room), or Fight (as a last resort).</li>
+        <li><strong>HEAT:</strong> Cool affected worker immediately with shade, water, and wet cloths.</li>
+    </ul>
+</div>
+
+<div class="print-page-break"></div>
+<h3 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 0.5rem;">DOCUMENT 4: TAILGATE TRAINING HANDOUT</h3>
+<p style="text-align: center; font-style: italic;">Emergency Action Plan - Field Weatherization Crews</p>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+    <div style="border: 1px solid var(--border-color); padding: 0.75rem; border-radius: 4px;">
+        <strong>Common Field Hazards:</strong>
+        <ul style="margin-top: 0.25rem; margin-bottom: 0;">
+            <li>Heat Exposure & Illness</li>
+            <li>Ladder Falls & Tripping</li>
+            <li>Roof Work / Falls</li>
+            <li>Water Heaters & Gas Leaks</li>
+            <li>Lead & Hazardous Exposures</li>
+        </ul>
+    </div>
+    <div style="border: 1px solid var(--border-color); padding: 0.75rem; border-radius: 4px;">
+        <strong>General Rules:</strong>
+        <ul style="margin-top: 0.25rem; margin-bottom: 0;">
+            <li>STOP WORK IMMEDIATELY</li>
+            <li>REMAIN CALM & DO NOT PANIC</li>
+            <li>CALL 9-1-1 FOR DANGER</li>
+            <li>EVACUATE IMMEDIATELY</li>
+        </ul>
+    </div>
+</div>
+<table style="width: 100%; border-collapse: collapse; margin-top: 1rem;" border="1" cellpadding="6">
+    <tr style="background-color: #f8fafc; font-weight: bold;">
+        <td style="width: 25%;">Hazard Type</td>
+        <td>Emergency Action Required</td>
+    </tr>
+    <tr>
+        <td><strong>FIRE</strong></td>
+        <td>Get out immediately. Stay low to avoid smoke. Shout "EMERGENCY" to alert others.</td>
+    </tr>
+    <tr>
+        <td><strong>HEAT ILLNESS</strong></td>
+        <td>Move worker to shade. Drink water. Cool body with wet cloths. Call 9-1-1 if confused or unconscious.</td>
+    </tr>
+    <tr>
+        <td><strong>FALL</strong></td>
+        <td>Do NOT move the injured worker. Call 9-1-1 immediately. Secure the ladder/area.</td>
+    </tr>
+    <tr>
+        <td><strong>ACTIVE SHOOTER</strong></td>
+        <td><strong>RUN</strong> (if path is clear), <strong>HIDE</strong> (barricade room, silence phones), <strong>FIGHT</strong> (last resort).</td>
+    </tr>
+</table>
+<div style="margin-top: 1rem; font-weight: bold; text-align: center; color: var(--accent-purple);">
+    KNOW YOUR JOB SITE ADDRESS PRIOR TO STARTING WORK EACH DAY.
+</div>
+
+<div class="print-page-break"></div>
+<h3 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 0.5rem;">DOCUMENT 5: INCIDENT REPORT FORM</h3>
+<table style="width: 100%; border-collapse: collapse; margin-top: 1rem; border: 1px solid var(--border-color);" border="1" cellpadding="6">
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; width: 15%;">Date:</td>
+        <td style="width: 35%;">________________</td>
+        <td style="background-color: #f8fafc; font-weight: bold; width: 15%;">Time:</td>
+        <td style="width: 35%;">________________</td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold;">Location:</td>
+        <td colspan="3">____________________________________________________________________</td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold;">Emergency Type:</td>
+        <td colspan="3">
+            [ ] Fire [ ] Injury/Medical [ ] Fall [ ] Heat Illness [ ] Gas Leak [ ] Violence [ ] Other: ______
+        </td>
+    </tr>
+    <tr style="background-color: #f8fafc; font-weight: bold;">
+        <td colspan="4">INJURY CLASSIFICATIONS</td>
+    </tr>
+    <tr>
+        <td colspan="2" style="vertical-align: top;">
+            <strong>[ ] Fatality:</strong><br>
+            [ ] Death confirmed<br>
+            [ ] CPR performed<br>
+            Time pronounced: ___________
+        </td>
+        <td colspan="2" style="vertical-align: top;">
+            <strong>[ ] Heat-Related Illnesses:</strong><br>
+            [ ] Heat cramps [ ] Heat exhaustion [ ] Heat stroke<br>
+            Symptoms: [ ] Dizziness [ ] Confusion [ ] Nausea [ ] Fainting
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="vertical-align: top;">
+            <strong>[ ] Cuts / Lacerations / Bleeding:</strong><br>
+            [ ] Minor cut (First aid only)<br>
+            [ ] Moderate bleeding (Bandaging required)<br>
+            [ ] Severe bleeding (Life-threatening / Uncontrolled)
+        </td>
+        <td colspan="2" style="vertical-align: top;">
+            <strong>[ ] Falls / Trauma (Ladders/Roofs):</strong><br>
+            [ ] Fall from ladder [ ] Fall from roof [ ] Slip/trip/fall<br>
+            Suspected: [ ] Head injury [ ] Spinal injury
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="vertical-align: top;">
+            <strong>[ ] Fractures / Musculoskeletal:</strong><br>
+            [ ] Suspected fracture [ ] Dislocation [ ] Sprain/strain
+        </td>
+        <td colspan="2" style="vertical-align: top;">
+            <strong>[ ] Burns & Shock:</strong><br>
+            [ ] Thermal burn [ ] Chemical burn [ ] Electrical shock
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="vertical-align: top;">
+            <strong>[ ] Exposure (Lead / CO / Gas):</strong><br>
+            [ ] Lead exposure [ ] Gas leak inhalation [ ] CO exposure
+        </td>
+        <td colspan="2" style="vertical-align: top;">
+            <strong>[ ] Violence:</strong><br>
+            [ ] Assault injury [ ] Gunshot wound [ ] Blunt force trauma
+        </td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Injury Description:</td>
+        <td colspan="3" style="height: 60px; vertical-align: top; color: var(--text-muted);">
+            Describe nature of injury, body part affected, severity, and first aid provided:<br><br>
+        </td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Medical Response:</td>
+        <td colspan="3">
+            [ ] First Aid Provided [ ] CPR/AED Used [ ] 9-1-1 Called [ ] Hospital Transport [ ] Refused Care
+        </td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold;">Care Provider Name:</td>
+        <td>______________________</td>
+        <td style="background-color: #f8fafc; font-weight: bold;">Certifications:</td>
+        <td>______________________</td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold;">Reported By Name:</td>
+        <td>______________________</td>
+        <td style="background-color: #f8fafc; font-weight: bold;">Signature / Date:</td>
+        <td>______________________</td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Witnesses:</td>
+        <td colspan="3" style="font-size: 0.8rem;">
+            1. Name/Phone: ________________________________ Statement: ______________________________________<br>
+            2. Name/Phone: ________________________________ Statement: ______________________________________
+        </td>
+    </tr>
+</table>
+
+<div class="print-page-break"></div>
+<h3 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 0.5rem;">DOCUMENT 6: EMERGENCY CONTACT POSTER</h3>
+<div style="border: 4px double #000; padding: 1.5rem; margin-top: 1.5rem; text-align: center;">
+    <h2 style="color: #ef4444; font-size: 2.5rem; margin-top: 0; margin-bottom: 1rem;">EMERGENCY CONTACTS</h2>
+    <div style="font-size: 1.5rem; margin-bottom: 1.5rem;">
+        🚨 LIFE SAFETY DANGER: <strong style="font-size: 2rem; color: #ef4444;">DIAL 9-1-1</strong>
+    </div>
+    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 1.1rem; margin-bottom: 1.5rem;" border="1" cellpadding="10">
+        <tr>
+            <td style="background-color: #f8fafc; font-weight: bold; width: 40%;">{{client_name}} Program Office</td>
+            <td><strong>{{client_phone}}</strong></td>
+        </tr>
+        <tr>
+            <td style="background-color: #f8fafc; font-weight: bold;">Emergency Coordinator (Toni Carrillo)</td>
+            <td><strong>{{safety_officer_phone}}</strong></td>
+        </tr>
+        <tr>
+            <td style="background-color: #f8fafc; font-weight: bold;">Brawley Fire Department (Non-Emergency)</td>
+            <td><strong>{{fire_dept_non_emergency_phone}}</strong></td>
+        </tr>
+        <tr>
+            <td style="background-color: #f8fafc; font-weight: bold;">Office of Emergency Services (Cal OES)</td>
+            <td><strong>(916) 845-8510</strong></td>
+        </tr>
+        <tr>
+            <td style="background-color: #f8fafc; font-weight: bold;">Toxic Substances Control (DTSC El Centro)</td>
+            <td><strong>{{dtsc_phone}}</strong></td>
+        </tr>
+    </table>
+    <div style="border: 2px solid #000; padding: 1rem; background-color: #f8fafc;">
+        <h4 style="margin-top: 0; margin-bottom: 0.5rem; color: #ef4444;">NEAREST HOSPITAL:</h4>
+        <strong style="font-size: 1.25rem;">{{hospital_name}}</strong><br>
+        {{hospital_address}}<br>
+        Phone: {{hospital_phone}}
+    </div>
+</div>
+
+<div class="print-page-break"></div>
+<h3 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 0.5rem;">DOCUMENT 7: MANAGEMENT CHECKLIST</h3>
+<p style="text-align: center; font-style: italic;">Emergency Coordinator Checklist</p>
+<table style="width: 100%; border-collapse: collapse; margin-top: 1.5rem; border: 1px solid var(--border-color);" border="1" cellpadding="10">
+    <tr style="background-color: #f8fafc;">
+        <th style="width: 10%; text-align: center;">Done</th>
+        <th style="text-align: left;">EMERGENCY COORDINATOR ACTION ITEM</th>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Establish Command:</strong> Take control of communication and response operations.</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Contact Emergency Services:</strong> Confirm 9-1-1 has been notified with correct address.</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Verify Evacuation:</strong> Confirm all personnel have evacuated structure and field sites.</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Ensure Headcount:</strong> Verify headcount roster has been completed by all leads/supervisors.</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Coordinate Responders:</strong> Direct designated employees to guide responders to scene.</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Determine Re-entry / Shutdown:</strong> Only authorize re-entry after official clearance from responders.</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Document Incident:</strong> Complete formal Incident Report and file in safety records.</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Post-Incident Review:</strong> Convene supervisors to evaluate EAP performance and make revisions.</td>
+    </tr>
+</table>
+
+<div class="print-page-break"></div>
+<h3 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 0.5rem;">DOCUMENT 8: TRAINING SIGN-IN SHEET</h3>
+<table style="width: 100%; border-collapse: collapse; margin-top: 1rem; border: 1px solid var(--border-color);" border="1" cellpadding="6">
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; width: 20%;">Company:</td>
+        <td style="width: 30%;">{{client_name}}</td>
+        <td style="background-color: #f8fafc; font-weight: bold; width: 20%;">Program:</td>
+        <td style="width: 30%;">{{eap_program_name}}</td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold;">Location:</td>
+        <td>{{client_address}}</td>
+        <td style="background-color: #f8fafc; font-weight: bold;">Instructor:</td>
+        <td>{{safety_officer}} ({{safety_officer_title}})</td>
+    </tr>
+</table>
+<table style="width: 100%; border-collapse: collapse; margin-top: 1rem; border: 1.5px solid #000;" border="1" cellpadding="6">
+    <tr style="background-color: #f1f5f9; font-weight: bold;">
+        <td style="width: 8%;">#</td>
+        <td style="width: 35%;">Employee Name</td>
+        <td style="width: 35%;">Signature</td>
+        <td style="width: 22%;">Date</td>
+    </tr>
+    ${Array.from({length: 10}, (_, i) => `
+    <tr>
+        <td>${i+1}</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>`).join('')}
+</table>
+<div style="margin-top: 1rem; border: 1px solid var(--border-color); padding: 0.75rem; background-color: #f8fafc;">
+    <strong>TRAINING CERTIFICATION STATEMENT:</strong><br>
+    <p style="font-style: italic; margin-top: 0.25rem; margin-bottom: 0; font-size: 0.85rem;">
+        "By placing my signature in this Safety Sign-in Sheet, I am verifying that I have received training on the Emergency Action Plan and understand my responsibilities. I have had the opportunity to ask questions, and I have received clear and specific answers to my satisfaction."
+    </p>
+</div>
+
+<div class="print-page-break"></div>
+<h3 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 0.5rem;">DOCUMENT 9: POST-INCIDENT REVIEW FORM</h3>
+<table style="width: 100%; border-collapse: collapse; margin-top: 1.5rem; border: 1px solid var(--border-color);" border="1" cellpadding="8">
+    <tr style="background-color: #f8fafc; font-weight: bold;">
+        <td colspan="2">POST-EMERGENCY EVALUATION</td>
+    </tr>
+    <tr>
+        <td style="width: 30%; background-color: #f8fafc; font-weight: bold; vertical-align: top;">What happened? (Summary of incident):</td>
+        <td style="height: 60px; vertical-align: top; color: var(--text-muted);">Provide timeline and scope:</td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">What worked well? (Procedures followed correctly):</td>
+        <td style="height: 60px; vertical-align: top; color: var(--text-muted);">List successful outcomes/actions:</td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">What failed? (Delays, communication breakdowns):</td>
+        <td style="height: 60px; vertical-align: top; color: var(--text-muted);">Identify structural/systemic failures:</td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Injuries reported? (List severity):</td>
+        <td style="height: 60px; vertical-align: top; color: var(--text-muted);">Specify personnel affected:</td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Improvements needed? (Updates to EAP):</td>
+        <td style="height: 60px; vertical-align: top; color: var(--text-muted);">List changes to training, equipment, or staging areas:</td>
+    </tr>
+</table>
+<table style="width: 100%; border-collapse: collapse; margin-top: 1.5rem;" cellpadding="6">
+    <tr>
+        <td><strong>Coordinator Signature:</strong><br><br>___________________________</td>
+        <td><strong>Date of Review:</strong><br><br>___________________________</td>
+    </tr>
+</table>`,
+                content_template_es: `<div class="print-page-break"></div>
+<h2>13. Apéndices del EAP y Hojas de Trabajo de Campo</h2>
+<p>Las siguientes páginas contienen registros, listas de verificación, diagramas de flujo y hojas de firmas para cumplir con los requisitos de Cal/OSHA y ayudar a los equipos de campo.</p>
+
+<div class="print-page-break"></div>
+<h3 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 0.5rem;">DOCUMENTO 1: LISTA DE CONTROL DE PERSONAL (LLENABLE)</h3>
+<p style="text-align: center; font-style: italic;">[T8 CCR §3220(b)(3)]</p>
+<table style="width: 100%; border-collapse: collapse; margin-top: 1rem; border: 1.5px solid #000;" border="1" cellpadding="6">
+    <tr style="background-color: #f1f5f9; font-weight: bold;">
+        <td style="width: 8%;">#</td>
+        <td style="width: 30%;">Nombre del Empleado</td>
+        <td style="width: 25%;">Puesto de Trabajo</td>
+        <td style="width: 20%;">Equipo / Ubicación</td>
+        <td style="width: 17%;">Presente (✔/✖)</td>
+    </tr>
+    ${Array.from({length: 10}, (_, i) => `
+    <tr>
+        <td>${i+1}</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>`).join('')}
+</table>
+<div style="margin-top: 1.5rem; background-color: #f8fafc; border: 1px dashed var(--border-color); padding: 1rem; border-radius: 4px;">
+    <strong>Procedimiento de Contabilización:</strong>
+    <ol style="margin-top: 0.5rem; margin-bottom: 0;">
+        <li>Todos los empleados se reportan de inmediato al área de reunión designada.</li>
+        <li>El supervisor realiza el recuento de personal utilizando esta lista diaria de personal.</li>
+        <li>Los empleados desaparecidos se reportan de inmediato al Coordinador de Emergencia y Rescatistas.</li>
+        <li>NO abandone el área de reunión hasta que el supervisor a cargo lo autorice.</li>
+    </ol>
+</div>
+
+<div class="print-page-break"></div>
+<h3 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 0.5rem;">DOCUMENTO 2: LISTA DE VERIFICACIÓN DE RESPUESTA A EMERGENCIAS (USO EN CAMPO)</h3>
+<table style="width: 100%; border-collapse: collapse; margin-top: 1.5rem; border: 1px solid var(--border-color);" border="1" cellpadding="8">
+    <tr style="background-color: #f8fafc;">
+        <th colspan="2" style="text-align: left; padding: 10px;">TAREAS DE EMERGENCIA DEL SUPERVISOR</th>
+    </tr>
+    <tr>
+        <td style="width: 10%; text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Identificar la emergencia:</strong> ¿Qué sucedió? ¿Incendio, terremoto, tirador, caída grave?</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Verificar lesionados:</strong> ¿Cuántos trabajadores o clientes están heridos? ¿Están conscientes?</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Llamar al 9-1-1:</strong> Llame de inmediato. Dé la dirección exacta y detalles del trabajo.</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Asegurar el área:</strong> Si es seguro, aísle el peligro, apague el gas/electricidad, asegure escaleras.</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Evacuar personal:</strong> Dirija al equipo fuera de la residencia al área de reunión.</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Realizar recuento:</strong> Verifique que todo el personal esté contabilizado en la lista.</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Notificar al coordinador:</strong> Llame a Toni Carrillo (Coordinador) al {{safety_officer_phone}}.</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Guiar rescatistas:</strong> Asigne a alguien para que espere en la calle y guíe a los servicios de emergencia.</td>
+    </tr>
+    <tr style="background-color: #f8fafc;">
+        <th colspan="2" style="text-align: left; padding: 10px;">CONTROL DE SERVICIOS PÚBLICOS (SI ES SEGURO)</th>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Corte de Gas:</strong> Cierre la válvula en el calentador o medidor principal si sospecha fuga.</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Corte de Electricidad:</strong> Apague el interruptor principal en el panel eléctrico de la estructura.</td>
+    </tr>
+</table>
+
+<div class="print-page-break"></div>
+<h3 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 0.5rem;">DOCUMENTO 3: DIAGRAMA DE FLUJO DE RESPUESTA A EMERGENCIAS (VERSIÓN DE CAMPO)</h3>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; margin-top: 1.5rem; text-align: center; font-family: sans-serif;">
+    <div style="border: 2px solid #000; padding: 0.75rem 1.5rem; font-weight: bold; background-color: #f8fafc; border-radius: 6px; width: 80%;">1. IDENTIFICAR LA EMERGENCIA</div>
+    <div style="font-size: 1.5rem;">⬇</div>
+    <div style="border: 2px solid #000; padding: 0.75rem 1.5rem; font-weight: bold; background-color: #f8fafc; border-radius: 6px; width: 80%;">2. DETENER EL TRABAJO</div>
+    <div style="font-size: 1.5rem;">⬇</div>
+    <div style="border: 2px solid #000; padding: 0.75rem 1.5rem; font-weight: bold; background-color: #f8fafc; border-radius: 6px; width: 80%;">3. ALERTAR A OTROS (Grite "EMERGENCIA")</div>
+    <div style="font-size: 1.5rem;">⬇</div>
+    <div style="border: 2px solid #ef4444; color: #ef4444; padding: 0.75rem 1.5rem; font-weight: bold; background-color: #fef2f2; border-radius: 6px; width: 80%;">4. LLAMAR AL 9-1-1</div>
+    <div style="font-size: 1.5rem;">⬇</div>
+    <div style="border: 2px solid #000; padding: 0.75rem 1.5rem; font-weight: bold; background-color: #f8fafc; border-radius: 6px; width: 80%;">5. EVACUAR LA ESTRUCTURA / REFUGIARSE</div>
+    <div style="font-size: 1.5rem;">⬇</div>
+    <div style="border: 2px solid #000; padding: 0.75rem 1.5rem; font-weight: bold; background-color: #f8fafc; border-radius: 6px; width: 80%;">6. PROCEDER AL ÁREA DE REUNIÓN</div>
+    <div style="font-size: 1.5rem;">⬇</div>
+    <div style="border: 2px solid #000; padding: 0.75rem 1.5rem; font-weight: bold; background-color: #f8fafc; border-radius: 6px; width: 80%;">7. REALIZAR EL RECUENTO</div>
+    <div style="font-size: 1.5rem;">⬇</div>
+    <div style="border: 2px solid #000; padding: 0.75rem 1.5rem; font-weight: bold; background-color: #f8fafc; border-radius: 6px; width: 80%;">8. ESPERAR INSTRUCCIONES</div>
+</div>
+<div style="margin-top: 1.5rem; border: 1.5px solid #ef4444; padding: 0.75rem; background-color: #fef2f2; border-radius: 4px;">
+    <strong>CONDICIONES ESPECIALES:</strong>
+    <ul style="margin-top: 0.25rem; margin-bottom: 0;">
+        <li><strong>INCENDIO:</strong> Evacue la estructura inmediatamente. No demore.</li>
+        <li><strong>LESIONES:</strong> No mueva al trabajador herido a menos que esté en peligro inmediato.</li>
+        <li><strong>TIRADOR:</strong> Corra (escape), Escóndase (bloquee la habitación, silencie el teléfono) o Pelee.</li>
+        <li><strong>CALOR:</strong> Refresque al trabajador con sombra, agua y paños húmedos.</li>
+    </ul>
+</div>
+
+<div class="print-page-break"></div>
+<h3 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 0.5rem;">DOCUMENTO 4: FOLLETO DE CAPACITACIÓN EN CAMPO</h3>
+<p style="text-align: center; font-style: italic;">Plan de Acción de Emergencia - Equipos de Climatización</p>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+    <div style="border: 1px solid var(--border-color); padding: 0.75rem; border-radius: 4px;">
+        <strong>Peligros Comunes en Campo:</strong>
+        <ul style="margin-top: 0.25rem; margin-bottom: 0;">
+            <li>Exposición al Calor</li>
+            <li>Caídas de Escaleras</li>
+            <li>Trabajo en Techos / Caídas</li>
+            <li>Calentadores y Fugas de Gas</li>
+            <li>Exposición a Plomo</li>
+        </ul>
+    </div>
+    <div style="border: 1px solid var(--border-color); padding: 0.75rem; border-radius: 4px;">
+        <strong>Reglas Generales:</strong>
+        <ul style="margin-top: 0.25rem; margin-bottom: 0;">
+            <li>DETENGA EL TRABAJO DE INMEDIATO</li>
+            <li>MANTENGA LA CALMA</li>
+            <li>LLAME AL 9-1-1 ANTE EL PELIGRO</li>
+            <li>EVACÚE DE INMEDIATO</li>
+        </ul>
+    </div>
+</div>
+<table style="width: 100%; border-collapse: collapse; margin-top: 1rem;" border="1" cellpadding="6">
+    <tr style="background-color: #f8fafc; font-weight: bold;">
+        <td style="width: 25%;">Tipo de Peligro</td>
+        <td>Acción de Emergencia Requerida</td>
+    </tr>
+    <tr>
+        <td><strong>INCENDIO</strong></td>
+        <td>Salga de inmediato. Permanezca bajo para evitar el humo. Grite "EMERGENCIA" para alertar.</td>
+    </tr>
+    <tr>
+        <td><strong>ENFERMEDAD POR CALOR</strong></td>
+        <td>Mueva al trabajador a la sombra. Déle agua. Enfríe su cuerpo. Llame al 9-1-1 si muestra confusión o desmayo.</td>
+    </tr>
+    <tr>
+        <td><strong>CAÍDA</strong></td>
+        <td>NO mueva al trabajador lesionado. Llame al 9-1-1 de inmediato. Asegure la escalera/área.</td>
+    </tr>
+    <tr>
+        <td><strong>ATACANTE ACTIVO</strong></td>
+        <td><strong>CORRER</strong> (si hay ruta libre), <strong>ESCONDERSE</strong> (barricar habitación, silencio), <strong>PELEAR</strong> (último recurso).</td>
+    </tr>
+</table>
+<div style="margin-top: 1rem; font-weight: bold; text-align: center; color: var(--accent-purple);">
+    CONOZCA LA DIRECCIÓN EXACTA DEL SITIO DE TRABAJO ANTES DE EMPEZAR CADA DÍA.
+</div>
+
+<div class="print-page-break"></div>
+<h3 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 0.5rem;">DOCUMENTO 5: FORMULARIO DE REPORTE DE INCIDENTES</h3>
+<table style="width: 100%; border-collapse: collapse; margin-top: 1rem; border: 1px solid var(--border-color);" border="1" cellpadding="6">
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; width: 15%;">Fecha:</td>
+        <td style="width: 35%;">________________</td>
+        <td style="background-color: #f8fafc; font-weight: bold; width: 15%;">Hora:</td>
+        <td style="width: 35%;">________________</td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold;">Ubicación:</td>
+        <td colspan="3">____________________________________________________________________</td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold;">Tipo de Emergencia:</td>
+        <td colspan="3">
+            [ ] Incendio [ ] Médico [ ] Caída [ ] Calor [ ] Fuga de Gas [ ] Violencia [ ] Otro: ______
+        </td>
+    </tr>
+    <tr style="background-color: #f8fafc; font-weight: bold;">
+        <td colspan="4">CLASIFICACIONES DE LESIÓN</td>
+    </tr>
+    <tr>
+        <td colspan="2" style="vertical-align: top;">
+            <strong>[ ] Fatalidad:</strong><br>
+            [ ] Muerte confirmada<br>
+            [ ] RCP realizado<br>
+            Hora de pronunciación: ___________
+        </td>
+        <td colspan="2" style="vertical-align: top;">
+            <strong>[ ] Enfermedades por Calor:</strong><br>
+            [ ] Calambres [ ] Agotamiento [ ] Golpe de calor<br>
+            Síntomas: [ ] Mareo [ ] Confusión [ ] Náuseas [ ] Desmayo
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="vertical-align: top;">
+            <strong>[ ] Cortes / Sangrado:</strong><br>
+            [ ] Corte menor (Solo primeros auxilios)<br>
+            [ ] Sangrado moderado (Requiere vendaje)<br>
+            [ ] Sangrado grave (Peligro de vida / Incontrolado)
+        </td>
+        <td colspan="2" style="vertical-align: top;">
+            <strong>[ ] Caídas / Trauma (Escaleras/Techos):</strong><br>
+            [ ] Caída de escalera [ ] Caída de techo [ ] Resbalón/Caída<br>
+            Sospecha de: [ ] Lesión cerebral [ ] Lesión espinal
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="vertical-align: top;">
+            <strong>[ ] Fracturas / Musculoesquelético:</strong><br>
+            [ ] Sospecha de fractura [ ] Dislocación [ ] Esguince/Tirón
+        </td>
+        <td colspan="2" style="vertical-align: top;">
+            <strong>[ ] Quemaduras y Choque:</strong><br>
+            [ ] Quemadura térmica [ ] Química [ ] Choque eléctrico
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="vertical-align: top;">
+            <strong>[ ] Exposición (Plomo / CO / Gas):</strong><br>
+            [ ] Plomo [ ] Inhalación de gas [ ] Monóxido de carbono (CO)
+        </td>
+        <td colspan="2" style="vertical-align: top;">
+            <strong>[ ] Violencia:</strong><br>
+            [ ] Lesión por asalto [ ] Herida de bala [ ] Trauma por fuerza contundente
+        </td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Descripción de la Lesión:</td>
+        <td colspan="3" style="height: 60px; vertical-align: top; color: var(--text-muted);">
+            Describa naturaleza de la lesión, parte afectada, gravedad y primeros auxilios dados:<br><br>
+        </td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Respuesta Médica:</td>
+        <td colspan="3">
+            [ ] Primeros auxilios [ ] RCP/DEA usado [ ] Llamada al 9-1-1 [ ] Traslado al hospital [ ] Rechazó atención
+        </td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold;">Nombre de Proveedor de Cuidado:</td>
+        <td>______________________</td>
+        <td style="background-color: #f8fafc; font-weight: bold;">Certificaciones:</td>
+        <td>______________________</td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold;">Nombre del Reportante:</td>
+        <td>______________________</td>
+        <td style="background-color: #f8fafc; font-weight: bold;">Firma / Fecha:</td>
+        <td>______________________</td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">Testigos:</td>
+        <td colspan="3" style="font-size: 0.8rem;">
+            1. Nombre/Tel: ________________________________ Declaración: ______________________________________<br>
+            2. Nombre/Tel: ________________________________ Declaración: ______________________________________
+        </td>
+    </tr>
+</table>
+
+<div class="print-page-break"></div>
+<h3 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 0.5rem;">DOCUMENTO 6: POSTER DE CONTACTOS DE EMERGENCIA</h3>
+<div style="border: 4px double #000; padding: 1.5rem; margin-top: 1.5rem; text-align: center;">
+    <h2 style="color: #ef4444; font-size: 2.5rem; margin-top: 0; margin-bottom: 1rem;">CONTACTOS DE EMERGENCIA</h2>
+    <div style="font-size: 1.5rem; margin-bottom: 1.5rem;">
+        🚨 PELIGRO DE VIDA: <strong style="font-size: 2rem; color: #ef4444;">MARQUE 9-1-1</strong>
+    </div>
+    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 1.1rem; margin-bottom: 1.5rem;" border="1" cellpadding="10">
+        <tr>
+            <td style="background-color: #f8fafc; font-weight: bold; width: 40%;">Oficina del Programa {{client_name}}</td>
+            <td><strong>{{client_phone}}</strong></td>
+        </tr>
+        <tr>
+            <td style="background-color: #f8fafc; font-weight: bold;">Coordinador de Emergencia (Toni Carrillo)</td>
+            <td><strong>{{safety_officer_phone}}</strong></td>
+        </tr>
+        <tr>
+            <td style="background-color: #f8fafc; font-weight: bold;">Bomberos de Brawley (Línea comercial)</td>
+            <td><strong>{{fire_dept_non_emergency_phone}}</strong></td>
+        </tr>
+        <tr>
+            <td style="background-color: #f8fafc; font-weight: bold;">Oficina de Servicios de Emergencia (Cal OES)</td>
+            <td><strong>(916) 845-8510</strong></td>
+        </tr>
+        <tr>
+            <td style="background-color: #f8fafc; font-weight: bold;">Control de Sustancias Tóxicas (DTSC El Centro)</td>
+            <td><strong>{{dtsc_phone}}</strong></td>
+        </tr>
+    </table>
+    <div style="border: 2px solid #000; padding: 1rem; background-color: #f8fafc;">
+        <h4 style="margin-top: 0; margin-bottom: 0.5rem; color: #ef4444;">HOSPITAL MÁS CERCANO:</h4>
+        <strong style="font-size: 1.25rem;">{{hospital_name}}</strong><br>
+        {{hospital_address}}<br>
+        Teléfono: {{hospital_phone}}
+    </div>
+</div>
+
+<div class="print-page-break"></div>
+<h3 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 0.5rem;">DOCUMENTO 7: LISTA DE VERIFICACIÓN GERENCIAL</h3>
+<p style="text-align: center; font-style: italic;">Lista del Coordinador de Emergencias</p>
+<table style="width: 100%; border-collapse: collapse; margin-top: 1.5rem; border: 1px solid var(--border-color);" border="1" cellpadding="10">
+    <tr style="background-color: #f8fafc;">
+        <th style="width: 10%; text-align: center;">Done</th>
+        <th style="text-align: left;">ACCIÓN DEL COORDINADOR DE EMERGENCIA</th>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Establecer el Mando:</strong> Tomar el control de las comunicaciones y las operaciones.</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Notificar Servicios de Emergencia:</strong> Confirmar que el 9-1-1 fue informado con la dirección correcta.</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Verificar Evacuación:</strong> Confirmar la evacuación de la oficina y de todos los sitios de campo.</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Asegurar Recuento:</strong> Verificar que la lista de control de personal esté completada por los líderes.</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Coordinar Rescatistas:</strong> Enviar personal designado a esperar y guiar a los servicios de emergencia.</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Determinar Reingreso:</strong> Autorizar el reingreso solo tras la aprobación oficial de los bomberos/policía.</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Documentar el Incidente:</strong> Completar el reporte formal de incidentes para los archivos de seguridad.</td>
+    </tr>
+    <tr>
+        <td style="text-align: center; font-size: 1.25rem;">[ ]</td>
+        <td><strong>Revisión Post-Incidente:</strong> Evaluar el desempeño del EAP con los supervisores para realizar mejoras.</td>
+    </tr>
+</table>
+
+<div class="print-page-break"></div>
+<h3 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 0.5rem;">DOCUMENTO 8: LISTA DE ASISTENCIA A CAPACITACIÓN</h3>
+<table style="width: 100%; border-collapse: collapse; margin-top: 1rem; border: 1px solid var(--border-color);" border="1" cellpadding="6">
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; width: 20%;">Empresa:</td>
+        <td style="width: 30%;">{{client_name}}</td>
+        <td style="background-color: #f8fafc; font-weight: bold; width: 20%;">Programa:</td>
+        <td style="width: 30%;">{{eap_program_name}}</td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold;">Ubicación:</td>
+        <td>{{client_address}}</td>
+        <td style="background-color: #f8fafc; font-weight: bold;">Instructor:</td>
+        <td>{{safety_officer}} ({{safety_officer_title}})</td>
+    </tr>
+</table>
+<table style="width: 100%; border-collapse: collapse; margin-top: 1rem; border: 1.5px solid #000;" border="1" cellpadding="6">
+    <tr style="background-color: #f1f5f9; font-weight: bold;">
+        <td style="width: 8%;">#</td>
+        <td style="width: 35%;">Nombre del Empleado</td>
+        <td style="width: 35%;">Firma</td>
+        <td style="width: 22%;">Fecha</td>
+    </tr>
+    ${Array.from({length: 10}, (_, i) => `
+    <tr>
+        <td>${i+1}</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>`).join('')}
+</table>
+<div style="margin-top: 1rem; border: 1px solid var(--border-color); padding: 0.75rem; background-color: #f8fafc;">
+    <strong>DECLARACIÓN DE CERTIFICACIÓN DE CAPACITACIÓN:</strong><br>
+    <p style="font-style: italic; margin-top: 0.25rem; margin-bottom: 0; font-size: 0.85rem;">
+        "Al colocar mi firma en esta hoja de asistencia de seguridad, verifico que he recibido capacitación sobre el Plan de Acción de Emergencia y entiendo mis responsabilidades. He tenido la oportunidad de hacer preguntas y he recibido respuestas claras y específicas a mi entera satisfacción."
+    </p>
+</div>
+
+<div class="print-page-break"></div>
+<h3 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 0.5rem;">DOCUMENTO 9: REVISIÓN EVALUACIÓN POST-EMERGENCIA</h3>
+<table style="width: 100%; border-collapse: collapse; margin-top: 1.5rem; border: 1px solid var(--border-color);" border="1" cellpadding="8">
+    <tr style="background-color: #f8fafc; font-weight: bold;">
+        <td colspan="2">EVALUACIÓN POST-EMERGENCIA</td>
+    </tr>
+    <tr>
+        <td style="width: 30%; background-color: #f8fafc; font-weight: bold; vertical-align: top;">¿Qué sucedió? (Resumen del incidente):</td>
+        <td style="height: 60px; vertical-align: top; color: var(--text-muted);">Proporcione cronología y alcance:</td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">¿Qué funcionó bien? (Procedimientos seguidos):</td>
+        <td style="height: 60px; vertical-align: top; color: var(--text-muted);">Enumere resultados exitosos:</td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">¿Qué falló? (Retrasos, fallas de comunicación):</td>
+        <td style="height: 60px; vertical-align: top; color: var(--text-muted);">Identifique fallas de coordinación:</td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">¿Lesiones reportadas? (Detalle gravedad):</td>
+        <td style="height: 60px; vertical-align: top; color: var(--text-muted);">Especifique personal afectado:</td>
+    </tr>
+    <tr>
+        <td style="background-color: #f8fafc; font-weight: bold; vertical-align: top;">¿Mejoras necesarias? (Cambios al EAP):</td>
+        <td style="height: 60px; vertical-align: top; color: var(--text-muted);">Cambios requeridos a capacitación, equipos o áreas de reunión:</td>
+    </tr>
+</table>
+<table style="width: 100%; border-collapse: collapse; margin-top: 1.5rem;" cellpadding="6">
+    <tr>
+        <td><strong>Firma del Coordinador:</strong><br><br>___________________________</td>
+        <td><strong>Fecha de Revisión:</strong><br><br>___________________________</td>
+    </tr>
+</table>`
             }
         ]
     },
@@ -2444,6 +3916,90 @@ function extractRegexMatches(text, reserved) {
 
 // Default Bilingual Values Mapping for scanned placeholders
 const defaultBilingualValues = {
+    "wvpp_initiation_date": {
+        "en": "July 1, 2024",
+        "es": "1 de julio de 2024"
+    },
+    "wvpp_last_review_date": {
+        "en": "PENDING",
+        "es": "PENDIENTE"
+    },
+    "wvpp_administrator_name": {
+        "en": "Alex Joo",
+        "es": "Alex Joo"
+    },
+    "wvpp_administrator_title": {
+        "en": "General Manager",
+        "es": "Gerente General"
+    },
+    "wvpp_administrator_phone": {
+        "en": "760-420-9118",
+        "es": "760-420-9118"
+    },
+    "wvpp_administrator_email": {
+        "en": "alexanderjoo69@yahoo.com",
+        "es": "alexanderjoo69@yahoo.com"
+    },
+    "wvpp_assistant_name": {
+        "en": "Efren Vital",
+        "es": "Efren Vital"
+    },
+    "wvpp_assistant_title": {
+        "en": "Operations Manager",
+        "es": "Gerente de Operaciones"
+    },
+    "wvpp_assistant_phone": {
+        "en": "760-500-0209",
+        "es": "760-500-0209"
+    },
+    "wvpp_assistant_email": {
+        "en": "jhbglobal@yahoo.com",
+        "es": "jhbglobal@yahoo.com"
+    },
+    "wvpp_suggestion_box_location": {
+        "en": "Employee Lunchroom",
+        "es": "Comedor de Empleados"
+    },
+    "safety_officer_title": {
+        "en": "Program Manager",
+        "es": "Gerente de Programa"
+    },
+    "client_phone": {
+        "en": "(760) 370-5100",
+        "es": "(760) 370-5100"
+    },
+    "eap_program_name": {
+        "en": "Weatherization Program",
+        "es": "Programa de Climatización"
+    },
+    "eap_office_staging_area": {
+        "en": "Southeast portion of the front parking lot at 1005 'C' Street",
+        "es": "Parte sureste del estacionamiento delantero en 1005 'C' Street"
+    },
+    "eap_field_staging_area": {
+        "en": "Safe distance from residence (minimum 50–100 feet)",
+        "es": "Distancia segura de la residencia (mínimo 50–100 pies)"
+    },
+    "hospital_name": {
+        "en": "Pioneers Memorial Hospital",
+        "es": "Pioneers Memorial Hospital"
+    },
+    "hospital_phone": {
+        "en": "(760) 351-3130",
+        "es": "(760) 351-3130"
+    },
+    "hospital_address": {
+        "en": "207 W. Legion Road, Brawley, CA 92227",
+        "es": "207 W. Legion Road, Brawley, CA 92227"
+    },
+    "fire_dept_non_emergency_phone": {
+        "en": "(760) 344-2111",
+        "es": "(760) 344-2111"
+    },
+    "dtsc_phone": {
+        "en": "(916) 322-5660",
+        "es": "(916) 322-5660"
+    },
     "water_replenishment_system": {
         "en": "coolers replenished from certified filtration wells",
         "es": "enfriadores reabastecidos de pozos de filtración certificados"
@@ -2457,8 +4013,8 @@ const defaultBilingualValues = {
         "es": "buzón de seguridad ubicado en la sala de descanso principal"
     },
     "wvpp_inspection_frequency": {
-        "en": "semi-annually in June and December",
-        "es": "semestralmente en junio y diciembre"
+        "en": "at least annually, and more frequently if situations require",
+        "es": "al menos anualmente, y más frecuentemente si las situaciones lo requieren"
     },
     "assembly_point": {
         "en": "the main office parking lot fence area",
@@ -2774,7 +4330,7 @@ function compileSafetyPlan() {
                 "iipp": "PROGRAMA DE PREVENCIÓN DE LESIONES Y ENFERMEDADES",
                 "hipp": "PLAN DE PREVENCIÓN DE ENFERMEDADES POR CALOR",
                 "wvpp": "PLAN DE PREVENCIÓN DE VIOLENCIA EN EL LUGAR DE TRABAJO",
-                "epp": "PLAN DE PREPARACIÓN PARA EMERGENCIAS",
+                "epp": "PLAN DE ACCIÓN DE EMERGENCIA",
                 "php": "PROGRAMA DE SEGURIDAD PARA MANEJADORES DE PESTICIDAS",
                 "rup": "PROGRAMA DE PROTECCIÓN RESPIRATORIA",
                 "hmbp": "PLAN DE NEGOCIOS DE MATERIALES PELIGROSOS"

@@ -2234,11 +2234,11 @@
                 }
                 
                 // Append text
-                let currentVal = textarea.value.trim();
-                if (currentVal) {
-                    textarea.value = currentVal + "\n\n" + regText;
+                let currentVal = textarea.value;
+                if (currentVal.trim()) {
+                    textarea.value = currentVal.trim() + " \n\n" + regText + " ";
                 } else {
-                    textarea.value = regText;
+                    textarea.value = regText + " ";
                 }
             } else {
                 // Deselect it
@@ -2251,10 +2251,15 @@
                 
                 // Remove text
                 let currentVal = textarea.value;
+                currentVal = currentVal.replace(regText + " ", "");
                 currentVal = currentVal.replace(regText, "");
                 // Clean up leading/trailing newlines and restore double newlines
                 currentVal = currentVal.replace(/\n{3,}/g, "\n\n").trim();
-                textarea.value = currentVal;
+                if (currentVal) {
+                    textarea.value = currentVal + " ";
+                } else {
+                    textarea.value = "";
+                }
             }
             obs.citations = textarea.value;
         };
