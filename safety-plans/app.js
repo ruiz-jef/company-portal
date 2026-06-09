@@ -1,4 +1,4 @@
-﻿// app.js - Business Logic for Ruiz & Associates Safety Plan Generator
+// app.js - Business Logic for Ruiz & Associates Safety Plan Generator
 // Relies on global 'db' initialized in ../shared/auth.js
 
 // Default Data Seed for Safety Modules (Cal/OSHA Templates - Bilingual English & Spanish)
@@ -5038,7 +5038,6 @@ function renderPlaceholderInputs() {
         }
 
         card.innerHTML = `
-            <span class="placeholder-tag">{{${ph}}}</span>
             <div class="form-group" style="margin-bottom: 0;">
                 <label class="form-label">${friendlyName}</label>
                 ${langGroupsHtml}
