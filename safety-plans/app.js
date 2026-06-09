@@ -4154,7 +4154,9 @@ const wizard = {
 };
 
 // Start Execution
-document.addEventListener('DOMContentLoaded', async () => {
+let isAppInitialized = false;
+
+document.addEventListener('DOMContentLoaded', () => {
     // Set default date to today
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -4162,28 +4164,36 @@ document.addEventListener('DOMContentLoaded', async () => {
     const dd = String(today.getDate()).padStart(2, '0');
     wizard.planDate.value = `${yyyy}-${mm}-${dd}`;
 
-    try {
-        // 1. Seed database first (handles migration if Spanish properties or new subsections missing)
-        await seedDatabaseIfNeeded();
+    // Wait for auth to resolve before fetching database configurations
+    auth.onAuthStateChanged(async (user) => {
+        if (user && isValidCompanyDomain(user.email) && user.emailVerified) {
+            if (isAppInitialized) return;
+            isAppInitialized = true;
 
-        // 2. Fetch configurations
-        await fetchDatabaseConfigs();
+            try {
+                // 1. Seed database first (handles migration if Spanish properties or new subsections missing)
+                await seedDatabaseIfNeeded();
 
-        // 3. Load clients from database
-        await loadClientsList();
+                // 2. Fetch configurations
+                await fetchDatabaseConfigs();
 
-        // 4. Render Step 2 HTML baseline
-        renderModulesChecklist();
+                // 3. Load clients from database
+                await loadClientsList();
 
-        // 5. Initialize listeners
-        initListeners();
+                // 4. Render Step 2 HTML baseline
+                renderModulesChecklist();
 
-        // 6. Set initial industry pre-checks
-        updateBaselineFromIndustry();
+                // 5. Initialize listeners
+                initListeners();
 
-    } catch (error) {
-        console.error("Initialization error:", error);
-    }
+                // 6. Set initial industry pre-checks
+                updateBaselineFromIndustry();
+
+            } catch (error) {
+                console.error("Initialization error:", error);
+            }
+        }
+    });
 });
 
 // Seed relational collections if empty (or missing bilingual/expanded fields)
