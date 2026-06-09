@@ -3408,7 +3408,7 @@ const defaultModulesSeed = [
 </table>`
             }
         ]
-    },,
+    },
     {
         id: "php",
         name: "Pesticide Handler Program",
@@ -4325,7 +4325,7 @@ async function fetchDatabaseConfigs() {
     
     // Fallback override: if IIPP in Firestore is outdated (missing the custom table), use local code version
     dbModules = dbModules.map(dbMod => {
-        const localMod = defaultModulesSeed.find(m => m.id === dbMod.id);
+        const localMod = defaultModulesSeed.find(m => m && m.id === dbMod.id);
         if (localMod) {
             if (dbMod.id === 'iipp' && (!dbMod.content_template || !dbMod.content_template.includes("iipp_custom_inspections_table"))) {
                 console.log("IIPP templates in Firestore are outdated. Falling back to local version.");
