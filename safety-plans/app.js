@@ -4156,7 +4156,22 @@ const wizard = {
 // Start Execution
 let isAppInitialized = false;
 
-document.addEventListener('DOMContentLoaded', () => {
+// Register auth listener immediately to capture resolved credentials at any point
+auth.onAuthStateChanged(async (user) => {
+    if (user) {
+        if (isAppInitialized) return;
+        isAppInitialized = true;
+
+        // Ensure DOM is fully interactive before initializing components
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => initializeApp());
+        } else {
+            await initializeApp();
+        }
+    }
+});
+
+async function initializeApp() {
     // Set default date to today
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -4164,37 +4179,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const dd = String(today.getDate()).padStart(2, '0');
     wizard.planDate.value = `${yyyy}-${mm}-${dd}`;
 
-    // Wait for auth to resolve before fetching database configurations
-    auth.onAuthStateChanged(async (user) => {
-        if (user && isValidCompanyDomain(user.email) && user.emailVerified) {
-            if (isAppInitialized) return;
-            isAppInitialized = true;
+    try {
+        // 1. Seed database first (handles migration if Spanish properties or new subsections missing)
+        await seedDatabaseIfNeeded();
 
-            try {
-                // 1. Seed database first (handles migration if Spanish properties or new subsections missing)
-                await seedDatabaseIfNeeded();
+        // 2. Fetch configurations
+        await fetchDatabaseConfigs();
 
-                // 2. Fetch configurations
-                await fetchDatabaseConfigs();
+        // 3. Load clients from database
+        await loadClientsList();
 
-                // 3. Load clients from database
-                await loadClientsList();
+        // 4. Render Step 2 HTML baseline
+        renderModulesChecklist();
 
-                // 4. Render Step 2 HTML baseline
-                renderModulesChecklist();
+        // 5. Initialize listeners
+        initListeners();
 
-                // 5. Initialize listeners
-                initListeners();
+        // 6. Set initial industry pre-checks
+        updateBaselineFromIndustry();
 
-                // 6. Set initial industry pre-checks
-                updateBaselineFromIndustry();
-
-            } catch (error) {
-                console.error("Initialization error:", error);
-            }
-        }
-    });
-});
+    } catch (error) {
+        console.error("Initialization error:", error);
+        alert("Ruiz & Associates Portal Initialization Error:\n" + error.message + "\n\nPlease check your internet connection or login permissions.");
+    }
+}
 
 // Seed relational collections if empty (or missing bilingual/expanded fields)
 async function seedDatabaseIfNeeded() {
