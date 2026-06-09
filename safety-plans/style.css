@@ -827,3 +827,8 @@ input[type="checkbox"]:checked::after {
     background: #fef2f2;
     border-color: rgba(239, 68, 68, 0.2);
 }
+
+/* Utility to hide elements */
+.hidden {
+    display: none !important;
+}
