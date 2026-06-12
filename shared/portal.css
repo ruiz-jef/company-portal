@@ -490,7 +490,7 @@ body {
     justify-content: space-between;
     align-items: center;
     background: var(--bg-surface);
-    padding: 0.85rem 1.5rem;
+    padding: 0.6rem 1.25rem;
     border-radius: var(--radius-md);
     border: 1px solid var(--border-color);
     box-shadow: var(--shadow-sm);
@@ -522,18 +522,21 @@ body {
 .nav-header-right {
     display: flex;
     align-items: center;
-    gap: 1.25rem;
+    gap: 0.75rem;
 }
 
 .user-email-badge {
     font-size: 0.85rem;
-    font-weight: 600;
-    padding: 0.45rem 1rem;
-    border-radius: 9999px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    padding: 0.4rem 0.85rem;
+    border-radius: var(--radius-sm);
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    box-shadow: var(--shadow-sm);
+    border: 1px solid transparent; /* Visual alignment with buttons */
+    box-shadow: none;
+    background: transparent;
 }
 
 .user-email-badge::before {
@@ -550,21 +553,21 @@ body {
     align-items: center;
     gap: 0.5rem;
     background: transparent;
-    border: 1.5px solid var(--error-color);
-    color: var(--error-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
     font-family: inherit;
     font-weight: 600;
     font-size: 0.85rem;
-    padding: 0.45rem 1rem;
+    padding: 0.4rem 0.85rem;
     border-radius: var(--radius-sm);
     cursor: pointer;
     transition: var(--transition-smooth);
 }
 
 .btn-signout-header:hover {
-    background: var(--error-color);
-    color: #ffffff;
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
+    border-color: var(--error-color);
+    color: var(--error-color);
+    background: rgba(239, 68, 68, 0.05);
     transform: translateY(-1px);
 }
 
@@ -572,18 +575,18 @@ body {
     transform: translateY(0);
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
     .nav-header-box {
         flex-direction: column;
-        gap: 1rem;
+        gap: 0.85rem;
         align-items: center;
-        padding: 1.25rem;
+        padding: 1rem;
         text-align: center;
     }
     
     .nav-header-right {
         flex-direction: column;
-        gap: 0.75rem;
+        gap: 0.5rem;
         width: 100%;
         align-items: center;
     }
@@ -593,5 +596,10 @@ body {
         width: 100%;
         justify-content: center;
         box-sizing: border-box;
+    }
+
+    .user-email-badge {
+        background: var(--bg-base);
+        border: 1px solid var(--border-color);
     }
 }

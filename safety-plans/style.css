@@ -837,11 +837,6 @@ input[type="checkbox"]:checked::after {
     color: var(--accent-purple-hover);
 }
 
-.user-email-badge {
-    color: var(--accent-purple);
-    background: var(--accent-purple-light);
-    border: 1px solid rgba(139, 92, 246, 0.15);
-}
 
 /* Utility to hide elements */
 .hidden {

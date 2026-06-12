@@ -817,76 +817,36 @@
         .nav-back-link:hover {
             color: var(--accent-blue-hover);
         }
-        .user-email-badge {
-            color: var(--accent-blue);
-            background: var(--accent-blue-light);
-            border: 1px solid rgba(37, 99, 235, 0.15);
-        }
         .btn-gemini-settings {
             display: inline-flex;
             align-items: center;
             gap: 0.25rem;
             background: transparent;
-            border: 1.5px solid var(--accent-purple);
-            color: var(--accent-purple);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
             font-family: inherit;
             font-weight: 600;
             font-size: 0.85rem;
-            padding: 0.45rem 1rem;
+            padding: 0.4rem 0.85rem;
             border-radius: var(--radius-sm);
             cursor: pointer;
             transition: var(--transition-smooth);
         }
         .btn-gemini-settings:hover {
-            background: var(--accent-purple);
-            color: #ffffff;
-            box-shadow: 0 4px 10px rgba(139, 92, 246, 0.15);
+            border-color: var(--accent-purple);
+            color: var(--accent-purple);
+            background: var(--accent-purple-light);
             transform: translateY(-1px);
         }
         .btn-gemini-settings:active {
             transform: translateY(0);
         }
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             .btn-gemini-settings {
                 width: 100%;
                 justify-content: center;
                 box-sizing: border-box;
             }
-        }
-
-        /* Custom styles for nav, buttons, and responsive grid */
-        .nav-header-box {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        .nav-header-right {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-        .btn-signout-header {
-            background: transparent;
-            border: 1.5px solid var(--error-color);
-            color: var(--error-color);
-            padding: 0.45rem 1rem;
-            font-family: inherit;
-            font-weight: 600;
-            font-size: 0.85rem;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            transition: var(--transition-smooth);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-        .btn-signout-header:hover {
-            background: var(--error-color);
-            color: #ffffff;
-            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.15);
         }
         .item-preview-container {
             flex-wrap: wrap;
