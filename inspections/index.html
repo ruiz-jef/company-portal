@@ -891,9 +891,14 @@
             </div>
             
             <div class="panel" style="width: 100%;">
-                <div class="panel-title">
-                    <span>Audit Log History</span>
-                    <span id="queue-indicator" class="sync-queue-badge" style="display: none;">0 Pending Sync</span>
+                <div class="panel-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <span>Audit Log History</span>
+                        <span id="queue-indicator" class="sync-queue-badge" style="display: none;">0 Pending Sync</span>
+                    </div>
+                    <button id="manual-sync-btn" type="button" class="btn-pdf" style="display: none; border-color: var(--accent-blue); color: var(--accent-blue); background: var(--accent-blue-light); padding: 0.25rem 0.75rem; font-size: 0.8rem; margin: 0; width: auto;" onclick="forceManualSync()">
+                        🔄 Sync Pending Now
+                    </button>
                 </div>
                 
                 <div style="overflow-x: auto;">
@@ -3021,13 +3026,101 @@ CRITICAL CONSTRAINTS:
         function updateQueueIndicator() {
             const queue = getQueue();
             const badge = document.getElementById('queue-indicator');
+            const landingBadge = document.getElementById('landing-queue-indicator');
+            const syncBtn = document.getElementById('manual-sync-btn');
+            
+            const countText = `${queue.length} Pending Sync`;
+            
             if (queue.length > 0) {
-                badge.textContent = `${queue.length} Pending Sync`;
-                badge.style.display = 'inline-block';
+                if (badge) {
+                    badge.textContent = countText;
+                    badge.style.display = 'inline-block';
+                }
+                if (landingBadge) {
+                    landingBadge.textContent = countText;
+                    landingBadge.style.display = 'inline-block';
+                }
+                if (syncBtn) {
+                    syncBtn.style.display = 'inline-block';
+                }
             } else {
-                badge.style.display = 'none';
+                if (badge) badge.style.display = 'none';
+                if (landingBadge) landingBadge.style.display = 'none';
+                if (syncBtn) syncBtn.style.display = 'none';
             }
         }
+
+        window.forceManualSync = async function() {
+            const syncBtn = document.getElementById('manual-sync-btn');
+            if (!syncBtn) return;
+            
+            if (isOffline) {
+                alert("Your app is currently set to Offline mode. Please switch the 'Network Mode' toggle to Online in the sidebar/settings before syncing.");
+                return;
+            }
+            
+            const queue = getQueue();
+            if (queue.length === 0) {
+                alert("There are no pending reports to sync.");
+                return;
+            }
+            
+            try {
+                syncBtn.disabled = true;
+                syncBtn.textContent = "🔄 Syncing...";
+                
+                await processSyncQueue();
+                
+            } catch (err) {
+                console.error("Manual sync failed:", err);
+                alert("Sync encountered errors. Some items may still be queued.");
+            } finally {
+                syncBtn.disabled = false;
+                syncBtn.textContent = "🔄 Sync Pending Now";
+                updateQueueIndicator();
+            }
+        };
+
+        window.syncIndividualReport = async function(id, event) {
+            if (event) event.stopPropagation();
+            
+            if (isOffline) {
+                alert("Please switch your network mode to Online to sync this report.");
+                return;
+            }
+            
+            const idx = parseInt(id.split('_')[1]);
+            const queue = getQueue();
+            const report = queue[idx];
+            if (!report) {
+                alert("Report not found in local cache.");
+                return;
+            }
+            
+            try {
+                const btn = event.target;
+                btn.disabled = true;
+                btn.textContent = "⏳ Syncing...";
+                
+                report.timestamp = firebase.firestore.Timestamp.now();
+                const docRef = db.collection("inspections").doc();
+                const reportId = docRef.id;
+                
+                await uploadReportImages(report, reportId);
+                await docRef.set(report);
+                
+                // Remove from queue
+                queue.splice(idx, 1);
+                saveQueue(queue);
+                
+                alert("Inspection report synchronized successfully!");
+                renderInspectionsLog();
+            } catch (err) {
+                console.error("Individual report sync failed:", err);
+                alert("Sync failed: " + err.message);
+                renderInspectionsLog();
+            }
+        };
 
         // Process Offline Queue Uploads
         async function processSyncQueue() {
@@ -3107,6 +3200,7 @@ CRITICAL CONSTRAINTS:
 
                 const canReopen = isWithinOneYear(ins.dateStr);
                 const editBtn = canReopen ? `<button class="btn-pdf" style="border-color: var(--accent-blue); color: var(--accent-blue); background: var(--accent-blue-light);" onclick="reopenInspectionReport('${ins.id}', event)">✏️ Edit</button>` : '';
+                const syncBtn = ins.isQueued ? `<button class="btn-pdf" style="border-color: var(--accent-blue); color: var(--accent-blue); background: var(--accent-blue-light);" onclick="syncIndividualReport('${ins.id}', event)">🔄 Sync</button>` : '';
 
                 tr.innerHTML = `
                     <td>
@@ -3121,6 +3215,7 @@ CRITICAL CONSTRAINTS:
                         <div style="display: flex; gap: 0.5rem; align-items: center;">
                             <button class="btn-pdf" onclick="printInspectionReport('${ins.id}')">📄 Print/PDF</button>
                             ${editBtn}
+                            ${syncBtn}
                             <button class="btn-delete" onclick="deleteInspectionReport('${ins.id}', event)">🗑️ Delete</button>
                         </div>
                     </td>
