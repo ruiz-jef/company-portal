@@ -1824,6 +1824,19 @@
                     triggerAutoSave();
                 }
             });
+
+            // Prevent Enter key from submitting the form, unless pressed inside a textarea or on a submit button
+            const formEl = document.getElementById('inspectionForm');
+            if (formEl) {
+                formEl.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        const targetTagName = e.target.tagName.toLowerCase();
+                        if (targetTagName !== 'textarea' && e.target.type !== 'submit') {
+                            e.preventDefault();
+                        }
+                    }
+                });
+            }
         });
 
         // Dynamic client dropdown populator from Firebase Firestore
