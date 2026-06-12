@@ -614,3 +614,18 @@ input[type="checkbox"]:checked::after {
     color: var(--primary-hover);
     background: #f1f5f9;
 }
+
+/* Navigation Header styling overrides */
+.nav-back-link {
+    color: var(--primary-hover);
+}
+
+.nav-back-link:hover {
+    color: var(--primary-hover);
+}
+
+.user-email-badge {
+    color: var(--primary-hover);
+    background: var(--bg-surface-hover);
+    border: 1px solid rgba(202, 138, 4, 0.15);
+}

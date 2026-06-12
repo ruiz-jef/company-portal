@@ -828,6 +828,21 @@ input[type="checkbox"]:checked::after {
     border-color: rgba(239, 68, 68, 0.2);
 }
 
+/* Navigation Header styling overrides */
+.nav-back-link {
+    color: var(--accent-purple);
+}
+
+.nav-back-link:hover {
+    color: var(--accent-purple-hover);
+}
+
+.user-email-badge {
+    color: var(--accent-purple);
+    background: var(--accent-purple-light);
+    border: 1px solid rgba(139, 92, 246, 0.15);
+}
+
 /* Utility to hide elements */
 .hidden {
     display: none !important;
