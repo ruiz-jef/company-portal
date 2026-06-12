@@ -16,6 +16,8 @@ if (!firebase.apps.length) {
 }
 const auth = firebase.auth();
 const db = firebase.firestore();
+const storage = firebase.storage();
+
 
 /**
  * Checks if the email domain matches @ruizinc.net
@@ -75,6 +77,9 @@ function initAuthGuard(depth = 0) {
                 if (userEmailEl) {
                     userEmailEl.textContent = user.email;
                 }
+
+                // Run one-time client-side migration to fix 'Juan Villareal' spelling
+                runJuanNameMigration();
             }
         }
     });
@@ -134,4 +139,62 @@ async function logoutUser(depth = 0) {
         const prefix = "../".repeat(depth);
         window.location.href = `${prefix}index.html`;
     });
+}
+
+/**
+ * One-time client-side database migration to correct the spelling of 'Juan Villareal' to 'Juan Villarreal'
+ */
+async function runJuanNameMigration() {
+    if (localStorage.getItem('juan_name_migration_done_v3')) return;
+    try {
+        console.log("Checking database for 'Juan Villareal' spelling corrections...");
+        const updatePromises = [];
+        
+        // 1. Update 'clients' collection (field: 'trainerAssigned')
+        const clientsSnap = await db.collection("clients").where("trainerAssigned", "==", "Juan Villareal").get();
+        clientsSnap.forEach(doc => {
+            console.log(`Migrating client document: ${doc.id}`);
+            updatePromises.push(doc.ref.update({ trainerAssigned: "Juan Villarreal" }));
+        });
+        
+        // 2. Update 'inspections' collection (field: 'inspector')
+        const inspectionsSnap = await db.collection("inspections").where("inspector", "==", "Juan Villareal").get();
+        inspectionsSnap.forEach(doc => {
+            console.log(`Migrating inspection document: ${doc.id}`);
+            updatePromises.push(doc.ref.update({ inspector: "Juan Villarreal" }));
+        });
+        
+        // 3. Update 'compiled_plans' collection (field: 'safety_officer' and check 'compiled_text')
+        const plansSnap = await db.collection("compiled_plans").get();
+        plansSnap.forEach(doc => {
+            const data = doc.data();
+            let needsUpdate = false;
+            const updateData = {};
+            
+            if (data.safety_officer === "Juan Villareal") {
+                updateData.safety_officer = "Juan Villarreal";
+                needsUpdate = true;
+            }
+            if (data.compiled_text && data.compiled_text.includes("Juan Villareal")) {
+                updateData.compiled_text = data.compiled_text.replace(/Juan Villareal/g, "Juan Villarreal");
+                needsUpdate = true;
+            }
+            
+            if (needsUpdate) {
+                console.log(`Migrating compiled plan document: ${doc.id}`);
+                updatePromises.push(doc.ref.update(updateData));
+            }
+        });
+        
+        if (updatePromises.length > 0) {
+            await Promise.all(updatePromises);
+            console.log(`Successfully migrated ${updatePromises.length} Firestore documents to 'Juan Villarreal'.`);
+        } else {
+            console.log("No outdated spelling documents found in Firestore.");
+        }
+        
+        localStorage.setItem('juan_name_migration_done_v3', 'true');
+    } catch (error) {
+        console.error("Spelling migration failed:", error);
+    }
 }

@@ -10,6 +10,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
     <script src="../shared/auth.js"></script>
 
     <style>
@@ -979,7 +980,7 @@
                                 <option value="">Select Staff...</option>
                                 <option value="Fernando Ruiz">Fernando Ruiz</option>
                                 <option value="Jefte Abencerraje">Jefte Abencerraje</option>
-                                <option value="Juan Villareal">Juan Villareal</option>
+                                <option value="Juan Villarreal">Juan Villarreal</option>
                                 <option value="David Meza">David Meza</option>
                                 <option value="Josue Mercado">Josue Mercado</option>
                             </select>
@@ -1770,8 +1771,8 @@
                         select.value = 'Fernando Ruiz';
                     } else if (email.includes('jefte') || email.includes('abencerraje')) {
                         select.value = 'Jefte Abencerraje';
-                    } else if (email.includes('juan') || email.includes('villareal')) {
-                        select.value = 'Juan Villareal';
+                    } else if (email.includes('juan') || email.includes('villarreal') || email.includes('villareal')) {
+                        select.value = 'Juan Villarreal';
                     } else if (email.includes('david') || email.includes('meza')) {
                         select.value = 'David Meza';
                     } else if (email.includes('josue') || email.includes('mercado')) {
@@ -2531,6 +2532,74 @@
 
         // Note: processGeneralSafetyPhoto has been replaced by processObservationPhoto
 
+        // Firebase Cloud Storage Helper Functions
+        async function uploadBase64ToStorage(base64Data, path) {
+            if (!base64Data || typeof base64Data !== 'string' || !base64Data.startsWith('data:')) {
+                // If it is already a URL or not a base64 string, return it directly
+                return base64Data;
+            }
+
+            try {
+                // Convert base64 Data URL to a Blob
+                const parts = base64Data.split(',');
+                const byteString = atob(parts[1]);
+                const mimeString = parts[0].split(':')[1].split(';')[0];
+                
+                const ab = new ArrayBuffer(byteString.length);
+                const ia = new Uint8Array(ab);
+                for (let i = 0; i < byteString.length; i++) {
+                    ia[i] = byteString.charCodeAt(i);
+                }
+                
+                const blob = new Blob([ab], { type: mimeString });
+                
+                // Upload Blob to Firebase Storage
+                const storageRef = firebase.storage().ref().child(path);
+                const snapshot = await storageRef.put(blob);
+                const downloadUrl = await snapshot.ref.getDownloadURL();
+                console.log("Successfully uploaded photo to Firebase Storage:", path, "->", downloadUrl);
+                return downloadUrl;
+            } catch (err) {
+                console.error("Error uploading photo to Firebase Storage at path: " + path, err);
+                throw err;
+            }
+        }
+
+        async function uploadReportImages(reportData, reportId) {
+            const folderId = reportId || Date.now() + "_" + Math.floor(Math.random() * 1000);
+            
+            if (reportData.inspectionType === 'Weekly Waste Area') {
+                if (reportData.wasteStreams && Array.isArray(reportData.wasteStreams)) {
+                    for (let stream of reportData.wasteStreams) {
+                        if (stream.checklist && Array.isArray(stream.checklist)) {
+                            for (let idx = 0; idx < stream.checklist.length; idx++) {
+                                const q = stream.checklist[idx];
+                                if (q.photo && q.photo.startsWith('data:')) {
+                                    const path = `inspections/${folderId}/stream_${encodeURIComponent(stream.streamName)}_q_${idx}.jpg`;
+                                    q.photo = await uploadBase64ToStorage(q.photo, path);
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                if (reportData.observations && Array.isArray(reportData.observations)) {
+                    for (let o of reportData.observations) {
+                        if (o.photos && Array.isArray(o.photos)) {
+                            for (let pIdx = 0; pIdx < o.photos.length; pIdx++) {
+                                const photoData = o.photos[pIdx];
+                                if (photoData && photoData.startsWith('data:')) {
+                                    const path = `inspections/${folderId}/obs_${o.id || Date.now()}_p_${pIdx}.jpg`;
+                                    o.photos[pIdx] = await uploadBase64ToStorage(photoData, path);
+                                }
+                            }
+                            o.photo = o.photos[0] || null;
+                        }
+                    }
+                }
+            }
+        }
+
         // Gemini AI Integration Scripts
         async function callGeminiAPI(base64DataUrl, promptText) {
             const apiKey = localStorage.getItem('gemini_api_key') || sharedGeminiApiKey;
@@ -2794,6 +2863,8 @@ CRITICAL CONSTRAINTS:
                         return;
                     }
                     try {
+                        // Upload photos to Storage before updating Firestore document
+                        await uploadReportImages(reportData, editingInspectionId);
                         await db.collection("inspections").doc(editingInspectionId).set(reportData);
                         alert("Inspection Report updated successfully in Cloud Firebase!");
                         resetForm();
@@ -2819,12 +2890,17 @@ CRITICAL CONSTRAINTS:
                 renderInspectionsLog();
             } else {
                 try {
-                    await db.collection("inspections").add(reportData);
+                    // Generate new doc reference to get the ID beforehand for Storage folder
+                    const docRef = db.collection("inspections").doc();
+                    const reportId = docRef.id;
+                    await uploadReportImages(reportData, reportId);
+                    await docRef.set(reportData);
+
                     alert("Inspection Report uploaded successfully to Cloud Firebase!");
                     resetForm();
                     backToStep1();
                 } catch (error) {
-                    console.error("Firestore upload failed, caching locally:", error);
+                    console.error("Firestore/Storage upload failed, caching locally:", error);
                     const queue = getQueue();
                     queue.push(reportData);
                     saveQueue(queue);
@@ -2964,7 +3040,11 @@ CRITICAL CONSTRAINTS:
             for (let report of queue) {
                 try {
                     report.timestamp = firebase.firestore.Timestamp.now();
-                    await db.collection("inspections").add(report);
+                    // Generate new doc reference to get the ID beforehand for Storage folder
+                    const docRef = db.collection("inspections").doc();
+                    const reportId = docRef.id;
+                    await uploadReportImages(report, reportId);
+                    await docRef.set(report);
                 } catch (err) {
                     console.error("Failed syncing report:", err);
                     remaining.push(report);
