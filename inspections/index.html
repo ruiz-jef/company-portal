@@ -1724,6 +1724,24 @@
 
         // Switch Views Helper
         window.switchToView = function(viewId) {
+            if (viewId === 'inspection' && !editingInspectionId) {
+                const draft = localStorage.getItem('inspection_active_draft');
+                if (draft) {
+                    try {
+                        const parsed = JSON.parse(draft);
+                        if (confirm(`We found an unfinished local draft for "${parsed.clientName || 'Unnamed Client'}" (last saved: ${new Date(parsed.lastSaved).toLocaleTimeString()}).\n\nWould you like to resume this draft? Click OK to resume, or Cancel to discard it and start a new inspection.`)) {
+                            loadActiveDraft(parsed);
+                            return;
+                        } else {
+                            clearActiveDraft();
+                            resetForm();
+                        }
+                    } catch (e) {
+                        console.error("Error checking draft:", e);
+                    }
+                }
+            }
+
             document.querySelectorAll('.view-container').forEach(view => {
                 view.classList.remove('active');
                 view.style.display = 'none';
@@ -1792,6 +1810,18 @@
                     }).catch((err) => {
                         console.warn("Could not fetch shared API key from Firestore:", err);
                     });
+                }
+            });
+
+            // Listen for input changes in the inspection view to trigger auto-saving
+            document.addEventListener('input', (e) => {
+                if (e.target.closest('#view-inspection')) {
+                    triggerAutoSave();
+                }
+            });
+            document.addEventListener('change', (e) => {
+                if (e.target.closest('#view-inspection')) {
+                    triggerAutoSave();
                 }
             });
         });
@@ -2153,6 +2183,7 @@
             observationCounter++;
             safetyObservations.push({ id: observationCounter, notes: "", citations: "", selectedCitations: [], photos: [] });
             generateInspectionFields();
+            triggerAutoSave();
         };
 
         window.removeObservation = function(id) {
@@ -2170,6 +2201,7 @@
 
             safetyObservations = safetyObservations.filter(o => o.id !== id);
             generateInspectionFields();
+            triggerAutoSave();
         };
 
         window.updateObservationNotes = function(id, notes) {
@@ -2268,6 +2300,7 @@
                 }
             }
             obs.citations = textarea.value;
+            triggerAutoSave();
         };
 
         window.renderCategoriesHtml = function(obs) {
@@ -2328,6 +2361,7 @@
                 obs.photos.push(annotatedDataUrl);
                 obs.photo = obs.photos[0] || null; // fallback
                 generateInspectionFields();
+                triggerAutoSave();
             });
         };
 
@@ -2358,6 +2392,7 @@
             if (isViolate) {
                 row.classList.add('violation');
             }
+            triggerAutoSave();
         };
 
         // Open Note / Photo expander drawer
@@ -2402,11 +2437,13 @@
             } else {
                 trigger.classList.remove('active-notes');
             }
+            triggerAutoSave();
         };
 
         // Update Stream General Summary
         window.updateStreamSummary = function(stream, value) {
             auditState.streams[stream].generalNotes = value;
+            triggerAutoSave();
         };
 
         // Compress Checklist Item Photos
@@ -2442,6 +2479,7 @@
                 if (trigger) {
                     trigger.classList.add('active-photo');
                 }
+                triggerAutoSave();
             });
         };
 
@@ -2464,6 +2502,7 @@
                 if (preview) {
                     preview.src = annotatedDataUrl;
                 }
+                triggerAutoSave();
             });
         };
 
@@ -2490,6 +2529,7 @@
             if (trigger) {
                 trigger.classList.remove('active-photo');
             }
+            triggerAutoSave();
         };
 
         // Re-edit Observation Photo
@@ -2508,6 +2548,7 @@
                 obs.photos[pIdx] = annotatedDataUrl;
                 obs.photo = obs.photos[0] || null; // fallback
                 generateInspectionFields();
+                triggerAutoSave();
             });
         };
 
@@ -2533,6 +2574,7 @@
             if (input) input.value = '';
 
             generateInspectionFields();
+            triggerAutoSave();
         };
 
         // Note: processGeneralSafetyPhoto has been replaced by processObservationPhoto
@@ -2604,6 +2646,211 @@
                 }
             }
         }
+
+        // Draft Auto-Save & Recovery Helper Functions
+        let autoSaveTimer = null;
+        function triggerAutoSave() {
+            if (autoSaveTimer) clearTimeout(autoSaveTimer);
+            autoSaveTimer = setTimeout(() => {
+                saveActiveDraft();
+            }, 800);
+        }
+
+        function saveActiveDraft() {
+            const clientSelect = document.getElementById('clientSelect');
+            const siteLocation = document.getElementById('siteLocation');
+            const auditDate = document.getElementById('auditDate');
+            const auditTime = document.getElementById('auditTime');
+            const inspectorName = document.getElementById('inspectorName');
+            const auditType = document.getElementById('auditType');
+
+            if (!clientSelect || !siteLocation || !auditDate || !auditTime || !inspectorName || !auditType) return;
+
+            // Only auto-save if we are currently looking at the inspection form
+            const currentView = document.querySelector('.view-container.active') || document.querySelector('.view-container:not([style*="display: none"])');
+            if (!currentView || currentView.id !== 'view-inspection') {
+                return;
+            }
+
+            // Sync observations from textareas to state array
+            if (auditType.value !== 'Weekly Waste Area') {
+                safetyObservations.forEach(o => {
+                    const el = document.getElementById(`obs-notes-${o.id}`);
+                    if (el) o.notes = el.value.trim();
+                    const citEl = document.getElementById(`obs-citations-${o.id}`);
+                    if (citEl) o.citations = citEl.value.trim();
+                });
+            }
+
+            const draft = {
+                clientName: clientSelect.value,
+                siteLocation: siteLocation.value.trim(),
+                dateStr: auditDate.value,
+                timeStr: auditTime.value,
+                inspector: inspectorName.value.trim(),
+                inspectionType: auditType.value,
+                editingInspectionId: editingInspectionId,
+                lastSaved: Date.now()
+            };
+
+            if (auditType.value === 'Weekly Waste Area') {
+                const checkedStreams = Array.from(document.querySelectorAll('.stream-checkbox:checked')).map(cb => cb.value);
+                draft.checkedStreams = checkedStreams;
+                
+                draft.streams = {};
+                checkedStreams.forEach(stream => {
+                    if (auditState.streams[stream]) {
+                        draft.streams[stream] = {
+                            questions: {},
+                            generalNotes: auditState.streams[stream].generalNotes || ""
+                        };
+                        checklistQuestions.forEach((q, idx) => {
+                            const answerObj = (auditState.streams[stream].questions && auditState.streams[stream].questions[idx]) || { answer: "Compliant", note: "", photo: null };
+                            draft.streams[stream].questions[idx] = {
+                                answer: answerObj.answer,
+                                note: answerObj.note || "",
+                                photo: answerObj.photo || null
+                            };
+                        });
+                    }
+                });
+            } else {
+                const checkedRadio = document.querySelector('.reason-radio:checked');
+                draft.safetyReason = checkedRadio ? checkedRadio.value : 'General';
+                draft.observations = safetyObservations.map(o => {
+                    const photos = o.photos || (o.photo ? [o.photo] : []);
+                    return {
+                        id: o.id,
+                        notes: o.notes,
+                        citations: o.citations || "",
+                        selectedCitations: o.selectedCitations || [],
+                        photo: photos.length > 0 ? photos[0] : null,
+                        photos: photos
+                    };
+                });
+            }
+
+            localStorage.setItem('inspection_active_draft', JSON.stringify(draft));
+            console.log("Draft auto-saved.");
+        }
+
+        function clearActiveDraft() {
+            localStorage.removeItem('inspection_active_draft');
+            console.log("Draft cleared.");
+            updateQueueIndicator();
+            renderInspectionsLog();
+        }
+
+        window.loadActiveDraft = function(draft, event) {
+            if (event) event.stopPropagation();
+
+            if (!draft) {
+                const d = localStorage.getItem('inspection_active_draft');
+                if (d) draft = JSON.parse(d);
+            }
+            if (!draft) return;
+
+            editingInspectionId = draft.editingInspectionId || null;
+
+            // 1. Populate preface form fields
+            document.getElementById('clientSelect').value = draft.clientName;
+            document.getElementById('siteLocation').value = draft.siteLocation || '';
+            document.getElementById('auditDate').value = draft.dateStr;
+            document.getElementById('auditTime').value = draft.timeStr;
+            document.getElementById('inspectorName').value = draft.inspector;
+            document.getElementById('auditType').value = draft.inspectionType;
+
+            // Trigger display change UI
+            handleAuditTypeChange(draft.inspectionType);
+
+            // 2. Populate checklist / observation state
+            if (draft.inspectionType === 'Weekly Waste Area') {
+                document.querySelectorAll('.stream-checkbox').forEach(cb => cb.checked = false);
+                
+                const grid = document.getElementById('streamsGrid');
+                draft.checkedStreams.forEach(stream => {
+                    const checkboxes = Array.from(document.querySelectorAll('.stream-checkbox'));
+                    const match = checkboxes.find(cb => cb.value.toLowerCase() === stream.toLowerCase());
+                    if (match) {
+                        match.checked = true;
+                    } else {
+                        const label = document.createElement('label');
+                        label.className = 'stream-card';
+                        label.innerHTML = `
+                            <input type="checkbox" value="${stream}" checked class="stream-checkbox">
+                            <span>${stream}</span>
+                        `;
+                        grid.appendChild(label);
+                    }
+                });
+
+                auditState.streams = {};
+                for (let streamName in draft.streams) {
+                    auditState.streams[streamName] = {
+                        questions: {},
+                        generalNotes: draft.streams[streamName].generalNotes || ""
+                    };
+                    for (let qIdx in draft.streams[streamName].questions) {
+                        const q = draft.streams[streamName].questions[qIdx];
+                        auditState.streams[streamName].questions[qIdx] = {
+                            answer: q.answer,
+                            note: q.note || "",
+                            photo: q.photo || null
+                        };
+                    }
+                }
+            } else {
+                const reason = draft.safetyReason || 'General';
+                const radios = Array.from(document.querySelectorAll('.reason-radio'));
+                let match = radios.find(r => r.value.toLowerCase() === reason.toLowerCase());
+                if (match) {
+                    match.checked = true;
+                } else {
+                    const grid = document.getElementById('safetyReasonsGrid');
+                    const label = document.createElement('label');
+                    label.className = 'stream-card';
+                    label.innerHTML = `
+                        <input type="radio" name="safetyReason" value="${reason}" checked class="reason-radio">
+                        <span>${reason}</span>
+                    `;
+                    grid.appendChild(label);
+                }
+
+                safetyObservations = draft.observations.map(o => {
+                    const photos = o.photos || (o.photo ? [o.photo] : []);
+                    return {
+                        id: o.id,
+                        notes: o.notes,
+                        citations: o.citations || "",
+                        selectedCitations: o.selectedCitations || [],
+                        photos: photos
+                    };
+                });
+                observationCounter = safetyObservations.length;
+            }
+
+            if (editingInspectionId) {
+                document.getElementById('preface-title').textContent = "✏️ Edit Inspection Preface";
+                document.getElementById('audit-details-title').textContent = "✏️ Edit Audit Details";
+            } else {
+                document.getElementById('preface-title').textContent = "Inspection Preface (Draft)";
+                document.getElementById('audit-details-title').textContent = "Audit Details (Draft)";
+            }
+
+            // Open the form view
+            switchToView('inspection');
+            
+            // Re-generate step fields
+            generateInspectionFields();
+            alert("Draft successfully restored!");
+        };
+
+        window.discardDraftFromLog = function(event) {
+            if (event) event.stopPropagation();
+            if (confirm("Are you sure you want to discard this local draft? Any unsaved progress will be permanently lost.")) {
+                clearActiveDraft();
+            }
+        };
 
         // Gemini AI Integration Scripts
         async function callGeminiAPI(base64DataUrl, promptText) {
@@ -2919,6 +3166,7 @@ CRITICAL CONSTRAINTS:
 
         // Reset form
         function resetForm() {
+            clearActiveDraft();
             document.getElementById('inspectionForm').reset();
             const today = new Date();
             document.getElementById('auditDate').value = today.toISOString().substring(0, 10);
@@ -3163,7 +3411,24 @@ CRITICAL CONSTRAINTS:
                 dateStr: item.dateStr
             }));
 
-            const combinedList = [...queuedItems, ...allInspections];
+            // Check if there is an active draft locally
+            const draftStr = localStorage.getItem('inspection_active_draft');
+            let draftItem = [];
+            if (draftStr) {
+                try {
+                    const draft = JSON.parse(draftStr);
+                    draftItem.push({
+                        ...draft,
+                        isDraft: true,
+                        id: 'draft_local',
+                        dateStr: draft.dateStr || 'Draft'
+                    });
+                } catch (e) {
+                    console.error("Failed to parse draft for log:", e);
+                }
+            }
+
+            const combinedList = [...draftItem, ...queuedItems, ...allInspections];
 
             if (combinedList.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">No inspections logged yet.</td></tr>`;
@@ -3173,7 +3438,9 @@ CRITICAL CONSTRAINTS:
             tbody.innerHTML = '';
             combinedList.forEach(ins => {
                 const tr = document.createElement('tr');
-                if (ins.isQueued) {
+                if (ins.isDraft) {
+                    tr.style.background = '#f0f9ff'; // distinct light blue background for local draft
+                } else if (ins.isQueued) {
                     tr.style.background = '#fefaf0';
                 }
 
@@ -3181,7 +3448,10 @@ CRITICAL CONSTRAINTS:
                 let detailText = "";
                 let statusBadge = "";
                 
-                if (ins.inspectionType === 'Weekly Waste Area') {
+                if (ins.isDraft) {
+                    detailText = `<strong>[Draft] ${ins.inspectionType === 'Weekly Waste Area' ? 'Weekly Waste Audit' : 'Site Safety Inspection'}</strong>`;
+                    statusBadge = `<span class="badge-status" style="background: var(--accent-blue-light); color: var(--accent-blue);">Local Draft</span>`;
+                } else if (ins.inspectionType === 'Weekly Waste Area') {
                     detailText = `<strong>Weekly Waste Audit</strong>`;
                     
                     if (ins.violationsCount > 0) {
@@ -3198,25 +3468,35 @@ CRITICAL CONSTRAINTS:
                     statusBadge += `<br><span class="badge-status badge-sync">Queued</span>`;
                 }
 
-                const canReopen = isWithinOneYear(ins.dateStr);
-                const editBtn = canReopen ? `<button class="btn-pdf" style="border-color: var(--accent-blue); color: var(--accent-blue); background: var(--accent-blue-light);" onclick="reopenInspectionReport('${ins.id}', event)">✏️ Edit</button>` : '';
+                let editBtn = '';
+                if (ins.isDraft) {
+                    editBtn = `<button class="btn-pdf" style="border-color: var(--accent-blue); color: var(--accent-blue); background: var(--accent-blue-light);" onclick="loadActiveDraft(null, event)">✏️ Resume</button>`;
+                } else {
+                    const canReopen = isWithinOneYear(ins.dateStr);
+                    editBtn = canReopen ? `<button class="btn-pdf" style="border-color: var(--accent-blue); color: var(--accent-blue); background: var(--accent-blue-light);" onclick="reopenInspectionReport('${ins.id}', event)">✏️ Edit</button>` : '';
+                }
+
                 const syncBtn = ins.isQueued ? `<button class="btn-pdf" style="border-color: var(--accent-blue); color: var(--accent-blue); background: var(--accent-blue-light);" onclick="syncIndividualReport('${ins.id}', event)">🔄 Sync</button>` : '';
+                
+                const deleteBtn = ins.isDraft ? 
+                    `<button class="btn-delete" onclick="discardDraftFromLog(event)">🗑️ Discard</button>` :
+                    `<button class="btn-delete" onclick="deleteInspectionReport('${ins.id}', event)">🗑️ Delete</button>`;
 
                 tr.innerHTML = `
                     <td>
-                        <strong style="color: var(--slate-dark);">${ins.clientName}</strong>
+                        <strong style="color: var(--slate-dark);">${ins.clientName || 'Unnamed Client'}</strong>
                         <div style="font-size:0.75rem; color: var(--text-secondary);">${ins.siteLocation || ''}</div>
                     </td>
                     <td>${detailText}</td>
                     <td>${statusBadge}</td>
-                    <td style="font-size: 0.8rem; color: var(--text-secondary);">${ins.inspector}</td>
+                    <td style="font-size: 0.8rem; color: var(--text-secondary);">${ins.inspector || ''}</td>
                     <td style="white-space: nowrap;">${ins.dateStr}</td>
                     <td>
                         <div style="display: flex; gap: 0.5rem; align-items: center;">
-                            <button class="btn-pdf" onclick="printInspectionReport('${ins.id}')">📄 Print/PDF</button>
+                            ${ins.isDraft ? '' : `<button class="btn-pdf" onclick="printInspectionReport('${ins.id}')">📄 Print/PDF</button>`}
                             ${editBtn}
                             ${syncBtn}
-                            <button class="btn-delete" onclick="deleteInspectionReport('${ins.id}', event)">🗑️ Delete</button>
+                            ${deleteBtn}
                         </div>
                     </td>
                 `;
