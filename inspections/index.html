@@ -1723,21 +1723,16 @@
         };
 
         // Switch Views Helper
-        window.switchToView = function(viewId) {
+        window.switchToView = async function(viewId) {
             if (viewId === 'inspection' && !editingInspectionId) {
-                const draft = localStorage.getItem('inspection_active_draft');
+                const draft = await getLocalItem('inspection_active_draft');
                 if (draft) {
-                    try {
-                        const parsed = JSON.parse(draft);
-                        if (confirm(`We found an unfinished local draft for "${parsed.clientName || 'Unnamed Client'}" (last saved: ${new Date(parsed.lastSaved).toLocaleTimeString()}).\n\nWould you like to resume this draft? Click OK to resume, or Cancel to discard it and start a new inspection.`)) {
-                            loadActiveDraft(parsed);
-                            return;
-                        } else {
-                            clearActiveDraft();
-                            resetForm();
-                        }
-                    } catch (e) {
-                        console.error("Error checking draft:", e);
+                    if (confirm(`We found an unfinished local draft for "${draft.clientName || 'Unnamed Client'}" (last saved: ${new Date(draft.lastSaved).toLocaleTimeString()}).\n\nWould you like to resume this draft? Click OK to resume, or Cancel to discard it and start a new inspection.`)) {
+                        await loadActiveDraft(draft);
+                        return;
+                    } else {
+                        await clearActiveDraft();
+                        resetForm();
                     }
                 }
             }
@@ -1754,12 +1749,12 @@
             
             // If opening history, re-render log to ensure sync indicators are fresh
             if (viewId === 'history') {
-                renderInspectionsLog();
+                await renderInspectionsLog();
             }
         };
 
         // Cancel Inspection Confirmation
-        window.cancelInspection = function() {
+        window.cancelInspection = async function() {
             const client = document.getElementById('clientSelect').value;
             const site = document.getElementById('siteLocation').value.trim();
             const step2Active = document.getElementById('step-2').classList.contains('active');
@@ -1771,9 +1766,9 @@
                     return;
                 }
             }
-            resetForm();
+            await resetForm();
             backToStep1();
-            switchToView('landing');
+            await switchToView('landing');
         };
 
         // Auto-fill Dates & Inspector Name
@@ -1855,9 +1850,9 @@
         });
 
         // Dynamic inspections listener from Firestore
-        db.collection("inspections").orderBy("timestamp", "desc").limit(30).onSnapshot((snapshot) => {
+        db.collection("inspections").orderBy("timestamp", "desc").limit(30).onSnapshot(async (snapshot) => {
             allInspections = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            renderInspectionsLog();
+            await renderInspectionsLog();
         });
 
         // Add Custom Waste Stream
@@ -2592,6 +2587,67 @@
 
         // Note: processGeneralSafetyPhoto has been replaced by processObservationPhoto
 
+        // IndexedDB Helper Functions for 1 GB local caching
+        function initDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open("FieldInspectionsDB", 1);
+                request.onupgradeneeded = function(e) {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains("cache")) {
+                        db.createObjectStore("cache");
+                    }
+                };
+                request.onsuccess = (e) => resolve(e.target.result);
+                request.onerror = (e) => reject(e.target.error);
+            });
+        }
+
+        async function getLocalItem(key) {
+            try {
+                const db = await initDB();
+                return new Promise((resolve, reject) => {
+                    const tx = db.transaction("cache", "readonly");
+                    const store = tx.objectStore("cache");
+                    const request = store.get(key);
+                    request.onsuccess = (e) => resolve(e.target.result);
+                    request.onerror = (e) => reject(e.target.error);
+                });
+            } catch (err) {
+                console.error("IndexedDB get error for key: " + key, err);
+                return null;
+            }
+        }
+
+        async function setLocalItem(key, value) {
+            try {
+                const db = await initDB();
+                return new Promise((resolve, reject) => {
+                    const tx = db.transaction("cache", "readwrite");
+                    const store = tx.objectStore("cache");
+                    const request = store.put(value, key);
+                    request.onsuccess = () => resolve();
+                    request.onerror = (e) => reject(e.target.error);
+                });
+            } catch (err) {
+                console.error("IndexedDB set error for key: " + key, err);
+            }
+        }
+
+        async function removeLocalItem(key) {
+            try {
+                const db = await initDB();
+                return new Promise((resolve, reject) => {
+                    const tx = db.transaction("cache", "readwrite");
+                    const store = tx.objectStore("cache");
+                    const request = store.delete(key);
+                    request.onsuccess = () => resolve();
+                    request.onerror = (e) => reject(e.target.error);
+                });
+            } catch (err) {
+                console.error("IndexedDB delete error for key: " + key, err);
+            }
+        }
+
         // Firebase Cloud Storage Helper Functions
         async function uploadBase64ToStorage(base64Data, path) {
             if (!base64Data || typeof base64Data !== 'string' || !base64Data.startsWith('data:')) {
@@ -2669,7 +2725,7 @@
             }, 800);
         }
 
-        function saveActiveDraft() {
+        async function saveActiveDraft() {
             const clientSelect = document.getElementById('clientSelect');
             const siteLocation = document.getElementById('siteLocation');
             const auditDate = document.getElementById('auditDate');
@@ -2743,23 +2799,23 @@
                 });
             }
 
-            localStorage.setItem('inspection_active_draft', JSON.stringify(draft));
+            await setLocalItem('inspection_active_draft', draft);
             console.log("Draft auto-saved.");
         }
 
-        function clearActiveDraft() {
-            localStorage.removeItem('inspection_active_draft');
+        async function clearActiveDraft() {
+            await removeLocalItem('inspection_active_draft');
             console.log("Draft cleared.");
-            updateQueueIndicator();
-            renderInspectionsLog();
+            await updateQueueIndicator();
+            await renderInspectionsLog();
         }
 
-        window.loadActiveDraft = function(draft, event) {
+        window.loadActiveDraft = async function(draft, event) {
             if (event) event.stopPropagation();
 
             if (!draft) {
-                const d = localStorage.getItem('inspection_active_draft');
-                if (d) draft = JSON.parse(d);
+                const d = await getLocalItem('inspection_active_draft');
+                if (d) draft = d;
             }
             if (!draft) return;
 
@@ -2851,17 +2907,17 @@
             }
 
             // Open the form view
-            switchToView('inspection');
+            await switchToView('inspection');
             
             // Re-generate step fields
             generateInspectionFields();
             alert("Draft successfully restored!");
         };
 
-        window.discardDraftFromLog = function(event) {
+        window.discardDraftFromLog = async function(event) {
             if (event) event.stopPropagation();
             if (confirm("Are you sure you want to discard this local draft? Any unsaved progress will be permanently lost.")) {
-                clearActiveDraft();
+                await clearActiveDraft();
             }
         };
 
@@ -3113,15 +3169,15 @@ CRITICAL CONSTRAINTS:
             if (editingInspectionId) {
                 if (editingInspectionId.startsWith('queued_')) {
                     const idx = parseInt(editingInspectionId.split('_')[1]);
-                    const queue = getQueue();
+                    const queue = await getQueue();
                     if (idx >= 0 && idx < queue.length) {
                         queue[idx] = reportData;
-                        saveQueue(queue);
+                        await saveQueue(queue);
                         alert("Queued inspection report updated successfully.");
                     }
-                    resetForm();
+                    await resetForm();
                     backToStep1();
-                    switchToView('history');
+                    await switchToView('history');
                 } else {
                     if (isOffline) {
                         alert("Cannot update a submitted Firestore report while in offline mode. Please switch to online mode.");
@@ -3132,9 +3188,9 @@ CRITICAL CONSTRAINTS:
                         await uploadReportImages(reportData, editingInspectionId);
                         await db.collection("inspections").doc(editingInspectionId).set(reportData);
                         alert("Inspection Report updated successfully in Cloud Firebase!");
-                        resetForm();
+                        await resetForm();
                         backToStep1();
-                        switchToView('history');
+                        await switchToView('history');
                     } catch (error) {
                         console.error("Firestore update failed:", error);
                         alert("Failed to update the report in Cloud Firestore: " + error.message);
@@ -3145,14 +3201,14 @@ CRITICAL CONSTRAINTS:
 
             if (isOffline) {
                 // Queue locally
-                const queue = getQueue();
+                const queue = await getQueue();
                 queue.push(reportData);
-                saveQueue(queue);
+                await saveQueue(queue);
                 
                 alert("Inspection saved locally in Offline sync cache!");
-                resetForm();
+                await resetForm();
                 backToStep1();
-                renderInspectionsLog();
+                await renderInspectionsLog();
             } else {
                 try {
                     // Generate new doc reference to get the ID beforehand for Storage folder
@@ -3162,24 +3218,24 @@ CRITICAL CONSTRAINTS:
                     await docRef.set(reportData);
 
                     alert("Inspection Report uploaded successfully to Cloud Firebase!");
-                    resetForm();
+                    await resetForm();
                     backToStep1();
                 } catch (error) {
                     console.error("Firestore/Storage upload failed, caching locally:", error);
-                    const queue = getQueue();
+                    const queue = await getQueue();
                     queue.push(reportData);
-                    saveQueue(queue);
+                    await saveQueue(queue);
                     alert("Network connection error. Report cached in local sync queue.");
-                    resetForm();
+                    await resetForm();
                     backToStep1();
-                    renderInspectionsLog();
+                    await renderInspectionsLog();
                 }
             }
         }
 
         // Reset form
-        function resetForm() {
-            clearActiveDraft();
+        async function resetForm() {
+            await clearActiveDraft();
             document.getElementById('inspectionForm').reset();
             const today = new Date();
             document.getElementById('auditDate').value = today.toISOString().substring(0, 10);
@@ -3257,7 +3313,7 @@ CRITICAL CONSTRAINTS:
         }
 
         // Network Toggle Switch
-        function toggleNetworkMode(checked) {
+        async function toggleNetworkMode(checked) {
             isOffline = checked;
             const dot = document.getElementById('network-dot');
             const text = document.getElementById('network-text');
@@ -3265,27 +3321,27 @@ CRITICAL CONSTRAINTS:
             if (isOffline) {
                 dot.className = 'dot offline';
                 text.textContent = 'Device Offline (Queuing locally in browser cache)';
-                renderInspectionsLog();
+                await renderInspectionsLog();
             } else {
                 dot.className = 'dot online';
                 text.textContent = 'Device Online (Connected to Firebase)';
-                processSyncQueue();
+                await processSyncQueue();
             }
         }
 
         // Local Queue cache
-        function getQueue() {
-            const q = localStorage.getItem('inspection_sync_queue');
-            return q ? JSON.parse(q) : [];
+        async function getQueue() {
+            const q = await getLocalItem('inspection_sync_queue');
+            return q || [];
         }
 
-        function saveQueue(queue) {
-            localStorage.setItem('inspection_sync_queue', JSON.stringify(queue));
-            updateQueueIndicator();
+        async function saveQueue(queue) {
+            await setLocalItem('inspection_sync_queue', queue);
+            await updateQueueIndicator();
         }
 
-        function updateQueueIndicator() {
-            const queue = getQueue();
+        async function updateQueueIndicator() {
+            const queue = await getQueue();
             const badge = document.getElementById('queue-indicator');
             const landingBadge = document.getElementById('landing-queue-indicator');
             const syncBtn = document.getElementById('manual-sync-btn');
@@ -3320,7 +3376,7 @@ CRITICAL CONSTRAINTS:
                 return;
             }
             
-            const queue = getQueue();
+            const queue = await getQueue();
             if (queue.length === 0) {
                 alert("There are no pending reports to sync.");
                 return;
@@ -3338,7 +3394,7 @@ CRITICAL CONSTRAINTS:
             } finally {
                 syncBtn.disabled = false;
                 syncBtn.textContent = "🔄 Sync Pending Now";
-                updateQueueIndicator();
+                await updateQueueIndicator();
             }
         };
 
@@ -3351,7 +3407,7 @@ CRITICAL CONSTRAINTS:
             }
             
             const idx = parseInt(id.split('_')[1]);
-            const queue = getQueue();
+            const queue = await getQueue();
             const report = queue[idx];
             if (!report) {
                 alert("Report not found in local cache.");
@@ -3372,20 +3428,20 @@ CRITICAL CONSTRAINTS:
                 
                 // Remove from queue
                 queue.splice(idx, 1);
-                saveQueue(queue);
+                await saveQueue(queue);
                 
                 alert("Inspection report synchronized successfully!");
-                renderInspectionsLog();
+                await renderInspectionsLog();
             } catch (err) {
                 console.error("Individual report sync failed:", err);
                 alert("Sync failed: " + err.message);
-                renderInspectionsLog();
+                await renderInspectionsLog();
             }
         };
 
         // Process Offline Queue Uploads
         async function processSyncQueue() {
-            const queue = getQueue();
+            const queue = await getQueue();
             if (queue.length === 0) return;
 
             console.log(`Syncing ${queue.length} reports...`);
@@ -3405,19 +3461,19 @@ CRITICAL CONSTRAINTS:
                 }
             }
 
-            saveQueue(remaining);
+            await saveQueue(remaining);
             if (remaining.length === 0) {
                 alert("Offline queue synchronized with Cloud database successfully!");
             }
-            renderInspectionsLog();
+            await renderInspectionsLog();
         }
 
         // Render Log entries
-        function renderInspectionsLog() {
+        async function renderInspectionsLog() {
             const tbody = document.getElementById('inspectionsLogBody');
             
             // Build temporary array combining Firestore + local queue
-            const queuedItems = getQueue().map((item, idx) => ({
+            const queuedItems = (await getQueue()).map((item, idx) => ({
                 ...item,
                 isQueued: true,
                 id: 'queued_' + idx,
@@ -3425,20 +3481,15 @@ CRITICAL CONSTRAINTS:
             }));
 
             // Check if there is an active draft locally
-            const draftStr = localStorage.getItem('inspection_active_draft');
+            const draft = await getLocalItem('inspection_active_draft');
             let draftItem = [];
-            if (draftStr) {
-                try {
-                    const draft = JSON.parse(draftStr);
-                    draftItem.push({
-                        ...draft,
-                        isDraft: true,
-                        id: 'draft_local',
-                        dateStr: draft.dateStr || 'Draft'
-                    });
-                } catch (e) {
-                    console.error("Failed to parse draft for log:", e);
-                }
+            if (draft) {
+                draftItem.push({
+                    ...draft,
+                    isDraft: true,
+                    id: 'draft_local',
+                    dateStr: draft.dateStr || 'Draft'
+                });
             }
 
             const combinedList = [...draftItem, ...queuedItems, ...allInspections];
@@ -3516,7 +3567,7 @@ CRITICAL CONSTRAINTS:
                 tbody.appendChild(tr);
             });
 
-            updateQueueIndicator();
+            await updateQueueIndicator();
         }
 
         // Helper to check if a date is within 1 year from now
@@ -3537,13 +3588,14 @@ CRITICAL CONSTRAINTS:
         }
 
         // Reopen and edit an existing inspection report
-        window.reopenInspectionReport = function(id, event) {
+        window.reopenInspectionReport = async function(id, event) {
             if (event) event.stopPropagation();
             
             let report = null;
             if (id.startsWith('queued_')) {
                 const idx = parseInt(id.split('_')[1]);
-                report = getQueue()[idx];
+                const queue = await getQueue();
+                report = queue[idx];
             } else {
                 report = allInspections.find(i => i.id === id);
             }
@@ -3651,7 +3703,7 @@ CRITICAL CONSTRAINTS:
             document.getElementById('audit-details-title').textContent = "✏️ Edit Audit Details";
 
             // Open the form view
-            switchToView('inspection');
+            await switchToView('inspection');
         };
 
         // Helper function to match General Safety observations
@@ -3695,7 +3747,7 @@ CRITICAL CONSTRAINTS:
             let report = null;
             if (id.startsWith('queued_')) {
                 const idx = parseInt(id.split('_')[1]);
-                report = getQueue()[idx];
+                report = (await getQueue())[idx];
             } else {
                 report = allInspections.find(i => i.id === id);
             }
@@ -3752,7 +3804,7 @@ CRITICAL CONSTRAINTS:
             }
             
             // Add local queued reports as well
-            const queuedReports = getQueue().filter(i => 
+            const queuedReports = (await getQueue()).filter(i => 
                 i.clientName === report.clientName && 
                 i.inspectionType === report.inspectionType
             );
@@ -4412,12 +4464,12 @@ CRITICAL CONSTRAINTS:
 
             if (id.startsWith('queued_')) {
                 const idx = parseInt(id.split('_')[1]);
-                const queue = getQueue();
+                const queue = await getQueue();
                 if (idx >= 0 && idx < queue.length) {
                     queue.splice(idx, 1);
-                    saveQueue(queue);
+                    await saveQueue(queue);
                     alert("Queued inspection report deleted successfully.");
-                    renderInspectionsLog();
+                    await renderInspectionsLog();
                 }
             } else {
                 try {
